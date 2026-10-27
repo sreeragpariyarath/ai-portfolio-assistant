@@ -2,9 +2,13 @@
   "name": "ai-portfolio-assistant",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@12.15.0",
   "scripts": {
     "dev:web": "pnpm --filter web dev",
-    "dev:api": "pnpm --filter api dev"
+    "dev:api": "pnpm --filter api dev",
+    "eval:validate": "node --disable-warning=ExperimentalWarning scripts/validate-eval.ts",
+    "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
+    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\""
   }
 }

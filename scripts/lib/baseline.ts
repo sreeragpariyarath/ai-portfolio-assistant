@@ -7,8 +7,16 @@ export const KS = [5, 10] as const;
 export interface CaseResult {
   id: string;
   question: string;
+  scoring: "ranked" | "list";
   expected: string[];
   retrieved: Hit[];
+}
+
+export interface ListResult {
+  caseId: string;
+  expected: number;
+  found: number;
+  missing: string[];
 }
 
 export interface KSummary {
@@ -37,6 +45,7 @@ export interface BaselineReport {
   totalCases: number;
   byK: KSummary[];
   misses: Miss[];
+  listCases: ListResult[];
   zeroEvidence: ZeroEvidenceCase[];
   privateRecordsRetrieved: string[];
 }
@@ -55,14 +64,19 @@ export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {
   );
   const index = buildIndex(publicRecords.map((record) => ({ id: record.id, text: `${record.title} ${record.content}` })));
 
-  const results: CaseResult[] = evalSet.cases.map((evalCase) => ({
-    id: evalCase.id,
-    question: evalCase.question,
-    expected: evalCase.expectedEvidenceIds,
-    retrieved: search(index, evalCase.question, Math.max(...KS)),
-  }));
+  // List cases search the whole index; ranked cases only need the largest k.
+  const results: CaseResult[] = evalSet.cases.map((evalCase) => {
+    const scoring = evalCase.scoring === "list" ? "list" : "ranked";
+    return {
+      id: evalCase.id,
+      question: evalCase.question,
+      scoring,
+      expected: evalCase.expectedEvidenceIds,
+      retrieved: search(index, evalCase.question, scoring === "list" ? publicRecords.length : Math.max(...KS)),
+    };
+  });
 
-  const withEvidence = results.filter((result) => result.expected.length > 0);
+  const withEvidence = results.filter((result) => result.scoring === "ranked" && result.expected.length > 0);
   const byK: KSummary[] = [];
   const misses: Miss[] = [];
 
@@ -85,6 +99,14 @@ export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {
     });
   }
 
+  const listCases = results
+    .filter((result) => result.scoring === "list")
+    .map((result) => {
+      const retrievedIds = new Set(result.retrieved.map((hit) => hit.id));
+      const missing = result.expected.filter((id) => !retrievedIds.has(id));
+      return { caseId: result.id, expected: result.expected.length, found: result.expected.length - missing.length, missing };
+    });
+
   const zeroEvidence = results
     .filter((result) => result.expected.length === 0)
     .map((result) => ({
@@ -104,6 +126,7 @@ export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {
     totalCases: results.length,
     byK,
     misses,
+    listCases,
     zeroEvidence,
     privateRecordsRetrieved,
   };

@@ -4,6 +4,7 @@ import {
   EVAL_FILE,
   RECORDS_FILE,
   RECORD_TYPES,
+  SCORING_MODES,
   VISIBILITIES,
   loadJson,
 } from "./lib/eval-data.ts";
@@ -166,6 +167,12 @@ function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Repor
       if (evidence.length === 0) report(`${label}: ${entry.expectedBehavior} cases need expectedEvidenceIds`);
       if (facts.length === 0) report(`${label}: ${entry.expectedBehavior} cases need requiredFacts`);
     }
+    if (entry.scoring !== undefined && !(SCORING_MODES as readonly unknown[]).includes(entry.scoring)) {
+      report(`${label}: scoring must be one of ${SCORING_MODES.join(", ")}`);
+    }
+    if (entry.scoring === "list" && evidence.length < 2) {
+      report(`${label}: list cases need at least two expectedEvidenceIds`);
+    }
     if (entry.expectedBehavior === "refuse" && evidence.length > 0) {
       report(`${label}: refuse cases must not expect evidence`);
     }
@@ -199,6 +206,7 @@ function validatePinnedFixes(casesById: Map<string, Obj>, report: Report): void 
     const facts = isStringArray(e032.requiredFacts) ? e032.requiredFacts : [];
     const forbidden = isStringArray(e032.forbiddenClaims) ? e032.forbiddenClaims : [];
 
+    if (e032.scoring !== "list") report('E032: scoring must be "list"');
     for (const id of ["project-demo-004", "project-demo-011"]) {
       if (evidence.includes(id)) report(`E032: expectedEvidenceIds must not include ${id}`);
     }

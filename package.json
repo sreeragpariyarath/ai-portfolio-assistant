@@ -9,6 +9,10 @@
     "dev:api": "pnpm --filter api dev",
     "eval:validate": "node --disable-warning=ExperimentalWarning scripts/validate-eval.ts",
     "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
-    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\""
+    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\"",
+    "embeddings:ingest:local": "node --disable-warning=ExperimentalWarning scripts/ingest/gemini-embeddings.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5"
   }
 }

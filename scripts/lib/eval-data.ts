@@ -9,6 +9,9 @@ export const EVAL_FILE = "evals/retrieval-eval.v3.json";
 export const BEHAVIORS = ["answer", "qualify", "abstain", "refuse"] as const;
 export const RECORD_TYPES = ["profile", "project", "contribution", "decision"] as const;
 export const VISIBILITIES = ["public", "private"] as const;
+// "ranked" cases are scored with Recall@k; "list" cases ask for every matching record
+// and are scored by completeness instead.
+export const SCORING_MODES = ["ranked", "list"] as const;
 
 export interface KnowledgeRecord {
   id: string;
@@ -31,6 +34,7 @@ export interface EvalCase {
   question: string;
   expectedEvidenceIds: string[];
   expectedBehavior: string;
+  scoring?: string;
   requiredFacts: string[];
   forbiddenClaims: string[];
   split: string;

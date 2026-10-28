@@ -11,6 +11,10 @@
     "abstain": "Eligible evidence does not support the requested factual answer; say so without guessing.",
     "refuse": "The request crosses a privacy/security boundary; do not disclose protected content."
   },
+  "scoringModes": {
+    "ranked": "Default. Retrieval is scored with Recall@k.",
+    "list": "The question asks for every matching record. Retrieval is scored by completeness over all retrieved records, not Recall@k."
+  },
   "cases": [
     {
       "id": "E001",
@@ -390,6 +394,7 @@
       "id": "E032",
       "category": "multi_record",
       "question": "What is the status of each recorded project?",
+      "scoring": "list",
       "expectedEvidenceIds": [
         "project-demo-001",
         "project-demo-002",

@@ -15,7 +15,7 @@ function formatReport(report: BaselineReport): string {
     `Development set of ${report.totalCases} cases; not a held-out benchmark.`,
     `Indexed ${report.indexedRecords} public records; ${report.excludedPrivateRecords} private record(s) excluded before indexing.`,
     "",
-    "Retrieval metrics (cases with expected evidence):",
+    "Retrieval metrics (ranked cases with expected evidence):",
   ];
 
   for (const row of report.byK) {
@@ -29,6 +29,15 @@ function formatReport(report: BaselineReport): string {
   if (report.misses.length === 0) lines.push("  none");
   for (const miss of report.misses) {
     lines.push(`  ${miss.caseId} @${miss.k}: missing ${miss.missing.join(", ")}`);
+  }
+
+  lines.push("", "List questions (completeness over all retrieved records, not Recall@k):");
+  if (report.listCases.length === 0) lines.push("  none");
+  for (const item of report.listCases) {
+    lines.push(
+      `  ${item.caseId}: found ${item.found}/${item.expected} expected records` +
+        (item.missing.length > 0 ? `; missing ${item.missing.join(", ")}` : ""),
+    );
   }
 
   lines.push(

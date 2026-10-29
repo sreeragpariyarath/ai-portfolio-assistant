@@ -12,6 +12,8 @@
     "typecheck:scripts": "tsc -p tsconfig.json",
     "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\"",
     "env:check": "node --disable-warning=ExperimentalWarning scripts/check-env.ts",
+    "ingest": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts",
+    "ingest:dry": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts --dry-run",
     "embeddings:ingest:local": "node --disable-warning=ExperimentalWarning scripts/ingest/gemini-embeddings.ts"
   },
   "devDependencies": {

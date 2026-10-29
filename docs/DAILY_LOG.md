@@ -5,7 +5,10 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 1 task 1.7 (the `pnpm ingest` script that uses the planner, with a `--dry-run` mode). The live run (1.8) needs the owner's go-ahead first.
+Next: Phase 1 task 1.8 (the live run). Needs the owner's go-ahead: first `pnpm ingest` writes to Qdrant and calls Gemini for all 39 records.
+
+- Built the ingest script: `pnpm ingest` and `pnpm ingest:dry`. It checks `.env`, validates the data, drops private records, makes sure the collection and indexes exist, plans, embeds only what changed, uploads, deletes stale points, then verifies (point count, no private record present, every stored point has the right model and size). The logic lives in `scripts/lib/ingest-run.ts` so it is tested with in-memory fake Qdrant and Gemini; the script only wires in the real clients. `pnpm test:scripts` 103 pass (7 new: first run, second run uploads nothing, dry run writes nothing, made-private is deleted, leaked private point fails verification, no public records, wrong-size vector rejected), type-checks clean, API `vitest run` 7 pass.
+- Ran `pnpm ingest:dry` once against the real cluster. It is read-only (one "does the collection exist" request, no Gemini call, nothing written): the collection does not exist yet, 39 public records would be uploaded, 1 private excluded. This was a read of the cluster made before the 1.8 go-ahead, so noting it here.
 
 - Added the ingest planner to `packages/rag`: given the public records and the points already in Qdrant, it says which records to embed and upload (new, edited, or embedded with a different model or size), which are unchanged, and which stored points to delete (record removed or made private, or a stray point). It makes no network calls and refuses any non-public record. `pnpm test:scripts` 96 pass (9 new planner tests: first run, rerun, edited, removed, made private, model change, stray point), `pnpm typecheck:scripts` and API typecheck clean, API `vitest run` 7 pass, `pnpm eval:validate` ok.
 

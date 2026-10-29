@@ -5,7 +5,7 @@ Part of [RAG_PROJECT_PLAN.md](RAG_PROJECT_PLAN.md). Phase 2 chose hybrid retriev
 **Outcome:** `POST /api/chat` with `{ "question": "..." }` streams an answer over server-sent events (SSE). Each answer declares one of the four behaviors (answer, qualify, abstain, refuse), cites record IDs that were actually retrieved, never reveals private records, and ignores instructions hidden in the data. `pnpm eval:answers` scores the 40 eval cases against a recorded threshold.
 
 ## Who builds what
-The owner builds the API and server parts (tasks 3.3, 3.4, 3.7 and 3.8). Claude can write the pure, testable pieces (3.1, 3.2, 3.5, 3.6 and 3.9), review the owner's code, and pair on anything when asked. Swap freely; the plan works either way. Whoever does a task follows the ground rules below.
+Claude builds every task (decided by the owner on 2026-10-29; the earlier split gave 3.3, 3.4, 3.7 and 3.8 to the owner). The owner reviews, runs the manual steps (accounts, keys, `.dev.vars`) and gives the go-ahead for live runs. Every task follows the ground rules below.
 
 ## Ground rules
 - Same loop as Phases 1 and 2: run `pnpm eval:validate`, `pnpm test:scripts`, `pnpm typecheck:scripts`, and in `apps/api` `pnpm typecheck` and `pnpm vitest run` before each commit. Descriptive commit message, no AI attribution, a daily log entry in the same commit, new decisions in `docs/DECISIONS.md`. Work on a feature branch with a draft PR so CI runs.
@@ -48,13 +48,13 @@ Confirm the open facts above against current docs and record **D-015**: the gene
 ### 3.1 Bundled public corpus (Claude)
 A script (`pnpm corpus:build`) validates the data and writes `apps/api/src/generated/public-corpus.json` with **public records only** (id, type, title, content, verification status, dates, project id). It is checked in, so the Worker bundle never contains the full dataset. Tests: no private ID or private content in the output, and the output is deterministic. A CI step fails if the committed file is stale.
 
-### 3.2 Worker config and env (Claude or owner)
+### 3.2 Worker config and env (Claude)
 Add `vars` (`QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL`, `ALLOWED_ORIGIN`) to `wrangler.jsonc`, and the secrets `GEMINI_API_KEY`, `QDRANT_URL` and `QDRANT_API_KEY` to `.dev.vars` (add a `.dev.vars.example`). Run `pnpm cf-typegen` and switch `index.ts` to the generated `Env`. Update `docs/SETUP.md`. The D1 binding stays until Phase 5.
 
-### 3.3 Route and request validation (owner)
+### 3.3 Route and request validation (Claude)
 `POST /api/chat`: JSON only, body `{ question: string }`, the question trimmed and 1 to 500 characters, the body capped at 4 KB. CORS for `ALLOWED_ORIGIN`, including the `OPTIONS` preflight. Errors use `jsonResponse`. Tests with `SELF.fetch`: each error status, the CORS headers, and the health route unchanged.
 
-### 3.4 Retrieval and context in the Worker (owner)
+### 3.4 Retrieval and context in the Worker (Claude)
 Build the BM25 index once per isolate from the bundled corpus (module scope), run `denseSearch` and `hybridSearch` from `@portfolio/rag`, take the top 8, re-check `visibility === "public"` against the bundled corpus, and assemble the context with each record's ID, type, title, verification status, valid-until date and content. Tests with mocked Gemini and Qdrant: private IDs never reach the context, a Qdrant hit missing from the bundled corpus is dropped, and BM25 still answers if dense search fails (degraded mode, logged).
 
 ### 3.5 Prompt and answer parsing (Claude)
@@ -63,10 +63,10 @@ In `packages/rag`: `buildPrompt(question, records)` and `parseAnswer(text, allow
 ### 3.6 Gemini generation client (Claude)
 Add `generate` and `streamGenerate` to the Gemini client in `packages/rag`, reusing `retry.ts`. Retries happen only before the first streamed byte. A 429 or an exhausted quota becomes a typed `QuotaError`, so the route can answer `demo_busy`. A blocked prompt becomes a typed error, not an empty answer. Tests with mocked SSE bodies: chunk parsing, chunks split mid-line, 429 mapping, block reason and timeout. Runs in Node and in the Workers pool.
 
-### 3.7 Streaming endpoint (owner)
+### 3.7 Streaming endpoint (Claude)
 Wire 3.3 to 3.6 into the SSE response (`meta`, `token`, `done`, `error`) with `Content-Type: text/event-stream` and `Cache-Control: no-store`. Add an overall timeout; if Gemini fails before streaming starts, return the JSON error instead. Log one structured line per request (latency, retrieval counts, behavior, citation counts, error code) with no question text, keys or content. Tests in the Workers pool with mocked upstreams: the full event order, invalid citations dropped, quota becomes 503 `demo_busy`, and an upstream failure mid-stream sends an `error` event.
 
-### 3.8 Rate limit and embedding cache (owner)
+### 3.8 Rate limit and embedding cache (Claude)
 A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or the fallback from D-015) returning 429 with `Retry-After`. Cache question embeddings in a per-isolate in-memory LRU (D-015: capped at about 200 entries, keyed by a SHA-256 of model, size and the normalized question; the Cache API is only confirmed on custom domains and KV Free allows 1,000 writes a day), so repeated questions skip the Gemini embedding call. The rate limiter sits behind a small interface because the binding's Free-plan availability is unconfirmed. Tests: the limit triggers, and a cached embedding skips the Gemini call.
 
 ### 3.9 Answer-level eval (Claude; the live run needs the go-ahead)

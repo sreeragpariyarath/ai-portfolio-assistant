@@ -5,7 +5,10 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: re-run the eval baseline, then start Phase 1 (`packages/rag`).
+Next: merge the Phase 0 PR, then Phase 1 task 1.1 (`packages/rag` spike).
+
+- Planned Phase 1 in detail as ten small tasks (`docs/PHASE_1_PLAN.md`). Data source stays the synthetic JSON; no PDFs, images or upload system.
+- Re-ran the BM25 baseline with the new list scoring (`pnpm eval:baseline`): Recall@5 85.7% (28/35 cases fully covered), Recall@10 95.0% (31/35), list question E032 found 2/10, private records retrieved: none. This is the comparison point for dense and hybrid retrieval.
 
 - Phase 0 complete on this PC: Gemini API key created (billing not linked), Qdrant Cloud free cluster created (AWS, Frankfurt), `.env` filled, `pnpm env:check` passes. The laptop still needs its own `.env`.
 

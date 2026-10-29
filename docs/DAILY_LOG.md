@@ -1,26 +1,27 @@
 # Daily log
 
-What was done, newest day first. Why we chose things: [DECISIONS.md](DECISIONS.md). Roadmap: [RAG_PROJECT_PLAN.md](RAG_PROJECT_PLAN.md).
+A brief record of the work done each day, newest first. Why we chose things: [DECISIONS.md](DECISIONS.md). Roadmap: [RAG_PROJECT_PLAN.md](RAG_PROJECT_PLAN.md).
 
-**Rule:** after every commit, add one short entry under today's date in the same commit: `` `hash` subject: what changed. Verified: ... Open: ... `` (keep it to 1-3 lines). The hash isn't known until the commit exists, so add it in the next update.
+**Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: create Gemini key and Qdrant cluster, fill `.env`, `pnpm env:check` (finishes Phase 0), then Phase 1.
+Next: create the Gemini API key and the Qdrant cluster, fill `.env`, run `pnpm env:check` (finishes Phase 0), then Phase 1.
 
-- `4894a4d` docs: add decisions log and daily log. Two-device shared memory; `CLAUDE.md` tells sessions to read both and log after each commit. Docs only.
-- `6e91b08` merge: list scoring by completeness and root TypeScript tooling pulled in. Verified: 28 tests pass, typecheck clean. Open: re-run `pnpm eval:baseline` and record new numbers (old 83.6% Recall@5 predates list scoring).
-- docs: shorten this log to one line per commit. Verified: `pnpm test:scripts` green.
+- Set up two-device shared memory: a decisions log and this daily log, and told Claude (in `CLAUDE.md`) to read them first and update this log after every commit.
+- Made this log short, then changed it to describe the work done instead of listing commit titles.
+- Pulled the latest branch: list questions are now scored by completeness, and root TypeScript tooling was added. Tests: 28 pass, type-check clean.
+- Open: re-run `pnpm eval:baseline` and record the new numbers, because the older 83.6% Recall@5 predates the new list scoring.
 
 ## 2026-10-28
 Next: env setup, then Phase 1.
 
-- `ee7de21` feat(env): `.env.example`, `pnpm env:check` (never prints values), `docs/SETUP.md`. Verified: 25 tests pass, checked with no and fake `.env`. Open: owner fills `.env`.
-- `9f52380` docs: phased RAG plan (`docs/RAG_PROJECT_PLAN.md`), source of D-001 to D-007.
-- `7a45ee8` feat(ingest): D1 embedding ingest prototype (`embeddings:ingest:local`). Replaced by Qdrant ingest in Phase 1. Script not re-run.
-- `1590228`, `3e3fae0` chore(api): D1 binding and migrations 0001/0002, applied locally only. Removed in Phase 5.
-- `0cd0ad7`, `1c1788c` root TypeScript tooling; list questions (E032) scored by completeness.
+- Reviewed the earlier ChatGPT plan and its notes. Confirmed Qdrant is the target and the D1 embedding store is only a prototype.
+- Checked free-tier pricing and limits for Qdrant Cloud, Gemini and Cloudflare Workers. Everything planned can be free, with quota limits.
+- Wrote the phased project plan (`docs/RAG_PROJECT_PLAN.md`).
+- Committed the D1 embedding prototype script, kept for reference and replaced by Qdrant ingestion in Phase 1. Not re-run.
+- Added `.env.example`, a `pnpm env:check` command that never prints secret values, and `docs/SETUP.md`. Tested with no `.env` and with a fake one: 25 tests pass, and it exits non-zero when variables are missing or the Qdrant URL isn't https.
+- Open: fill `.env` with real values.
 
 ## 2026-10-27
-- `6ca8e6c`, `3ca4bbe` initial commit; pnpm monorepo and stock Next.js app.
-- `2397cad`, `d0c6e52` Cloudflare Worker with `GET /api/health`, 404/405 handling.
-- `3393627`, `38e29eb` synthetic dataset (40 records, 40 cases), validator, BM25 baseline; PR #1 merged. See [evaluation-notes.md](evaluation-notes.md).
+- Set up the pnpm monorepo, the Next.js app, and a Cloudflare Worker with a health endpoint.
+- Built the synthetic dataset (40 records, 40 eval cases), the validator and the BM25 retrieval baseline. See [evaluation-notes.md](evaluation-notes.md).

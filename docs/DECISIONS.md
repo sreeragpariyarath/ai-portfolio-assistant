@@ -58,5 +58,5 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 ## D-010: Two-device workflow, repo docs are the shared memory
 - **Date:** 2026-10-29 · **Status:** Accepted
 - **Context:** The owner works from a PC and a laptop, and Claude on one machine does not remember what Claude on the other did.
-- **Decision:** This file records decisions and [DAILY_LOG.md](DAILY_LOG.md) records what was done. After every commit, Claude adds a short (1-3 line) log entry. `CLAUDE.md` tells every session to read both files first. Run `git pull` before starting on either device.
+- **Decision:** This file records decisions and [DAILY_LOG.md](DAILY_LOG.md) records what was done. After every commit, Claude adds a few plain-language lines to the log: what was done, what was tested, and manual steps like creating a Gemini key (never the secret value). It does not copy commit titles. `CLAUDE.md` tells every session to read both files first. Run `git pull` before starting on either device.
 - **Consequences:** Secrets are never synced: `.env` is per device, so each device creates its own from `.env.example` (see [SETUP.md](SETUP.md)).

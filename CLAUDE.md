@@ -16,7 +16,7 @@ Don't assume RAG, Gemini, Qdrant, or streaming code exists. Check before extendi
 The owner works from two machines, and a Claude session on one has no memory of the other. These files are the shared memory:
 
 - `docs/DECISIONS.md` — why things are built the way they are. Read it before proposing design or tooling changes. Add a numbered entry for every new decision; supersede, never rewrite.
-- `docs/DAILY_LOG.md` — what was done, newest day first. Read the latest entries at the start of a session. **After every commit, add an entry for it in the same commit** (what, why, how it was verified, what is open).
+- `docs/DAILY_LOG.md` — what was done, newest day first. Read the latest entries at the start of a session. **After every commit, add a short entry (1-3 lines) for it in the same commit** (what changed, how it was verified, what is open).
 - `docs/RAG_PROJECT_PLAN.md` — the phased roadmap.
 
 Run `git pull` before starting. `.env` is per device and never synced; create it from `.env.example` (see `docs/SETUP.md`).

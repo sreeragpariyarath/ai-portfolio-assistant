@@ -12,6 +12,8 @@ export {
 } from "./ingest.ts";
 export type { IngestPlan, PlannedRecord, PointPayload } from "./ingest.ts";
 export { documentInput, queryInput } from "./embedding-input.ts";
+export { PUBLIC_ONLY_FILTER, denseSearch, denseSearchByVector } from "./dense.ts";
+export type { DenseDeps } from "./dense.ts";
 export { hybridSearch, rrf } from "./fusion.ts";
 export type { HybridOptions, RrfOptions } from "./fusion.ts";
 export { GeminiError, createGeminiClient } from "./gemini.ts";

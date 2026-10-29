@@ -5,7 +5,10 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 task 2.2 (dense search: embed the question, query Qdrant with the public-only filter).
+Next: Phase 2 task 2.3 (the `pnpm eval:retrieval` runner; the owner has approved its live run).
+
+- Opened draft PR #4 for Phase 2 so CI runs on the branch.
+- Added dense search to `packages/rag`: it embeds the question and asks Qdrant for the closest public records, always sending the public-only filter, and drops any result that has no record id or is not marked public (a second safety net). A version that takes a ready-made vector lets the eval cache question embeddings. Mocked tests only, nothing run against Gemini or Qdrant. `pnpm test:scripts` 121 pass (5 new), both type-checks clean, API `vitest run` 8 pass, `pnpm eval:validate` ok.
 
 - Added reciprocal rank fusion and hybrid search to `packages/rag`. RRF combines rankings by position only, so BM25 scores and cosine scores never need to be on the same scale; `k` (default 60), candidate depth (default 20) and result limit are configurable, and ties break in a fixed order. Pure code, nothing run against Gemini or Qdrant. `pnpm test:scripts` 116 pass (12 new), `pnpm typecheck:scripts` and API typecheck clean, API `vitest run` 8 pass (one new test runs hybrid search in the Workers runtime), `pnpm eval:validate` ok.
 

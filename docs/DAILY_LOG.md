@@ -5,7 +5,22 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 (retrieval and evaluation: dense, BM25 and hybrid, compared on the eval set). Phase 1 is finished; draft PR #3 is ready for the owner to review and merge.
+Next: Phase 3 (grounded answers and the `/api/chat` endpoint), which the owner plans to build. Phase 2 is finished; draft PR #4 is ready for review.
+
+- Recorded the Phase 2 result as D-014: hybrid search (BM25 plus dense, RRF k=60, 20 candidates each) is the default, with dense alone as the fallback if Worker CPU becomes a problem. Marked Phase 2 done in the roadmap. Docs only, nothing run.
+
+- Tuned hybrid search on the development cases: tried k 10, 30 and 60 with 10, 20 and 39 candidates per method (9 runs, all from cached question embeddings, so 0 Gemini calls; read-only Qdrant searches). Every setting landed within about one case of the others; the best one beat the default by a single case at k=5, which is noise on 40 cases. Kept the standard default (k=60, 20 candidates). Fewer candidates (10) was consistently slightly worse. No private record in any run. Grid and reasoning in `evals/results/rrf-tuning.md`. No code changed; `pnpm test:scripts` 128 pass.
+
+- Built `pnpm eval:retrieval`: runs BM25, dense (Qdrant) and hybrid on the same 40 eval cases with the same scoring as the baseline, prints a table and writes it to `evals/results/retrieval-comparison.md`. Question embeddings are cached in a git-ignored file (`evals/.cache/`), so reruns make no Gemini calls. Refactored the baseline so the BM25 scoring is shared; `pnpm eval:baseline` output is byte-identical. Options `--k=` and `--depth=` for tuning.
+- Live run, approved by the owner: 40 new Gemini query embeddings and read-only Qdrant searches; the rerun used 40 cached embeddings and 0 Gemini calls. Results (default k=60, depth 20): BM25 Recall@5 85.7% / Recall@10 95.0%, list question 2/10; dense 95.7% / 96.4%, list 10/10; hybrid 95.7% / 99.3%, list 10/10. No private record retrieved by any method. E015 still misses two decision records at k=5 with dense and hybrid.
+- Tests: `pnpm test:scripts` 128 pass (7 new: BM25 scored the same as the baseline, a perfect dense ranking scores 100%, hybrid falls back to BM25 when dense is empty, list cases fuse every candidate, a leaked private record is reported, the table format, the embedding cache), both type-checks clean, API `vitest run` 8 pass, `pnpm eval:validate` ok.
+
+- Opened draft PR #4 for Phase 2 so CI runs on the branch.
+- Added dense search to `packages/rag`: it embeds the question and asks Qdrant for the closest public records, always sending the public-only filter, and drops any result that has no record id or is not marked public (a second safety net). A version that takes a ready-made vector lets the eval cache question embeddings. Mocked tests only, nothing run against Gemini or Qdrant. `pnpm test:scripts` 121 pass (5 new), both type-checks clean, API `vitest run` 8 pass, `pnpm eval:validate` ok.
+
+- Added reciprocal rank fusion and hybrid search to `packages/rag`. RRF combines rankings by position only, so BM25 scores and cosine scores never need to be on the same scale; `k` (default 60), candidate depth (default 20) and result limit are configurable, and ties break in a fixed order. Pure code, nothing run against Gemini or Qdrant. `pnpm test:scripts` 116 pass (12 new), `pnpm typecheck:scripts` and API typecheck clean, API `vitest run` 8 pass (one new test runs hybrid search in the Workers runtime), `pnpm eval:validate` ok.
+
+- Merged the Phase 1 PR, started the Phase 2 branch and wrote the Phase 2 plan (`docs/PHASE_2_PLAN.md`): fusion, dense search, an eval runner comparing BM25, dense and hybrid, tuning on the development split, then recording the results. The first run that embeds the eval questions needs the owner's go-ahead. Docs only, no code changed, nothing run.
 
 - Retired the old D1 ingest script and its `embeddings:ingest:local` command (Qdrant ingest replaces it; the D1 binding and migrations stay until Phase 5). Added the ingest commands and the suspended or deleted cluster steps to `docs/SETUP.md`, and marked Phase 1 done in the roadmap. Nothing was run against Gemini or Qdrant this time. `pnpm test:scripts` 103 pass, `pnpm typecheck:scripts` clean, `pnpm eval:validate` ok, API typecheck and `vitest run` pass.
 

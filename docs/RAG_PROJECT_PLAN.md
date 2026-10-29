@@ -36,7 +36,7 @@ Each phase ends runnable and is committed separately.
 - Tests: private-leak test (private IDs absent after ingest), idempotent rerun, client tests with mocked fetch.
 - **Done when:** 39 points exist, a rerun skips all, and a direct query returns sensible hits.
 
-### Phase 2: Retrieval and evaluation
+### Phase 2: Retrieval and evaluation (done; results in D-014; detailed plan in [PHASE_2_PLAN.md](PHASE_2_PLAN.md))
 - In `packages/rag`: `denseSearch` (Qdrant filter `visibility=public`), `bm25Search`, `rrf(lists, k=60)` with configurable k and candidate counts, and `hybridSearch`.
 - Extend `scripts/retrieval-baseline.ts` into `pnpm eval:retrieval`, comparing BM25 / dense / hybrid on Recall@5/10, full-evidence coverage, private leakage and E032 list completeness. Write a markdown table to `evals/results/`.
 - Tune RRF k and candidate depth on the development split only. The eval file says it is not a held-out test set; say so in the README.

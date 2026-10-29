@@ -48,6 +48,7 @@ Evaluation scripts live in `scripts/` and run directly on Node's built-in TypeSc
 ```bash
 pnpm eval:validate     # validate data/knowledge/synthetic-records.v3.json and evals/retrieval-eval.v3.json
 pnpm eval:baseline     # validate, then run the BM25 retrieval baseline on the 40 development cases
+pnpm eval:retrieval    # BM25 vs dense (Qdrant) vs hybrid; needs .env; caches question embeddings in evals/.cache/
 pnpm test:scripts      # node:test suite for the validator, BM25 and metrics
 ```
 

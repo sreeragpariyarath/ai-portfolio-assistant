@@ -7,6 +7,8 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 ## 2026-10-29
 Next: Phase 1 task 1.3 (ingestion helpers: hashing, point IDs, payload).
 
+- Added CI (GitHub Actions) that runs on every pull request and on pushes to `main`: data validation, script tests, type-check, API tests in the Workers runtime, and web lint and build. It uses no secrets and never calls Gemini or Qdrant or deploys. Ran `pnpm --filter web lint` and `build` locally first: both pass. Deploy and the Qdrant keep-alive stay for Phase 5.
+
 - Moved the recall metric and the record types into `packages/rag`, and moved the BM25 and recall tests there too. Added a test that fails if any package file imports a `node:` module (checked it fails on a deliberately bad file, then removed that file). `pnpm eval:baseline` is still byte-identical, `pnpm test:scripts` 33 pass, `pnpm typecheck:scripts` clean, API `vitest run` 4 pass.
 
 - Installed the GitHub CLI on the PC (winget, already logged in). Opened and merged the Phase 0 PR, then started the Phase 1 branch from `main`.

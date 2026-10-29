@@ -29,6 +29,9 @@ jobs:
       - run: pnpm eval:validate
       - run: pnpm test:scripts
       - run: pnpm typecheck:scripts
+      - name: Worker types are current
+        run: pnpm cf-typegen:check
+        working-directory: apps/api
       - name: API type-check
         run: pnpm typecheck
         working-directory: apps/api

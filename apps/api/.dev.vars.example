@@ -1,0 +1,12 @@
+# Local secrets for `wrangler dev`. Copy to `.dev.vars` (git-ignored) in this folder and fill in.
+# Never commit real values. Use the same values as the repo-root `.env`; see docs/SETUP.md.
+# Only the names listed under "secrets.required" in wrangler.jsonc are loaded.
+
+# Google AI Studio API key (created WITHOUT billing linked).
+GEMINI_API_KEY=
+
+# Qdrant Cloud cluster URL, including the port, e.g. https://<cluster-id>.<region>.<provider>.cloud.qdrant.io:6333
+QDRANT_URL=
+
+# Qdrant Cloud API key for that cluster.
+QDRANT_API_KEY=

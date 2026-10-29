@@ -46,6 +46,23 @@ size; it stops with an error instead.
 `pnpm ingest:dry`. **If it was deleted:** create a new cluster, put the new URL and key in `.env`,
 then run `pnpm ingest`; the empty collection is recreated and all records are re-uploaded.
 
-## Worker secrets (later phases)
-Local Worker development reads secrets from `apps/api/.dev.vars` (git-ignored). Deployed secrets
-are set with `wrangler secret put <NAME>`. Never put secrets in `wrangler.jsonc`.
+## 5. Worker settings and secrets (Phase 3)
+The Worker has two kinds of configuration, both declared in `apps/api/wrangler.jsonc`:
+
+- **Settings (not secret), committed:** `QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL` and
+  `ALLOWED_ORIGIN` live under `vars`. `ALLOWED_ORIGIN` is `http://localhost:3000` for now; set the real
+  web origin when deploying.
+- **Secrets, never committed:** `GEMINI_API_KEY`, `QDRANT_URL` and `QDRANT_API_KEY` are only *named* under
+  `secrets.required`. Their values come from `apps/api/.dev.vars` locally and from `wrangler secret put <NAME>`
+  when deployed. Never put a secret value in `wrangler.jsonc`.
+
+To run the Worker locally with real upstreams (needed from task 3.7, not before; tests use mocks):
+```bash
+cd apps/api
+cp .dev.vars.example .dev.vars
+# edit .dev.vars: use the same three values as the repo-root .env
+pnpm dev          # wrangler dev; warns by name if a required secret is missing
+```
+`.dev.vars` is git-ignored. Wrangler loads only the three required names from it. After editing
+`wrangler.jsonc`, run `pnpm cf-typegen` and commit the regenerated `worker-configuration.d.ts`; CI fails
+if it is out of date (`pnpm cf-typegen:check`).

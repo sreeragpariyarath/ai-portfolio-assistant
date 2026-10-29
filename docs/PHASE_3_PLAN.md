@@ -63,7 +63,7 @@ In `packages/rag`: `buildPrompt(question, records)` and `parseAnswer(text, allow
 ### 3.6 Gemini generation client (Claude) (done 2026-10-29)
 Add `generate` and `streamGenerate` to the Gemini client in `packages/rag`, reusing `retry.ts`. Retries happen only before the first streamed byte. A 429 or an exhausted quota becomes a typed `QuotaError`, so the route can answer `demo_busy`. A blocked prompt becomes a typed error, not an empty answer. Tests with mocked SSE bodies: chunk parsing, chunks split mid-line, 429 mapping, block reason and timeout. Runs in Node and in the Workers pool.
 
-### 3.7 Streaming endpoint (Claude)
+### 3.7 Streaming endpoint (Claude) (done 2026-10-29)
 Wire 3.3 to 3.6 into the SSE response (`meta`, `token`, `done`, `error`) with `Content-Type: text/event-stream` and `Cache-Control: no-store`. Add an overall timeout; if Gemini fails before streaming starts, return the JSON error instead. Log one structured line per request (latency, retrieval counts, behavior, citation counts, error code) with no question text, keys or content. Tests in the Workers pool with mocked upstreams: the full event order, invalid citations dropped, quota becomes 503 `demo_busy`, and an upstream failure mid-stream sends an `error` event.
 
 ### 3.8 Rate limit and embedding cache (Claude)

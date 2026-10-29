@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { SELF } from "cloudflare:test";
+import { ORIGIN, chatRequest, testEnv, workerWith } from "./helpers";
 
 const URL_CHAT = "https://example.com/api/chat";
-const ORIGIN = "http://localhost:3000"; // ALLOWED_ORIGIN in wrangler.jsonc
 
 function post(body: BodyInit | null, headers: Record<string, string> = {}) {
   return SELF.fetch(URL_CHAT, {
@@ -17,19 +17,11 @@ function postJson(value: unknown, headers: Record<string, string> = {}) {
 }
 
 describe("POST /api/chat request validation", () => {
-  it("accepts a valid question (the answer itself arrives in task 3.7)", async () => {
-    const response = await postJson({ question: "  What has Alex built?  " });
-
-    expect(response.status).toBe(501);
-    expect(response.headers.get("cache-control")).toBe("no-store");
-    expect(await response.json()).toEqual({
-      error: "Not implemented",
-      code: "not_implemented",
-    });
-  });
-
   it("accepts a question of exactly 500 characters and rejects 501", async () => {
-    expect((await postJson({ question: "a".repeat(500) })).status).toBe(501);
+    const { worker } = workerWith();
+    const ok = await worker.fetch(chatRequest({ question: "a".repeat(500) }), testEnv);
+    expect(ok.status).toBe(200);
+    await ok.text();
 
     const response = await postJson({ question: "a".repeat(501) });
     expect(response.status).toBe(400);
@@ -90,11 +82,16 @@ describe("POST /api/chat request validation", () => {
     }
   });
 
-  it("accepts application/json with a charset parameter", async () => {
-    const response = await post('{"question":"hi"}', {
-      "Content-Type": "application/json; charset=utf-8",
-    });
-    expect(response.status).toBe(501);
+  it("accepts application/json with a charset parameter, and trims the question", async () => {
+    const { worker, calls } = workerWith();
+    const response = await worker.fetch(
+      chatRequest('{"question":"  hi there  "}', { "Content-Type": "application/json; charset=utf-8" }),
+      testEnv,
+    );
+    expect(response.status).toBe(200);
+    await response.text();
+    const generation = calls.find((call) => call.url.includes(":streamGenerateContent"));
+    expect(generation?.body.contents[0].parts[0].text).toContain("<question>\nhi there\n</question>");
   });
 
   it("returns 413 for a body over 4 KB", async () => {
@@ -172,23 +169,25 @@ describe("POST /api/chat CORS", () => {
   });
 
   it("adds the CORS header to success-path and error responses for the allowed origin only", async () => {
-    const ok = await postJson({ question: "hi" }, { Origin: ORIGIN });
+    const { worker } = workerWith();
+    const ok = await worker.fetch(chatRequest({ question: "hi" }, { Origin: ORIGIN }), testEnv);
     expect(ok.headers.get("access-control-allow-origin")).toBe(ORIGIN);
+    await ok.text();
 
     const bad = await postJson({ question: "" }, { Origin: ORIGIN });
     expect(bad.status).toBe(400);
     expect(bad.headers.get("access-control-allow-origin")).toBe(ORIGIN);
 
-    const other = await postJson(
-      { question: "hi" },
-      { Origin: "https://evil.example" },
-    );
+    const other = await worker.fetch(chatRequest({ question: "hi" }, { Origin: "https://evil.example" }), testEnv);
     expect(other.headers.get("access-control-allow-origin")).toBeNull();
     expect(other.headers.get("vary")).toContain("Origin");
+    await other.text();
   });
 
   it("never sends a wildcard origin", async () => {
-    const response = await postJson({ question: "hi" }, { Origin: ORIGIN });
+    const { worker } = workerWith();
+    const response = await worker.fetch(chatRequest({ question: "hi" }, { Origin: ORIGIN }), testEnv);
     expect(response.headers.get("access-control-allow-origin")).not.toBe("*");
+    await response.text();
   });
 });

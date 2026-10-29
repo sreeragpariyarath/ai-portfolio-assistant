@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 task 2.1 (reciprocal rank fusion and hybrid search, pure code).
+Next: Phase 2 task 2.2 (dense search: embed the question, query Qdrant with the public-only filter).
+
+- Added reciprocal rank fusion and hybrid search to `packages/rag`. RRF combines rankings by position only, so BM25 scores and cosine scores never need to be on the same scale; `k` (default 60), candidate depth (default 20) and result limit are configurable, and ties break in a fixed order. Pure code, nothing run against Gemini or Qdrant. `pnpm test:scripts` 116 pass (12 new), `pnpm typecheck:scripts` and API typecheck clean, API `vitest run` 8 pass (one new test runs hybrid search in the Workers runtime), `pnpm eval:validate` ok.
 
 - Merged the Phase 1 PR, started the Phase 2 branch and wrote the Phase 2 plan (`docs/PHASE_2_PLAN.md`): fusion, dense search, an eval runner comparing BM25, dense and hybrid, tuning on the development split, then recording the results. The first run that embeds the eval questions needs the owner's go-ahead. Docs only, no code changed, nothing run.
 

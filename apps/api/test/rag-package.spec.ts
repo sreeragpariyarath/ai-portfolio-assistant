@@ -4,6 +4,7 @@ import {
   contentHash,
   createGeminiClient,
   createQdrantClient,
+  hybridSearch,
   pointId,
   search,
 } from "@portfolio/rag";
@@ -77,5 +78,13 @@ describe("@portfolio/rag in the Workers runtime", () => {
 
     expect(await qdrant.count("portfolio_knowledge")).toBe(39);
     expect(calls[0]).toEqual({ path: "/collections/portfolio_knowledge/points/count", apiKey: "test-key" });
+  });
+
+  it("fuses BM25 and dense rankings with RRF in Workers", () => {
+    const fused = hybridSearch(
+      [{ id: "a", score: 9 }, { id: "b", score: 4 }],
+      [{ id: "b", score: 0.8 }, { id: "c", score: 0.7 }],
+    );
+    expect(fused.map((hit) => hit.id)).toEqual(["b", "a", "c"]);
   });
 });

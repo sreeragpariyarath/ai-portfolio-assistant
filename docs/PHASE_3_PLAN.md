@@ -27,6 +27,7 @@ The owner builds the API and server parts (tasks 3.3, 3.4, 3.7 and 3.8). Claude 
 question -> validate -> rate limit -> embed (cached) -> Qdrant dense (public filter) --+
                                       BM25 over the bundled public corpus ---------------+-> RRF -> top 8
 top 8 -> visibility re-check -> prompt (records as delimited data) -> Gemini stream
+(3.0 done, D-015: the embedding cache is a per-isolate in-memory LRU, not the Cache API; see tasks 3.0 and 3.8)
 Gemini stream -> parse behavior line and [record-id] citations -> SSE: meta, token..., done
 ```
 
@@ -41,7 +42,7 @@ Failures before streaming starts return JSON: 400 (bad input), 405, 413 (too lar
 ## Tasks
 Each task is one commit unless noted.
 
-### 3.0 Verify and decide (docs only)
+### 3.0 Verify and decide (docs only) (done 2026-10-29, recorded as D-015)
 Confirm the open facts above against current docs and record **D-015**: the generation model (proposal: `gemini-3.5-flash-lite` by default, with the name in a `GEMINI_MODEL` var so it can change without code), the rate-limit approach (the binding if it is on Free, otherwise a documented fallback), the embedding-cache approach, and the answer protocol. Create the Phase 3 branch and draft PR.
 
 ### 3.1 Bundled public corpus (Claude)
@@ -66,7 +67,7 @@ Add `generate` and `streamGenerate` to the Gemini client in `packages/rag`, reus
 Wire 3.3 to 3.6 into the SSE response (`meta`, `token`, `done`, `error`) with `Content-Type: text/event-stream` and `Cache-Control: no-store`. Add an overall timeout; if Gemini fails before streaming starts, return the JSON error instead. Log one structured line per request (latency, retrieval counts, behavior, citation counts, error code) with no question text, keys or content. Tests in the Workers pool with mocked upstreams: the full event order, invalid citations dropped, quota becomes 503 `demo_busy`, and an upstream failure mid-stream sends an `error` event.
 
 ### 3.8 Rate limit and embedding cache (owner)
-A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or the fallback from D-015) returning 429 with `Retry-After`. Cache question embeddings (proposal: the Workers Cache API, keyed by a SHA-256 of model, size and the normalized question), so repeated questions skip the Gemini embedding call. Tests: the limit triggers, and a cached embedding skips the Gemini call.
+A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or the fallback from D-015) returning 429 with `Retry-After`. Cache question embeddings in a per-isolate in-memory LRU (D-015: capped at about 200 entries, keyed by a SHA-256 of model, size and the normalized question; the Cache API is only confirmed on custom domains and KV Free allows 1,000 writes a day), so repeated questions skip the Gemini embedding call. The rate limiter sits behind a small interface because the binding's Free-plan availability is unconfirmed. Tests: the limit triggers, and a cached embedding skips the Gemini call.
 
 ### 3.9 Answer-level eval (Claude; the live run needs the go-ahead)
 `pnpm eval:answers` runs the 40 cases through the same retrieval, prompt and parsing code (from Node, calling Gemini and Qdrant directly) and caches answers in git-ignored `evals/.cache/`, so changes to the scoring rerun for free. Rule-based checks per case:

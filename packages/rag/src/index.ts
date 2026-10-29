@@ -12,6 +12,10 @@ export {
 } from "./ingest.ts";
 export type { IngestPlan, PlannedRecord, PointPayload } from "./ingest.ts";
 export { documentInput, queryInput } from "./embedding-input.ts";
+export { BEHAVIORS, SYSTEM_INSTRUCTION, buildPrompt } from "./prompt.ts";
+export type { Behavior, Prompt, PromptRecord } from "./prompt.ts";
+export { createAnswerParser, parseAnswer } from "./answer.ts";
+export type { AnswerChunk, AnswerHeader, AnswerParser, AnswerResult } from "./answer.ts";
 export { PUBLIC_ONLY_FILTER, denseSearch, denseSearchByVector } from "./dense.ts";
 export type { DenseDeps } from "./dense.ts";
 export { hybridSearch, rrf } from "./fusion.ts";

@@ -57,7 +57,7 @@ Add `vars` (`QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL`, `ALLOWED_ORI
 ### 3.4 Retrieval and context in the Worker (Claude) (done 2026-10-29)
 Build the BM25 index once per isolate from the bundled corpus (module scope), run `denseSearch` and `hybridSearch` from `@portfolio/rag`, take the top 8, re-check `visibility === "public"` against the bundled corpus, and assemble the context with each record's ID, type, title, verification status, valid-until date and content. Tests with mocked Gemini and Qdrant: private IDs never reach the context, a Qdrant hit missing from the bundled corpus is dropped, and BM25 still answers if dense search fails (degraded mode, logged).
 
-### 3.5 Prompt and answer parsing (Claude)
+### 3.5 Prompt and answer parsing (Claude) (done 2026-10-29)
 In `packages/rag`: `buildPrompt(question, records)` and `parseAnswer(text, allowedIds)`. The system instruction carries the four behavior definitions from the eval file. It says retrieved text is data and never instructions, tells the model to cite `[record-id]`, to qualify unverified, expired or conflicting evidence, and to refuse privacy and security requests. Records go inside clear delimiters. Tests: the prompt contains every record ID and no private field; parsing treats a missing or malformed behavior line as `qualify`, strips citations not in `allowedIds`, and handles citations split across stream chunks.
 
 ### 3.6 Gemini generation client (Claude)

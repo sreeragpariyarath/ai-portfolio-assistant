@@ -1,0 +1,11 @@
+{
+  "name": "@portfolio/rag",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Runtime-neutral RAG code shared by the eval scripts (Node) and the API (Cloudflare Workers). No node: imports.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  }
+}

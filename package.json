@@ -10,11 +10,14 @@
     "eval:validate": "node --disable-warning=ExperimentalWarning scripts/validate-eval.ts",
     "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
     "typecheck:scripts": "tsc -p tsconfig.json",
-    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\"",
+    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\"",
     "env:check": "node --disable-warning=ExperimentalWarning scripts/check-env.ts",
-    "embeddings:ingest:local": "node --disable-warning=ExperimentalWarning scripts/ingest/gemini-embeddings.ts"
+    "ingest": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts",
+    "ingest:dry": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts --dry-run",
+    "qdrant:query": "node --disable-warning=ExperimentalWarning scripts/qdrant-query.ts"
   },
   "devDependencies": {
+    "@portfolio/rag": "workspace:*",
     "@types/node": "^22.20.5",
     "typescript": "^5.9.3"
   }

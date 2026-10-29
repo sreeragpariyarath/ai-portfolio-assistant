@@ -28,7 +28,7 @@ Each phase ends runnable and is committed separately.
 - Add `.env.example` (`GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`); gitignore `.env` and `.dev.vars`.
 - Owner creates a Gemini key in AI Studio **without billing linked**, and a Qdrant Cloud free cluster plus API key.
 
-### Phase 1: `packages/rag` and Qdrant ingestion
+### Phase 1: `packages/rag` and Qdrant ingestion (done; detailed plan in [PHASE_1_PLAN.md](PHASE_1_PLAN.md))
 - Create `packages/rag` (the workspace already globs `packages/*`). Move or reuse `scripts/lib/bm25.ts`, `recallAtK`/metrics from `scripts/lib/baseline.ts`, and types from `scripts/lib/eval-data.ts`. Scripts import from the package. Keep erasable-syntax TS with `.ts` import extensions so Node scripts, vitest and wrangler all consume it.
 - Add `qdrant.ts` (thin fetch-based REST client: create collection, upsert batch, filtered query, count, scroll) and `gemini.ts` (embed document/query, streaming generate).
 - Verify against current docs before coding: embedding task types for `gemini-embedding-2`, normalization of truncated 768d vectors, Qdrant distance metric (cosine), point ID format (UUID v5 from record id).

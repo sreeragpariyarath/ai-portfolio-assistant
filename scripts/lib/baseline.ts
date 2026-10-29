@@ -1,5 +1,5 @@
-import { buildIndex, search } from "./bm25.ts";
-import type { Hit } from "./bm25.ts";
+import { buildIndex, recallAtK, search } from "@portfolio/rag";
+import type { Hit } from "@portfolio/rag";
 import type { Corpus, EvalSet } from "./eval-data.ts";
 
 export const KS = [5, 10] as const;
@@ -48,12 +48,6 @@ export interface BaselineReport {
   listCases: ListResult[];
   zeroEvidence: ZeroEvidenceCase[];
   privateRecordsRetrieved: string[];
-}
-
-export function recallAtK(expected: string[], retrievedIds: string[], k: number): number {
-  if (expected.length === 0) throw new Error("recall is undefined without expected evidence");
-  const top = new Set(retrievedIds.slice(0, k));
-  return expected.filter((id) => top.has(id)).length / expected.length;
 }
 
 export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {

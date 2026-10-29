@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { buildIndex, search, tokenize } from "./lib/bm25.ts";
-import { recallAtK, runBaseline } from "./lib/baseline.ts";
+import { runBaseline } from "./lib/baseline.ts";
 import { EVAL_FILE, RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalSet } from "./lib/eval-data.ts";
 import { validateEvalData } from "./validate-eval.ts";
@@ -128,47 +127,6 @@ describe("validateEvalData", () => {
       delete caseById(data, "E032").scoring;
     });
     assert.ok(errors.some((message) => message.includes('E032: scoring must be "list"')));
-  });
-});
-
-describe("bm25", () => {
-  const index = buildIndex([
-    { id: "a", text: "TypeScript API for support" },
-    { id: "b", text: "Python scripts for data" },
-    { id: "c", text: "TypeScript web client" },
-  ]);
-
-  it("drops stopwords and punctuation", () => {
-    assert.deepEqual(tokenize("What is the Next.js app?"), ["next", "js", "app"]);
-  });
-
-  it("ranks documents that match rarer terms higher", () => {
-    assert.equal(search(index, "python", 3)[0]?.id, "b");
-  });
-
-  it("returns only documents that match", () => {
-    assert.deepEqual(search(index, "rust", 3), []);
-  });
-
-  it("breaks score ties by id", () => {
-    const hits = search(index, "typescript", 3).map((hit) => hit.id);
-    assert.equal(hits[0], "a");
-    assert.equal(hits[1], "c");
-  });
-
-  it("respects the limit", () => {
-    assert.equal(search(index, "typescript", 1).length, 1);
-  });
-});
-
-describe("recallAtK", () => {
-  it("counts expected ids found in the top k", () => {
-    assert.equal(recallAtK(["a", "b"], ["a", "x", "b"], 2), 0.5);
-    assert.equal(recallAtK(["a", "b"], ["a", "x", "b"], 3), 1);
-  });
-
-  it("is undefined when no evidence is expected", () => {
-    assert.throws(() => recallAtK([], ["a"], 5));
   });
 });
 

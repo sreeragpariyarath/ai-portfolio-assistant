@@ -30,6 +30,22 @@ pnpm env:check
 `.env` is git-ignored. `pnpm env:check` reports which variables are set, missing or malformed.
 It never prints their values.
 
+## 4. Load the knowledge into Qdrant
+```bash
+pnpm ingest:dry                 # read-only: shows what would be uploaded
+pnpm ingest                     # embeds changed public records, uploads, verifies
+pnpm qdrant:query "question"    # top 5 record ids and scores
+```
+
+`pnpm ingest` is safe to repeat: unchanged records are skipped, records removed or made private
+are deleted from Qdrant, and it ends by checking the point count and that no private record is
+stored. It uses `QDRANT_COLLECTION` and never recreates a collection that has the wrong vector
+size; it stops with an error instead.
+
+**If the cluster is suspended:** resume it from the Qdrant dashboard, wait a minute, run
+`pnpm ingest:dry`. **If it was deleted:** create a new cluster, put the new URL and key in `.env`,
+then run `pnpm ingest`; the empty collection is recreated and all records are re-uploaded.
+
 ## Worker secrets (later phases)
 Local Worker development reads secrets from `apps/api/.dev.vars` (git-ignored). Deployed secrets
 are set with `wrangler secret put <NAME>`. Never put secrets in `wrangler.jsonc`.

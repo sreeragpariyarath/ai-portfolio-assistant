@@ -6,11 +6,11 @@ import {
   assertIngestable,
   contentHash,
   pointId,
-  recordText,
   toPayload,
   uuidV5,
   validateVector,
 } from "../src/ingest.ts";
+import { documentInput, queryInput } from "../src/embedding-input.ts";
 import type { KnowledgeRecord } from "../src/types.ts";
 
 const MODEL = "gemini-embedding-2";
@@ -31,16 +31,18 @@ function record(overrides: Partial<KnowledgeRecord> = {}): KnowledgeRecord {
   };
 }
 
-describe("recordText", () => {
-  it("joins title and content with a blank line", () => {
-    assert.equal(recordText(record()), "Support portal\n\nBuilt a TypeScript support portal.");
+describe("embedding input formats", () => {
+  it("formats documents and queries the way gemini-embedding-2 expects", () => {
+    assert.equal(documentInput("Support portal", "Built it."), "title: Support portal | text: Built it.");
+    assert.equal(documentInput("", "Built it."), "title: none | text: Built it.");
+    assert.equal(queryInput("What did Alex build?"), "task: search result | query: What did Alex build?");
   });
 });
 
 describe("contentHash", () => {
-  it("matches the node:crypto hash the D1 prototype produced", async () => {
+  it("is the node:crypto sha256 of model, dimensions and the embedded document text", async () => {
     const expected = createHash("sha256")
-      .update(`${MODEL}\n${DIMS}\n${recordText(record())}`)
+      .update(`${MODEL}\n${DIMS}\n${documentInput(record().title, record().content)}`)
       .digest("hex");
     assert.equal(await contentHash(record(), MODEL, DIMS), expected);
   });

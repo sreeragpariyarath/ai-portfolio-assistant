@@ -1,3 +1,4 @@
+import { documentInput } from "./embedding-input.ts";
 import type { KnowledgeRecord } from "./types.ts";
 
 // Fixed project namespace for point IDs. Never change it: every stored point ID derives from it.
@@ -30,13 +31,9 @@ async function digest(algorithm: "SHA-1" | "SHA-256", data: Uint8Array): Promise
   return new Uint8Array(await crypto.subtle.digest(algorithm, data as BufferSource));
 }
 
-export function recordText(record: KnowledgeRecord): string {
-  return `${record.title}\n\n${record.content}`;
-}
-
-// Covers model, dimensions and text, so changing any of them re-embeds the record.
+// Covers model, dimensions and the exact text sent to Gemini, so changing any of them re-embeds the record.
 export async function contentHash(record: KnowledgeRecord, model: string, dims: number): Promise<string> {
-  const input = new TextEncoder().encode(`${model}\n${dims}\n${recordText(record)}`);
+  const input = new TextEncoder().encode(`${model}\n${dims}\n${documentInput(record.title, record.content)}`);
   return toHex(await digest("SHA-256", input));
 }
 

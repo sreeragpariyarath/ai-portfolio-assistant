@@ -66,3 +66,15 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 - **Context:** The shared package (D-006) has no build step. The risk was that Node refuses to strip types from files under `node_modules`, and pnpm links workspace packages there.
 - **Decision:** Scripts and the API both import `@portfolio/rag` by name (a `workspace:*` dev dependency). Its `exports` point straight at `./src/*.ts`. Node resolves the symlink to the real path in `packages/rag`, so type stripping works. Checked in four places: Node scripts (baseline output byte-identical), root `tsc`, the Workers vitest pool (`apps/api/test/rag-package.spec.ts`), and a `wrangler deploy --dry-run` bundle.
 - **Consequences:** No relative-import fallback is needed. Package code must stay erasable-syntax TypeScript with `.ts` import extensions and no `node:` imports. Running Node with `--preserve-symlinks` would break this.
+
+## D-012: How we call `gemini-embedding-2` (resolves D-002's open checks)
+- **Date:** 2026-10-29 · **Status:** Accepted
+- **Context:** Checked Google's embeddings and rate-limit docs (the rate-limit page was last updated 2026-10-28).
+- **Findings and decisions:**
+  - **No `task_type`.** The docs say it cannot be used with `gemini-embedding-2`; the task goes in the text instead. Documents are embedded as `title: {title} | text: {content}` and queries as `task: search result | query: {question}`. Both formats live in `packages/rag/src/embedding-input.ts`.
+  - **The content hash now covers that formatted text.** The D1 prototype embedded plain `title\n\ncontent`, so its hashes and vectors are not reusable. Nothing depended on them.
+  - **No client-side normalization.** The docs say truncated sizes such as 768 are normalized automatically (only `gemini-embedding-001` needs manual normalization). Qdrant's cosine distance copes either way. The live run (task 1.8) should confirm a returned vector has a length of about 1.
+  - **Batching.** `batchEmbedContents` takes one `Content` per input (several parts in one `Content` would be merged into one vector). The docs give no per-request maximum, so the client batches 20 and the size is configurable.
+  - **Input limit:** 8,192 tokens, and longer input is silently truncated. Our records are short, but keep it in mind for chunked documents later.
+  - **Free tier.** The docs list no free-tier limits for this model and say to check AI Studio. The prototype did embed all 39 records on a key with billing not linked, so it works on free. Quotas are unknown, so the client retries 429 and 5xx with exponential backoff, honors `Retry-After`, and never retries other 4xx.
+- **Consequences:** If Google adds `task_type` support or changes the prefix guidance, change `embedding-input.ts`; the hash change re-embeds everything on the next ingest.

@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 1 task 1.4 (Gemini client; check the current Gemini docs first).
+Next: Phase 1 task 1.5 (Qdrant client; check the current Qdrant docs first).
+
+- Read the current Gemini docs and built the Gemini client in `packages/rag` (batching, timeouts, retries on rate-limit and server errors, no key or text in error messages). Important finding: `gemini-embedding-2` has no task types, so documents and questions are embedded with a text prefix instead, and the stored hash now covers that exact text. The docs give no free-tier numbers for this model; recorded in D-012. No real Gemini call was made: all tests use a mocked fetch. `pnpm test:scripts` 65 pass, `pnpm typecheck:scripts` and API typecheck clean, API `vitest run` 6 pass (one runs the client inside the Workers runtime).
 
 - Added the ingestion helpers to `packages/rag`: the text and hash for each record (same hash as the old D1 script), vector checks, the privacy guard, stable point IDs and the payload stored in Qdrant. Tests: the hash matches Node's own sha256; the point ID code matches the official UUID v5 reference example, and a real ID matched Python's `uuid5`; a private record is rejected without leaking its content. `pnpm test:scripts` 49 pass, `pnpm typecheck:scripts` clean, API `vitest run` 5 pass (one runs the hash and ID code in the Workers runtime).
 - Found that the API's own type-check had been failing since the shared package was added (the API config did not allow `.ts` imports) and nothing ran it. Fixed it and added `pnpm typecheck` in `apps/api`, now also run in CI.

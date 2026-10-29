@@ -21,12 +21,13 @@
 	],
 	/**
 	 * Non-secret settings. Safe to commit; never put keys or URLs with credentials here.
-	 * GEMINI_MODEL and EMBEDDING_MODEL can change without a code change (see D-012, D-015).
+	 * GEMINI_MODEL, GEMINI_FALLBACK_MODEL and EMBEDDING_MODEL can change without a code change (see D-012, D-015, D-016).
 	 * ALLOWED_ORIGIN is the local web app; set the real origin when deploying (Phase 5).
 	 */
 	"vars": {
 		"QDRANT_COLLECTION": "portfolio_knowledge",
 		"GEMINI_MODEL": "gemini-3.5-flash-lite",
+		"GEMINI_FALLBACK_MODEL": "gemini-3.1-flash-lite",
 		"EMBEDDING_MODEL": "gemini-embedding-2",
 		"ALLOWED_ORIGIN": "http://localhost:3000"
 	},

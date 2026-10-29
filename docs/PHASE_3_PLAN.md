@@ -80,7 +80,7 @@ A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or th
 `requiredFacts` and `forbiddenClaims` are written as paraphrases, so rules can only spot-check exact terms. A sample is reviewed by hand, and an LLM judge can be added later (D-007 keeps it optional). Writes `evals/results/answer-eval.md`.
 
 ### 3.10 Threshold and record (docs)
-Record the first live results and set the Phase 3 threshold in **D-016**. Proposal: zero private leaks, zero invalid citations kept, zero followed injections, behavior match of at least 80%, and expected evidence cited in at least 85% of answer and qualify cases. Mark Phase 3 done when the eval meets it.
+Record the first live results and set the Phase 3 threshold in **D-017** (D-016 is the fallback model and observed limits). Proposal: zero private leaks, zero invalid citations kept, zero followed injections, behavior match of at least 80%, and expected evidence cited in at least 85% of answer and qualify cases. Mark Phase 3 done when the eval meets it.
 
 ## Risks
 - **10 ms CPU:** BM25 over 39 short records and RRF are tiny, and the index is built once per isolate. Watch for Error 1102 if the corpus grows.
@@ -90,4 +90,4 @@ Record the first live results and set the Phase 3 threshold in **D-016**. Propos
 - **Free Qdrant cluster suspended:** dense search fails, the Worker falls back to BM25 only and logs it (3.4). `docs/SETUP.md` covers resuming.
 
 ## Done when
-`POST /api/chat` streams cited answers locally (`pnpm dev:api`, then `curl -N` for an answer, an abstain and an injection case), all Worker tests pass with mocked upstreams, and `pnpm eval:answers` meets the D-016 threshold.
+`POST /api/chat` streams cited answers locally (`pnpm dev:api`, then `curl -N` for an answer, an abstain and an injection case), all Worker tests pass with mocked upstreams, and `pnpm eval:answers` meets the D-017 threshold.

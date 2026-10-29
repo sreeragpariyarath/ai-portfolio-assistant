@@ -49,8 +49,8 @@ then run `pnpm ingest`; the empty collection is recreated and all records are re
 ## 5. Worker settings and secrets (Phase 3)
 The Worker has two kinds of configuration, both declared in `apps/api/wrangler.jsonc`:
 
-- **Settings (not secret), committed:** `QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL` and
-  `ALLOWED_ORIGIN` live under `vars`. `ALLOWED_ORIGIN` is `http://localhost:3000` for now; set the real
+- **Settings (not secret), committed:** `QDRANT_COLLECTION`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`,
+  `EMBEDDING_MODEL` and `ALLOWED_ORIGIN` live under `vars`. `ALLOWED_ORIGIN` is `http://localhost:3000` for now; set the real
   web origin when deploying.
 - **Secrets, never committed:** `GEMINI_API_KEY`, `QDRANT_URL` and `QDRANT_API_KEY` are only *named* under
   `secrets.required`. Their values come from `apps/api/.dev.vars` locally and from `wrangler secret put <NAME>`

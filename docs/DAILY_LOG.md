@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 1 task 1.9 (retire the old D1 ingest script and update the setup docs and roadmap).
+Next: Phase 2 (retrieval and evaluation: dense, BM25 and hybrid, compared on the eval set). Phase 1 is finished; draft PR #3 is ready for the owner to review and merge.
+
+- Retired the old D1 ingest script and its `embeddings:ingest:local` command (Qdrant ingest replaces it; the D1 binding and migrations stay until Phase 5). Added the ingest commands and the suspended or deleted cluster steps to `docs/SETUP.md`, and marked Phase 1 done in the roadmap. Nothing was run against Gemini or Qdrant this time. `pnpm test:scripts` 103 pass, `pnpm typecheck:scripts` clean, `pnpm eval:validate` ok, API typecheck and `vitest run` pass.
 
 - Live run, with the owner's go-ahead. `pnpm ingest`: collection created on the Qdrant cluster, 39 public records embedded with Gemini and uploaded, 1 private excluded, verification passed (count 39, private id absent, model and size correct on every point). Second `pnpm ingest`: 0 uploaded, 39 unchanged, no Gemini call, verification passed.
 - Added `pnpm qdrant:query "question"` (top 5 record ids and scores, public only). Tried three eval questions: "currently focused on" ranked the expected profile-demo-006 first; "built the onboarding tool alone" ranked contribution-demo-003 first (project-demo-006 second, both expected); "what roles is Alex looking for" ranked the expected profile-demo-001 only third, a hint for Phase 2's real dense-versus-BM25 eval. Returned query vector length is 768 with norm 1.0000, so no client-side normalization is needed (confirms D-012).

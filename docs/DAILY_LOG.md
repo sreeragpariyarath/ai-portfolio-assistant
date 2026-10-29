@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: create the Gemini API key and the Qdrant cluster, fill `.env`, run `pnpm env:check` (finishes Phase 0), then Phase 1.
+Next: re-run the eval baseline, then start Phase 1 (`packages/rag`).
+
+- Phase 0 complete on this PC: Gemini API key created (billing not linked), Qdrant Cloud free cluster created (AWS, Frankfurt), `.env` filled, `pnpm env:check` passes. The laptop still needs its own `.env`.
 
 - Set up two-device shared memory: a decisions log and this daily log, and told Claude (in `CLAUDE.md`) to read them first and update this log after every commit.
 - Made this log short, then changed it to describe the work done instead of listing commit titles.

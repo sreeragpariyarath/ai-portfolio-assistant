@@ -42,7 +42,7 @@ Each phase ends runnable and is committed separately.
 - Tune RRF k and candidate depth on the development split only. The eval file says it is not a held-out test set; say so in the README.
 - **Done when:** a results table exists and the README can state which method wins, even if hybrid does not.
 
-### Phase 3: Grounded generation and API
+### Phase 3: Grounded generation and API (detailed plan in [PHASE_3_PLAN.md](PHASE_3_PLAN.md))
 - Worker `POST /api/chat` in `apps/api/src/index.ts`, following the existing `jsonResponse` pattern (JSON errors, `Cache-Control: no-store`; SSE for success). Use the generated `Env` from `worker-configuration.d.ts` (`pnpm cf-typegen`) with secrets `GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`.
 - Request validation (size cap, schema), per-IP rate limit, timeouts with retry/backoff, friendly "demo busy" response when the Gemini quota is hit, and an embedding cache for repeated queries.
 - Prompt policy implements answer / qualify / abstain / refuse (definitions in `evals/retrieval-eval.v3.json`). Retrieved text is treated as data, not instructions. Citations are record IDs. Visibility is checked a second time at context assembly.

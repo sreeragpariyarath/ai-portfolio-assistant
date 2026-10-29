@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 3 (grounded answers and the `/api/chat` endpoint), which the owner plans to build. Phase 2 is finished; draft PR #4 is ready for review.
+Next: Phase 3 task 3.0 (confirm the remaining facts and record the generation model, rate limit, cache and answer format as D-015).
+
+- Merged the Phase 2 PR. Wrote the Phase 3 plan (`docs/PHASE_3_PLAN.md`): `POST /api/chat` streaming cited answers over SSE, request checks, a rate limit, an embedding cache, a prompt with the four behaviors, a Gemini streaming client, and an answer-level eval with a recorded threshold. Checked current Cloudflare and Gemini docs first: Workers Free has 10 ms CPU (waiting on fetch does not count) and 50 subrequests; the rate-limit binding is approximate per location and whether it is on Free is unconfirmed; `gemini-3.5-flash-lite` and `gemini-3.8-flash` have a free tier. The plan marks which tasks the owner builds (the API parts) and which Claude can do. Docs only, nothing run.
 
 - Recorded the Phase 2 result as D-014: hybrid search (BM25 plus dense, RRF k=60, 20 candidates each) is the default, with dense alone as the fallback if Worker CPU becomes a problem. Marked Phase 2 done in the roadmap. Docs only, nothing run.
 

@@ -69,7 +69,7 @@ Wire 3.3 to 3.6 into the SSE response (`meta`, `token`, `done`, `error`) with `C
 ### 3.8 Rate limit and embedding cache (Claude) (done 2026-10-29)
 A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or the fallback from D-015) returning 429 with `Retry-After`. Cache question embeddings in a per-isolate in-memory LRU (D-015: capped at about 200 entries, keyed by a SHA-256 of model, size and the normalized question; the Cache API is only confirmed on custom domains and KV Free allows 1,000 writes a day), so repeated questions skip the Gemini embedding call. The rate limiter sits behind a small interface because the binding's Free-plan availability is unconfirmed. Tests: the limit triggers, and a cached embedding skips the Gemini call.
 
-### 3.9 Answer-level eval (Claude; the live run needs the go-ahead) (code done 2026-10-29; live run pending)
+### 3.9 Answer-level eval (Claude; the live run needs the go-ahead) (done 2026-10-29; first live run recorded in D-017)
 `pnpm eval:answers` runs the 40 cases through the same retrieval, prompt and parsing code (from Node, calling Gemini and Qdrant directly) and caches answers in git-ignored `evals/.cache/`, so changes to the scoring rerun for free. Rule-based checks per case:
 - the behavior matches `expectedBehavior`;
 - every citation is a retrieved, public record, and for `answer` and `qualify` at least one expected evidence ID is cited;
@@ -79,7 +79,7 @@ A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or th
 
 `requiredFacts` and `forbiddenClaims` are written as paraphrases, so rules can only spot-check exact terms. A sample is reviewed by hand, and an LLM judge can be added later (D-007 keeps it optional). Writes `evals/results/answer-eval.md`.
 
-### 3.10 Threshold and record (docs)
+### 3.10 Threshold and record (docs) (done 2026-10-29, recorded as D-017)
 Record the first live results and set the Phase 3 threshold in **D-017** (D-016 is the fallback model and observed limits). Proposal: zero private leaks, zero invalid citations kept, zero followed injections, behavior match of at least 80%, and expected evidence cited in at least 85% of answer and qualify cases. Mark Phase 3 done when the eval meets it.
 
 ## Risks

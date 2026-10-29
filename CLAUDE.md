@@ -11,6 +11,18 @@ A pnpm monorepo for an AI portfolio assistant. The README describes the target s
 
 Don't assume RAG, Gemini, Qdrant, or streaming code exists. Check before extending.
 
+## Two-device workflow: read and update the docs
+
+The owner works from two machines, and a Claude session on one has no memory of the other. These files are the shared memory:
+
+- `docs/DECISIONS.md` — why things are built the way they are. Read it before proposing design or tooling changes. Add a numbered entry for every new decision; supersede, never rewrite.
+- `docs/DAILY_LOG.md` — what was done, newest day first. Read the latest entries at the start of a session. **After every commit, add a few plain-language lines in the same commit** saying what we did, what we tested (command and result), and manual steps such as creating a Gemini API key or Qdrant cluster. Don't copy commit titles or hashes, and never write secret values.
+- `docs/RAG_PROJECT_PLAN.md` — the phased roadmap.
+
+Run `git pull` before starting. `.env` is per device and never synced; create it from `.env.example` (see `docs/SETUP.md`).
+
+Commit workflow: run the relevant tests first; commit and push only if green, otherwise fix and retest. Write descriptive commit messages (subject plus a body on what and why), no AI attribution lines, and work on feature branches.
+
 ## Commands
 
 Run from the repo root unless noted. The root uses pnpm (`packageManager` is pinned in `package.json`).

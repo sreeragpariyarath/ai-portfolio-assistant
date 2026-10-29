@@ -115,6 +115,20 @@ describe("validateEvalData", () => {
     assert.ok(errors.some((message) => message.includes("scratch notes")));
     assert.ok(errors.some((message) => message.includes("must not include project-demo-004")));
   });
+
+  it("rejects an unknown scoring mode", () => {
+    const errors = errorsAfter((data) => {
+      caseById(data, "E001").scoring = "fuzzy";
+    });
+    assert.ok(errors.some((message) => message.includes("scoring must be one of")));
+  });
+
+  it("keeps E032 scored as a list question", () => {
+    const errors = errorsAfter((data) => {
+      delete caseById(data, "E032").scoring;
+    });
+    assert.ok(errors.some((message) => message.includes('E032: scoring must be "list"')));
+  });
 });
 
 describe("bm25", () => {
@@ -165,6 +179,16 @@ describe("runBaseline", () => {
     assert.deepEqual(report.privateRecordsRetrieved, []);
     assert.equal(report.excludedPrivateRecords, 1);
     assert.equal(report.indexedRecords, 39);
+  });
+
+  it("scores list cases by completeness, not Recall@k", () => {
+    const data = load();
+    const report = runBaseline(data.corpus, data.evalSet);
+    const listCaseIds = report.listCases.map((item) => item.caseId);
+    assert.deepEqual(listCaseIds, ["E032"]);
+    assert.equal(report.listCases[0]?.expected, 10);
+    assert.ok(report.misses.every((miss) => miss.caseId !== "E032"));
+    assert.equal(report.byK[0]?.casesWithEvidence, 35);
   });
 
   it("is deterministic", () => {

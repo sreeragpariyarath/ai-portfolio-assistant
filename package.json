@@ -14,6 +14,7 @@
     "env:check": "node --disable-warning=ExperimentalWarning scripts/check-env.ts",
     "ingest": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts",
     "ingest:dry": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts --dry-run",
+    "qdrant:query": "node --disable-warning=ExperimentalWarning scripts/qdrant-query.ts",
     "embeddings:ingest:local": "node --disable-warning=ExperimentalWarning scripts/ingest/gemini-embeddings.ts"
   },
   "devDependencies": {

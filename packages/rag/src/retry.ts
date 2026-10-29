@@ -7,6 +7,8 @@ export interface RetryOptions {
   maxRetries: number;
   sleep: (ms: number) => Promise<void>;
   random: () => number;
+  // Statuses worth retrying. Defaults to 429 and 5xx; callers that prefer to fail over on 429 pass their own set.
+  retryStatuses?: ReadonlySet<number>;
 }
 
 export function defaultSleep(ms: number): Promise<void> {
@@ -36,7 +38,7 @@ export async function sendWithRetry(
       response = undefined;
     }
 
-    if (response !== undefined && (response.ok || !RETRYABLE_STATUSES.has(response.status))) return response;
+    if (response !== undefined && (response.ok || !(options.retryStatuses ?? RETRYABLE_STATUSES).has(response.status))) return response;
     if (attempt >= options.maxRetries) return response;
 
     const backoff = Math.min(500 * 2 ** attempt + options.random() * 250, MAX_RETRY_DELAY_MS);

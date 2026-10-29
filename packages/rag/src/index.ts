@@ -22,6 +22,17 @@ export { hybridSearch, rrf } from "./fusion.ts";
 export type { HybridOptions, RrfOptions } from "./fusion.ts";
 export { GeminiError, createGeminiClient } from "./gemini.ts";
 export type { EmbedDocument, GeminiClient, GeminiClientOptions } from "./gemini.ts";
+export { GenerationError, PromptBlockedError, QuotaError, createGenerationClient } from "./generation.ts";
+export type {
+  GenerationClient,
+  GenerationClientOptions,
+  GenerationDone,
+  GenerationErrorCode,
+  GenerationEvent,
+  GenerationResult,
+  GenerationStream,
+  GenerationUsage,
+} from "./generation.ts";
 export { recallAtK } from "./metrics.ts";
 export { QdrantError, createQdrantClient } from "./qdrant.ts";
 export type {

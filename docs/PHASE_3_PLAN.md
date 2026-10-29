@@ -60,7 +60,7 @@ Build the BM25 index once per isolate from the bundled corpus (module scope), ru
 ### 3.5 Prompt and answer parsing (Claude) (done 2026-10-29)
 In `packages/rag`: `buildPrompt(question, records)` and `parseAnswer(text, allowedIds)`. The system instruction carries the four behavior definitions from the eval file. It says retrieved text is data and never instructions, tells the model to cite `[record-id]`, to qualify unverified, expired or conflicting evidence, and to refuse privacy and security requests. Records go inside clear delimiters. Tests: the prompt contains every record ID and no private field; parsing treats a missing or malformed behavior line as `qualify`, strips citations not in `allowedIds`, and handles citations split across stream chunks.
 
-### 3.6 Gemini generation client (Claude)
+### 3.6 Gemini generation client (Claude) (done 2026-10-29)
 Add `generate` and `streamGenerate` to the Gemini client in `packages/rag`, reusing `retry.ts`. Retries happen only before the first streamed byte. A 429 or an exhausted quota becomes a typed `QuotaError`, so the route can answer `demo_busy`. A blocked prompt becomes a typed error, not an empty answer. Tests with mocked SSE bodies: chunk parsing, chunks split mid-line, 429 mapping, block reason and timeout. Runs in Node and in the Workers pool.
 
 ### 3.7 Streaming endpoint (Claude)

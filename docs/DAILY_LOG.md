@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 task 2.4 (try a few RRF k and candidate-depth settings on the development cases and keep the simplest one that is not clearly worse).
+Next: Phase 2 task 2.5 (record which method wins in a decision entry and mark Phase 2 done).
+
+- Tuned hybrid search on the development cases: tried k 10, 30 and 60 with 10, 20 and 39 candidates per method (9 runs, all from cached question embeddings, so 0 Gemini calls; read-only Qdrant searches). Every setting landed within about one case of the others; the best one beat the default by a single case at k=5, which is noise on 40 cases. Kept the standard default (k=60, 20 candidates). Fewer candidates (10) was consistently slightly worse. No private record in any run. Grid and reasoning in `evals/results/rrf-tuning.md`. No code changed; `pnpm test:scripts` 128 pass.
 
 - Built `pnpm eval:retrieval`: runs BM25, dense (Qdrant) and hybrid on the same 40 eval cases with the same scoring as the baseline, prints a table and writes it to `evals/results/retrieval-comparison.md`. Question embeddings are cached in a git-ignored file (`evals/.cache/`), so reruns make no Gemini calls. Refactored the baseline so the BM25 scoring is shared; `pnpm eval:baseline` output is byte-identical. Options `--k=` and `--depth=` for tuning.
 - Live run, approved by the owner: 40 new Gemini query embeddings and read-only Qdrant searches; the rerun used 40 cached embeddings and 0 Gemini calls. Results (default k=60, depth 20): BM25 Recall@5 85.7% / Recall@10 95.0%, list question 2/10; dense 95.7% / 96.4%, list 10/10; hybrid 95.7% / 99.3%, list 10/10. No private record retrieved by any method. E015 still misses two decision records at k=5 with dense and hybrid.

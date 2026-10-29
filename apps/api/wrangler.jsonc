@@ -18,6 +18,39 @@
 			"database_id": "ac5e5590-915e-4349-bd88-9afbd2dae667",
 			"migrations_dir": "migrations"
 		}
+	],
+	/**
+	 * Non-secret settings. Safe to commit; never put keys or URLs with credentials here.
+	 * GEMINI_MODEL, GEMINI_FALLBACK_MODEL and EMBEDDING_MODEL can change without a code change (see D-012, D-015, D-016).
+	 * ALLOWED_ORIGIN is the local web app; set the real origin when deploying (Phase 5).
+	 */
+	"vars": {
+		"QDRANT_COLLECTION": "portfolio_knowledge",
+		"GEMINI_MODEL": "gemini-3.5-flash-lite",
+		"GEMINI_FALLBACK_MODEL": "gemini-3.1-flash-lite",
+		"EMBEDDING_MODEL": "gemini-embedding-2",
+		"ALLOWED_ORIGIN": "http://localhost:3000"
+	},
+	/**
+	 * Required secrets. Local values go in apps/api/.dev.vars (git-ignored); deployed values are set with
+	 * `wrangler secret put <NAME>`. Declaring them here types them in `Env` without needing a .dev.vars file
+	 * (so CI can run `wrangler types`), loads only these keys locally, and makes `wrangler deploy` fail if one is missing.
+	 */
+	"secrets": {
+		"required": ["GEMINI_API_KEY", "QDRANT_URL", "QDRANT_API_KEY"]
+	},
+	/**
+	 * Per-client limit for POST /api/chat (task 3.8, D-015): 10 requests per 60 seconds, keyed by client IP.
+	 * Counts are approximate and per Cloudflare location. Whether the binding is available on the Workers
+	 * Free plan is not stated in the docs: check at the first deploy (Phase 5). Without the binding the Worker
+	 * falls back to an in-memory counter (see src/rate-limit.ts).
+	 */
+	"ratelimits": [
+		{
+			"name": "CHAT_RATE_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 10, "period": 60 }
+		}
 	]
 	/**
 	 * Smart Placement

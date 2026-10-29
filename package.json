@@ -10,9 +10,12 @@
     "eval:validate": "node --disable-warning=ExperimentalWarning scripts/validate-eval.ts",
     "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
     "eval:retrieval": "node --disable-warning=ExperimentalWarning scripts/retrieval-eval.ts",
+    "eval:answers": "node --disable-warning=ExperimentalWarning scripts/answer-eval.ts",
     "typecheck:scripts": "tsc -p tsconfig.json",
     "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\"",
-    "env:check": "node --disable-warning=ExperimentalWarning scripts/check-env.ts",
+    "corpus:build": "node --disable-warning=ExperimentalWarning scripts/build-corpus.ts",
+    "corpus:check": "node --disable-warning=ExperimentalWarning scripts/build-corpus.ts --check",
+    "env:check":"node --disable-warning=ExperimentalWarning scripts/check-env.ts",
     "ingest": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts",
     "ingest:dry": "node --disable-warning=ExperimentalWarning scripts/ingest/ingest-qdrant.ts --dry-run",
     "qdrant:query": "node --disable-warning=ExperimentalWarning scripts/qdrant-query.ts"

@@ -1,0 +1,8 @@
+data: {"candidates": [{"content": {"parts": [{"text": "BEHAV"}],"role": "model"},"index": 0}],"usageMetadata": {"promptTokenCount": 984,"candidatesTokenCount": 2,"totalTokenCount": 986,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 984}],"serviceTier": "standard"},"modelVersion": "gemini-3.5-flash-lite","responseId": "2Y_javC9Dpah3LUPlfia2Qg"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "IOR: answer\nAlex is seeking full-stack developer and forward deployed engineer roles [profile-"}],"role": "model"},"index": 0}],"usageMetadata": {"promptTokenCount": 984,"candidatesTokenCount": 21,"totalTokenCount": 1005,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 984}],"serviceTier": "standard"},"modelVersion": "gemini-3.5-flash-lite","responseId": "2Y_javC9Dpah3LUPlfia2Qg"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "demo-001]."}],"role": "model"},"index": 0}],"usageMetadata": {"promptTokenCount": 984,"candidatesTokenCount": 27,"totalTokenCount": 1011,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 984}],"serviceTier": "standard"},"modelVersion": "gemini-3.5-flash-lite","responseId": "2Y_javC9Dpah3LUPlfia2Qg"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "","thoughtSignature": "EmAKXgFpFH0TDWYpB6TQxY5XGRHdI7BzW0apiIpDmu48nsxjTvmjGoFbqjPgf49gQQiamRsKLAJT9HAmBzYL/FLqtG7xvFKcu6gQ/zwMTd5dO9XAAy2nA1cCQEQnfmiXTDo="}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 984,"candidatesTokenCount": 27,"totalTokenCount": 1011,"promptTokensDetails": [{"modality": "TEXT","tokenCount": 984}],"serviceTier": "standard"},"modelVersion": "gemini-3.5-flash-lite","responseId": "2Y_javC9Dpah3LUPlfia2Qg"}
+

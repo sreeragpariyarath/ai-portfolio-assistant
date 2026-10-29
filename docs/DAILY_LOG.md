@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 (retrieval and evaluation: dense, BM25 and hybrid, compared on the eval set). Phase 1 is finished; draft PR #3 is ready for the owner to review and merge.
+Next: Phase 2 task 2.1 (reciprocal rank fusion and hybrid search, pure code).
+
+- Merged the Phase 1 PR, started the Phase 2 branch and wrote the Phase 2 plan (`docs/PHASE_2_PLAN.md`): fusion, dense search, an eval runner comparing BM25, dense and hybrid, tuning on the development split, then recording the results. The first run that embeds the eval questions needs the owner's go-ahead. Docs only, no code changed, nothing run.
 
 - Retired the old D1 ingest script and its `embeddings:ingest:local` command (Qdrant ingest replaces it; the D1 binding and migrations stay until Phase 5). Added the ingest commands and the suspended or deleted cluster steps to `docs/SETUP.md`, and marked Phase 1 done in the roadmap. Nothing was run against Gemini or Qdrant this time. `pnpm test:scripts` 103 pass, `pnpm typecheck:scripts` clean, `pnpm eval:validate` ok, API typecheck and `vitest run` pass.
 

@@ -29,6 +29,9 @@ jobs:
       - run: pnpm eval:validate
       - run: pnpm test:scripts
       - run: pnpm typecheck:scripts
+      - name: API type-check
+        run: pnpm typecheck
+        working-directory: apps/api
       - name: API tests (Workers runtime)
         run: pnpm vitest run
         working-directory: apps/api

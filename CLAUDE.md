@@ -37,6 +37,7 @@ pnpm --filter web lint      # eslint (flat config, eslint-config-next + TypeScri
 
 cd apps/api
 pnpm test                    # vitest (watch mode by default; use `pnpm vitest run` for one pass)
+pnpm typecheck               # tsc over src and test (CI runs this too)
 pnpm vitest run test/index.spec.ts -t "returns 404"   # single test by name
 pnpm deploy                  # wrangler deploy
 pnpm cf-typegen              # wrangler types -> regenerates worker-configuration.d.ts

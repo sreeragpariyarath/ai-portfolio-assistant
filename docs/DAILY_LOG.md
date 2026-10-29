@@ -5,7 +5,10 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 1 task 1.3 (ingestion helpers: hashing, point IDs, payload).
+Next: Phase 1 task 1.4 (Gemini client; check the current Gemini docs first).
+
+- Added the ingestion helpers to `packages/rag`: the text and hash for each record (same hash as the old D1 script), vector checks, the privacy guard, stable point IDs and the payload stored in Qdrant. Tests: the hash matches Node's own sha256; the point ID code matches the official UUID v5 reference example, and a real ID matched Python's `uuid5`; a private record is rejected without leaking its content. `pnpm test:scripts` 49 pass, `pnpm typecheck:scripts` clean, API `vitest run` 5 pass (one runs the hash and ID code in the Workers runtime).
+- Found that the API's own type-check had been failing since the shared package was added (the API config did not allow `.ts` imports) and nothing ran it. Fixed it and added `pnpm typecheck` in `apps/api`, now also run in CI.
 
 - Added CI (GitHub Actions) that runs on every pull request and on pushes to `main`: data validation, script tests, type-check, API tests in the Workers runtime, and web lint and build. It uses no secrets and never calls Gemini or Qdrant or deploys. Ran `pnpm --filter web lint` and `build` locally first: both pass. Deploy and the Qdrant keep-alive stay for Phase 5.
 

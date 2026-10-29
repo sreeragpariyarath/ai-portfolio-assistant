@@ -23,6 +23,8 @@
 
 		/* Disable emitting files from a compilation. */
 		"noEmit": true,
+		/* @portfolio/rag is imported as TypeScript source with .ts extensions (see D-011). */
+		"allowImportingTsExtensions": true,
 
 		/* Ensure that each file can be safely transpiled without relying on other imports. */
 		"isolatedModules": true,

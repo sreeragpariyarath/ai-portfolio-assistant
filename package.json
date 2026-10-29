@@ -10,6 +10,7 @@
     "eval:validate": "node --disable-warning=ExperimentalWarning scripts/validate-eval.ts",
     "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
     "eval:retrieval": "node --disable-warning=ExperimentalWarning scripts/retrieval-eval.ts",
+    "eval:answers": "node --disable-warning=ExperimentalWarning scripts/answer-eval.ts",
     "typecheck:scripts": "tsc -p tsconfig.json",
     "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\"",
     "corpus:build": "node --disable-warning=ExperimentalWarning scripts/build-corpus.ts",

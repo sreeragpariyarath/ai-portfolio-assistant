@@ -50,6 +50,7 @@ Evaluation scripts live in `scripts/` and run directly on Node's built-in TypeSc
 pnpm eval:validate     # validate data/knowledge/synthetic-records.v3.json and evals/retrieval-eval.v3.json
 pnpm eval:baseline     # validate, then run the BM25 retrieval baseline on the 40 development cases
 pnpm eval:retrieval    # BM25 vs dense (Qdrant) vs hybrid; needs .env; caches question embeddings in evals/.cache/
+pnpm eval:answers     # score saved answers to the 40 cases (rule-based); makes no network calls unless --live (needs the owner's go-ahead)
 pnpm corpus:build      # write apps/api/src/generated/public-corpus.json (public records only) for the Worker
 pnpm corpus:check      # fail if that committed file is stale (also covered by a test in test:scripts)
 pnpm test:scripts      # node:test suite for the validator, BM25 and metrics

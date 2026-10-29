@@ -1,120 +1,42 @@
-// Retrieval for POST /api/chat (Phase 3 task 3.4): hybrid search over the bundled public corpus.
-// Privacy is enforced here as the third layer (D-015): a record is used only if it exists in the
-// bundled corpus, which `pnpm corpus:build` fills with public records only.
+// Retrieval for POST /api/chat (Phase 3 task 3.4): hybrid search over the bundled public corpus. The search
+// itself lives in @portfolio/rag (shared with the answer eval); this file holds what is specific to the Worker:
+// the bundled corpus, built once per isolate, and the Gemini and Qdrant clients for dense search.
 import {
   EmbeddingCache,
-  buildIndex,
   cachedEmbedQuery,
+  createCorpus,
   createGeminiClient,
   createQdrantClient,
   denseSearch,
-  hybridSearch,
-  search,
-  type Bm25Index,
+  retrieve as retrieveFrom,
+  CANDIDATE_DEPTH,
+  CONTEXT_LIMIT,
+  type Corpus,
+  type DenseSearcher,
   type GeminiClient,
-  type Hit,
+  type PublicRecord,
+  type RetrievalResult,
 } from "@portfolio/rag";
 import corpusFile from "./generated/public-corpus.json";
 
+export { CANDIDATE_DEPTH, CONTEXT_LIMIT, createCorpus, toContextRecord } from "@portfolio/rag";
+export type { ContextRecord, Corpus, DenseSearcher, RetrievalResult } from "@portfolio/rag";
+
 // Query vectors must have the same size as the ingested ones (see scripts/ingest.ts).
 export const EMBEDDING_DIMS = 768;
-export const CONTEXT_LIMIT = 8;
-export const CANDIDATE_DEPTH = 20;
 // Per isolate. Holds vectors under hash keys only, never question text (D-015).
 export const EMBEDDING_CACHE_ENTRIES = 200;
 export const sharedEmbeddingCache = new EmbeddingCache(EMBEDDING_CACHE_ENTRIES);
 
-interface PublicRecord {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  verificationStatus: string;
-  validUntil?: string;
-}
-
-// The only fields that may reach the prompt (3.5). No visibility, no dates other than validUntil.
-export interface ContextRecord {
-  id: string;
-  type: string;
-  title: string;
-  verificationStatus: string;
-  validUntil?: string;
-  content: string;
-}
-
-export interface Corpus {
-  records: Map<string, PublicRecord>;
-  index: Bm25Index;
-}
-
-export interface RetrievalResult {
-  records: ContextRecord[];
-  // True when dense search failed and the answer context comes from BM25 only.
-  degraded: boolean;
-  counts: { bm25: number; dense: number; droppedDense: number; context: number };
-}
-
-export function createCorpus(records: PublicRecord[]): Corpus {
-  return {
-    records: new Map(records.map((record) => [record.id, record])),
-    index: buildIndex(records.map((record) => ({ id: record.id, text: `${record.title} ${record.content}` }))),
-  };
-}
-
 // Built once per isolate, at module load.
 const bundledCorpus = createCorpus((corpusFile as { records: PublicRecord[] }).records);
 
-export type DenseSearcher = (question: string) => Promise<Hit[]>;
-
-export function toContextRecord(record: PublicRecord): ContextRecord {
-  const context: ContextRecord = {
-    id: record.id,
-    type: record.type,
-    title: record.title,
-    verificationStatus: record.verificationStatus,
-    content: record.content,
-  };
-  if (record.validUntil !== undefined) context.validUntil = record.validUntil;
-  return context;
-}
-
-export async function retrieve(
+export function retrieve(
   question: string,
   dense: DenseSearcher,
   { corpus = bundledCorpus, limit = CONTEXT_LIMIT }: { corpus?: Corpus; limit?: number } = {},
 ): Promise<RetrievalResult> {
-  const bm25Hits = search(corpus.index, question, CANDIDATE_DEPTH);
-
-  let denseHits: Hit[] = [];
-  let degraded = false;
-  try {
-    denseHits = await dense(question);
-  } catch (error) {
-    // Degraded mode: BM25 still answers. Log the error type only, never the question or upstream text.
-    degraded = true;
-    console.warn(JSON.stringify({ event: "dense_search_failed", error: error instanceof Error ? error.name : "unknown" }));
-  }
-
-  // Drop any dense hit that is not in the bundled public corpus (a private or stale Qdrant point).
-  const knownDense = denseHits.filter((hit) => corpus.records.has(hit.id));
-  const fused = hybridSearch(bm25Hits, knownDense, { depth: CANDIDATE_DEPTH, limit });
-
-  const records = fused.flatMap((hit) => {
-    const record = corpus.records.get(hit.id);
-    return record ? [toContextRecord(record)] : [];
-  });
-
-  return {
-    records,
-    degraded,
-    counts: {
-      bm25: bm25Hits.length,
-      dense: knownDense.length,
-      droppedDense: denseHits.length - knownDense.length,
-      context: records.length,
-    },
-  };
+  return retrieveFrom(question, dense, { corpus, limit });
 }
 
 // Dense search against Qdrant with the public-only filter (applied inside denseSearch). Query embeddings are

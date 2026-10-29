@@ -1,9 +1,8 @@
 import { documentInput, queryInput } from "./embedding-input.ts";
 import { validateVector } from "./ingest.ts";
+import { defaultSleep, sendWithRetry } from "./retry.ts";
 
 const DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
-const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
-const MAX_RETRY_DELAY_MS = 30_000;
 
 export interface GeminiClientOptions {
   apiKey: string;
@@ -40,12 +39,6 @@ export class GeminiError extends Error {
   }
 }
 
-function retryAfterMs(header: string | null): number | undefined {
-  if (header === null) return undefined;
-  const seconds = Number(header);
-  return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : undefined;
-}
-
 export function createGeminiClient(options: GeminiClientOptions): GeminiClient {
   const {
     apiKey,
@@ -56,40 +49,26 @@ export function createGeminiClient(options: GeminiClientOptions): GeminiClient {
     timeoutMs = 30_000,
     maxRetries = 4,
     batchSize = 20,
-    sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)),
+    sleep = defaultSleep,
     random = Math.random,
   } = options;
 
   if (apiKey.trim() === "") throw new GeminiError("Gemini API key is empty.");
 
   async function post(method: "embedContent" | "batchEmbedContents", body: unknown): Promise<unknown> {
-    const url = `${baseUrl}/models/${model}:${method}`;
+    const response = await sendWithRetry(
+      `${baseUrl}/models/${model}:${method}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify(body),
+      },
+      { fetch: fetchImpl, timeoutMs, maxRetries, sleep, random },
+    );
 
-    for (let attempt = 0; ; attempt++) {
-      let response: Response | undefined;
-      try {
-        response = await fetchImpl(url, {
-          method: "POST",
-          headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout(timeoutMs),
-        });
-      } catch {
-        // Timeouts and network failures are retried. The underlying error is dropped on purpose.
-        if (attempt >= maxRetries) throw new GeminiError(`Gemini ${method} failed: network error or timeout.`);
-      }
-
-      if (response !== undefined) {
-        if (response.ok) return response.json();
-        if (!RETRYABLE_STATUSES.has(response.status) || attempt >= maxRetries) {
-          throw new GeminiError(`Gemini ${method} failed with HTTP ${response.status}.`, response.status);
-        }
-      }
-
-      const backoff = Math.min(500 * 2 ** attempt + random() * 250, MAX_RETRY_DELAY_MS);
-      const requested = response === undefined ? undefined : retryAfterMs(response.headers.get("retry-after"));
-      await sleep(Math.min(Math.max(backoff, requested ?? 0), MAX_RETRY_DELAY_MS));
-    }
+    if (response === undefined) throw new GeminiError(`Gemini ${method} failed: network error or timeout.`);
+    if (!response.ok) throw new GeminiError(`Gemini ${method} failed with HTTP ${response.status}.`, response.status);
+    return response.json();
   }
 
   function request(text: string) {

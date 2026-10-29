@@ -78,3 +78,14 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
   - **Input limit:** 8,192 tokens, and longer input is silently truncated. Our records are short, but keep it in mind for chunked documents later.
   - **Free tier.** The docs list no free-tier limits for this model and say to check AI Studio. The prototype did embed all 39 records on a key with billing not linked, so it works on free. Quotas are unknown, so the client retries 429 and 5xx with exponential backoff, honors `Retry-After`, and never retries other 4xx.
 - **Consequences:** If Google adds `task_type` support or changes the prefix guidance, change `embedding-input.ts`; the hash change re-embeds everything on the next ingest.
+
+## D-013: How we call Qdrant's REST API
+- **Date:** 2026-10-29 · **Status:** Accepted
+- **Context:** Checked the Qdrant v1.20 API reference (per-endpoint Markdown pages) before writing the client in `packages/rag/src/qdrant.ts`.
+- **Decisions:**
+  - Auth is the `api-key` header. Point IDs are UUID v5 strings (see `pointId`), which Qdrant accepts alongside unsigned integers.
+  - Collection: one unnamed vector, size 768, `Cosine`. A missing collection is detected with `GET /collections/{name}/exists`. If it exists with a different size or distance (or named vectors), the client throws and **never recreates it**; deleting is a manual step in Qdrant Cloud.
+  - Keyword payload indexes on `visibility`, `record_id` and `type` (created idempotently, with `wait=true`). Writes (upsert, delete) use `wait=true`. Counts are exact.
+  - Scroll pages through all points with `offset` and stops on a null, missing or non-advancing `next_page_offset`.
+  - Requests share one retry helper with the Gemini client (`retry.ts`): timeout per attempt, retry on 429/5xx and network errors with backoff, `Retry-After` honored. Errors never include the API key; Qdrant's own explanation is included for 4xx, truncated to 200 characters.
+- **Not confirmed by the docs, so to be checked in the live run (task 1.8):** that `next_page_offset` is null on the last page, and that retrieving an ID that does not exist simply omits it (the privacy check relies on this). The code is written to be safe if the first is wrong; the second would make that check fail loudly rather than pass wrongly.

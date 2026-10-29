@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildIndex, contentHash, createGeminiClient, pointId, search } from "@portfolio/rag";
+import {
+  buildIndex,
+  contentHash,
+  createGeminiClient,
+  createQdrantClient,
+  pointId,
+  search,
+} from "@portfolio/rag";
 
 // Proves the shared package resolves and runs inside the Workers runtime,
 // so the API can use the same retrieval code the eval scripts measure.
@@ -52,5 +59,23 @@ describe("@portfolio/rag in the Workers runtime", () => {
     expect(await gemini.embedQuery("hello")).toEqual([0.1, 0.2, 0.3]);
     expect(calls[0]?.url).toContain("gemini-embedding-2:embedContent");
     expect(calls[0]?.text).toBe("task: search result | query: hello");
+  });
+
+  it("runs the Qdrant client in Workers against a mocked fetch", async () => {
+    const calls: { path: string; apiKey: string | undefined }[] = [];
+    const qdrant = createQdrantClient({
+      url: "https://example.cloud.qdrant.io:6333",
+      apiKey: "test-key",
+      fetch: (async (url: string | URL | Request, init?: RequestInit) => {
+        calls.push({
+          path: new URL(String(url)).pathname,
+          apiKey: (init?.headers as Record<string, string>)["api-key"],
+        });
+        return Response.json({ status: "ok", result: { count: 39 } });
+      }) as typeof fetch,
+    });
+
+    expect(await qdrant.count("portfolio_knowledge")).toBe(39);
+    expect(calls[0]).toEqual({ path: "/collections/portfolio_knowledge/points/count", apiKey: "test-key" });
   });
 });

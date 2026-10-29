@@ -14,5 +14,16 @@ export { documentInput, queryInput } from "./embedding-input.ts";
 export { GeminiError, createGeminiClient } from "./gemini.ts";
 export type { EmbedDocument, GeminiClient, GeminiClientOptions } from "./gemini.ts";
 export { recallAtK } from "./metrics.ts";
+export { QdrantError, createQdrantClient } from "./qdrant.ts";
+export type {
+  Payload,
+  QdrantClient,
+  QdrantClientOptions,
+  QdrantFilter,
+  ScoredPoint,
+  StoredPoint,
+  UpsertPoint,
+  VectorSpec,
+} from "./qdrant.ts";
 export { RECORD_TYPES, VISIBILITIES } from "./types.ts";
 export type { KnowledgeRecord } from "./types.ts";

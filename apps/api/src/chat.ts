@@ -15,7 +15,9 @@ import {
   type GenerationEvent,
   type GenerationStream,
 } from "@portfolio/rag";
-import { createDenseSearcher, retrieve, type RetrievalResult } from "./retrieval";
+import type { EmbeddingCache } from "@portfolio/rag";
+import { createDenseSearcher, retrieve, sharedEmbeddingCache, type RetrievalResult } from "./retrieval";
+import type { RateLimiter } from "./rate-limit";
 
 // The whole request, retrieval plus the full answer, must finish inside this budget.
 export const OVERALL_TIMEOUT_MS = 25_000;
@@ -26,6 +28,9 @@ export interface ChatDeps {
   fetch: typeof fetch;
   now: () => Date;
   overallTimeoutMs: number;
+  embeddingCache: EmbeddingCache;
+  // Replaces the rate limiter built from `env` (tests only).
+  rateLimiter?: RateLimiter;
 }
 
 export const defaultChatDeps: ChatDeps = {
@@ -33,6 +38,7 @@ export const defaultChatDeps: ChatDeps = {
   fetch: (input, init) => fetch(input, init),
   now: () => new Date(),
   overallTimeoutMs: OVERALL_TIMEOUT_MS,
+  embeddingCache: sharedEmbeddingCache,
 };
 
 class DeadlineError extends Error {
@@ -108,6 +114,7 @@ export async function answerQuestion(
         latencyMs: Date.now() - started,
         retrieved: retrieval?.counts,
         degraded: retrieval?.degraded,
+        embeddingCache: deps.embeddingCache.stats(),
         ...outcome,
       }),
     );
@@ -115,7 +122,7 @@ export async function answerQuestion(
 
   let stream: GenerationStream;
   try {
-    const dense = (text: string) => createDenseSearcher(env, { fetch: deps.fetch })(text);
+    const dense = (text: string) => createDenseSearcher(env, { fetch: deps.fetch, cache: deps.embeddingCache })(text);
     retrieval = await before(deadline, retrieve(question, dense));
     const generation = createGenerationClient({
       apiKey: env.GEMINI_API_KEY,

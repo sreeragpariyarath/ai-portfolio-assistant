@@ -66,7 +66,7 @@ Add `generate` and `streamGenerate` to the Gemini client in `packages/rag`, reus
 ### 3.7 Streaming endpoint (Claude) (done 2026-10-29)
 Wire 3.3 to 3.6 into the SSE response (`meta`, `token`, `done`, `error`) with `Content-Type: text/event-stream` and `Cache-Control: no-store`. Add an overall timeout; if Gemini fails before streaming starts, return the JSON error instead. Log one structured line per request (latency, retrieval counts, behavior, citation counts, error code) with no question text, keys or content. Tests in the Workers pool with mocked upstreams: the full event order, invalid citations dropped, quota becomes 503 `demo_busy`, and an upstream failure mid-stream sends an `error` event.
 
-### 3.8 Rate limit and embedding cache (Claude)
+### 3.8 Rate limit and embedding cache (Claude) (done 2026-10-29)
 A per-IP rate limit (proposal: 10 requests per 60 seconds via the binding, or the fallback from D-015) returning 429 with `Retry-After`. Cache question embeddings in a per-isolate in-memory LRU (D-015: capped at about 200 entries, keyed by a SHA-256 of model, size and the normalized question; the Cache API is only confirmed on custom domains and KV Free allows 1,000 writes a day), so repeated questions skip the Gemini embedding call. The rate limiter sits behind a small interface because the binding's Free-plan availability is unconfirmed. Tests: the limit triggers, and a cached embedding skips the Gemini call.
 
 ### 3.9 Answer-level eval (Claude; the live run needs the go-ahead)

@@ -2,7 +2,9 @@
 // Privacy is enforced here as the third layer (D-015): a record is used only if it exists in the
 // bundled corpus, which `pnpm corpus:build` fills with public records only.
 import {
+  EmbeddingCache,
   buildIndex,
+  cachedEmbedQuery,
   createGeminiClient,
   createQdrantClient,
   denseSearch,
@@ -18,6 +20,9 @@ import corpusFile from "./generated/public-corpus.json";
 export const EMBEDDING_DIMS = 768;
 export const CONTEXT_LIMIT = 8;
 export const CANDIDATE_DEPTH = 20;
+// Per isolate. Holds vectors under hash keys only, never question text (D-015).
+export const EMBEDDING_CACHE_ENTRIES = 200;
+export const sharedEmbeddingCache = new EmbeddingCache(EMBEDDING_CACHE_ENTRIES);
 
 interface PublicRecord {
   id: string;
@@ -112,13 +117,14 @@ export async function retrieve(
   };
 }
 
-// Dense search against Qdrant with the public-only filter (applied inside denseSearch).
+// Dense search against Qdrant with the public-only filter (applied inside denseSearch). Query embeddings are
+// cached per isolate, so a repeated question skips the Gemini embedding call.
 // Retries are short so a slow upstream cannot hold the request: after that, BM25 answers.
 export function createDenseSearcher(
   env: Pick<Env, "GEMINI_API_KEY" | "EMBEDDING_MODEL" | "QDRANT_URL" | "QDRANT_API_KEY" | "QDRANT_COLLECTION">,
-  overrides: { gemini?: Pick<GeminiClient, "embedQuery">; fetch?: typeof fetch } = {},
+  overrides: { gemini?: Pick<GeminiClient, "embedQuery">; fetch?: typeof fetch; cache?: EmbeddingCache } = {},
 ): DenseSearcher {
-  const gemini =
+  const inner =
     overrides.gemini ??
     createGeminiClient({
       apiKey: env.GEMINI_API_KEY,
@@ -128,6 +134,13 @@ export function createDenseSearcher(
       timeoutMs: 8_000,
       ...(overrides.fetch ? { fetch: overrides.fetch } : {}),
     });
+  const gemini = {
+    embedQuery: cachedEmbedQuery(inner, {
+      model: env.EMBEDDING_MODEL,
+      dims: EMBEDDING_DIMS,
+      cache: overrides.cache ?? sharedEmbeddingCache,
+    }),
+  };
   const qdrant = createQdrantClient({
     url: env.QDRANT_URL,
     apiKey: env.QDRANT_API_KEY,

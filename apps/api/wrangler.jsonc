@@ -38,7 +38,20 @@
 	 */
 	"secrets": {
 		"required": ["GEMINI_API_KEY", "QDRANT_URL", "QDRANT_API_KEY"]
-	}
+	},
+	/**
+	 * Per-client limit for POST /api/chat (task 3.8, D-015): 10 requests per 60 seconds, keyed by client IP.
+	 * Counts are approximate and per Cloudflare location. Whether the binding is available on the Workers
+	 * Free plan is not stated in the docs: check at the first deploy (Phase 5). Without the binding the Worker
+	 * falls back to an in-memory counter (see src/rate-limit.ts).
+	 */
+	"ratelimits": [
+		{
+			"name": "CHAT_RATE_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 10, "period": 60 }
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

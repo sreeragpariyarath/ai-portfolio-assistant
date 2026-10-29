@@ -1,6 +1,8 @@
 import { env } from "cloudflare:test";
 import { createWorker } from "../src/index";
+import { EmbeddingCache } from "@portfolio/rag";
 import { OVERALL_TIMEOUT_MS } from "../src/chat";
+import type { RateLimiter } from "../src/rate-limit";
 
 // Secrets come from .dev.vars locally and do not exist in CI, so tests set their own fake ones.
 export const testEnv = {
@@ -63,12 +65,20 @@ export function mockUpstreams(options: UpstreamOptions = {}) {
   return { calls, fetch: fetchImpl };
 }
 
-export function workerWith(options: UpstreamOptions = {}, overrides: { overallTimeoutMs?: number } = {}) {
+const allowAll: RateLimiter = { check: async () => true };
+
+export function workerWith(
+  options: UpstreamOptions = {},
+  overrides: { overallTimeoutMs?: number; rateLimiter?: RateLimiter; embeddingCache?: EmbeddingCache } = {},
+) {
   const upstreams = mockUpstreams(options);
   const worker = createWorker({
     fetch: upstreams.fetch,
     now: () => new Date("2026-10-29T12:00:00Z"),
     overallTimeoutMs: overrides.overallTimeoutMs ?? OVERALL_TIMEOUT_MS,
+    // A fresh cache per worker, so one test never answers from another test's vectors.
+    embeddingCache: overrides.embeddingCache ?? new EmbeddingCache(),
+    rateLimiter: overrides.rateLimiter ?? allowAll,
   });
   return { ...upstreams, worker };
 }

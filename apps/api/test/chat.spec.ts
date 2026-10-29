@@ -4,12 +4,14 @@ import { ORIGIN, chatRequest, testEnv, workerWith } from "./helpers";
 
 const URL_CHAT = "https://example.com/api/chat";
 
+// POSTs go through a worker with mocked upstreams and an always-allow limiter, so the real rate limit
+// (10 a minute) cannot interfere with the many requests these tests send.
 function post(body: BodyInit | null, headers: Record<string, string> = {}) {
-  return SELF.fetch(URL_CHAT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
-    body,
-  });
+  const { worker } = workerWith();
+  return worker.fetch(
+    new Request(URL_CHAT, { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body }),
+    testEnv,
+  );
 }
 
 function postJson(value: unknown, headers: Record<string, string> = {}) {
@@ -111,13 +113,17 @@ describe("POST /api/chat request validation", () => {
       },
     });
 
-    const response = await SELF.fetch(URL_CHAT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: stream,
-      // @ts-expect-error `duplex` is required for streamed request bodies but is not in the DOM types
-      duplex: "half",
-    });
+    const { worker } = workerWith();
+    const response = await worker.fetch(
+      new Request(URL_CHAT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: stream,
+        // @ts-expect-error `duplex` is required for streamed request bodies but is not in the DOM types
+        duplex: "half",
+      }),
+      testEnv,
+    );
 
     expect(response.status).toBe(413);
   });

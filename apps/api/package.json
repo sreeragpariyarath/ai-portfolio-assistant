@@ -11,6 +11,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-plugin": "^1.4.3",
+		"@portfolio/rag": "workspace:*",
 		"@types/node": "^26.6.5",
 		"typescript": "^5.5.2",
 		"vitest": "~5.0.3",

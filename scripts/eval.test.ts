@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { buildIndex, search, tokenize } from "./lib/bm25.ts";
+import { buildIndex, search, tokenize } from "@portfolio/rag";
 import { recallAtK, runBaseline } from "./lib/baseline.ts";
 import { EVAL_FILE, RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalSet } from "./lib/eval-data.ts";

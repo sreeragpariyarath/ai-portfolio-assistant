@@ -1,5 +1,5 @@
-import { buildIndex, search } from "./bm25.ts";
-import type { Hit } from "./bm25.ts";
+import { buildIndex, search } from "@portfolio/rag";
+import type { Hit } from "@portfolio/rag";
 import type { Corpus, EvalSet } from "./eval-data.ts";
 
 export const KS = [5, 10] as const;

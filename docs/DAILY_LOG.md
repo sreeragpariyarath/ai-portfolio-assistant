@@ -5,7 +5,10 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: merge the Phase 0 PR, then Phase 1 task 1.1 (`packages/rag` spike).
+Next: Phase 1 task 1.2 (move metrics and record types into the package).
+
+- Installed the GitHub CLI on the PC (winget, already logged in). Opened and merged the Phase 0 PR, then started the Phase 1 branch from `main`.
+- Created the shared package `packages/rag` and moved BM25 into it. Checked that it loads everywhere it will be used: `pnpm eval:baseline` output is byte-identical to before, `pnpm test:scripts` 28 pass, `pnpm typecheck:scripts` clean, API tests (`pnpm vitest run`) 4 pass including a new one that runs BM25 inside the Workers runtime, and `wrangler deploy --dry-run` bundles it (nothing deployed). Recorded as D-011.
 
 - Planned Phase 1 in detail as ten small tasks (`docs/PHASE_1_PLAN.md`). Data source stays the synthetic JSON; no PDFs, images or upload system.
 - Re-ran the BM25 baseline with the new list scoring (`pnpm eval:baseline`): Recall@5 85.7% (28/35 cases fully covered), Recall@10 95.0% (31/35), list question E032 found 2/10, private records retrieved: none. This is the comparison point for dense and hybrid retrieval.

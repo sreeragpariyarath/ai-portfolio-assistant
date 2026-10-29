@@ -56,7 +56,7 @@ Run `pnpm cf-typegen` after changing bindings in `apps/api/wrangler.jsonc`. Ther
 
 ## Architecture
 
-**Workspace layout:** `pnpm-workspace.yaml` includes `apps/*` and `packages/*`. `packages/` does not exist yet; add shared code there only when a second consumer appears.
+**Workspace layout:** `pnpm-workspace.yaml` includes `apps/*` and `packages/*`. `packages/rag` (`@portfolio/rag`) holds retrieval code shared by the eval scripts and the API. It is imported by name as raw TypeScript (no build step), so it must stay runtime-neutral: no `node:` imports, erasable syntax, `.ts` import extensions (see D-011 in `docs/DECISIONS.md`).
 
 **API tests run inside the Workers runtime.** `apps/api/vitest.config.mts` uses `@cloudflare/vitest-plugin`, pointed at `wrangler.jsonc`. Tests import `SELF` from `cloudflare:test` and call `SELF.fetch(...)` against the real `default.fetch` handler. They do not spin up a Node HTTP server, so Node-only APIs may not be available in tests or at runtime.
 

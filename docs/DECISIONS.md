@@ -60,3 +60,9 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 - **Context:** The owner works from a PC and a laptop, and Claude on one machine does not remember what Claude on the other did.
 - **Decision:** This file records decisions and [DAILY_LOG.md](DAILY_LOG.md) records what was done. After every commit, Claude adds a few plain-language lines to the log: what was done, what was tested, and manual steps like creating a Gemini key (never the secret value). It does not copy commit titles. `CLAUDE.md` tells every session to read both files first. Run `git pull` before starting on either device.
 - **Consequences:** Secrets are never synced: `.env` is per device, so each device creates its own from `.env.example` (see [SETUP.md](SETUP.md)).
+
+## D-011: `@portfolio/rag` is imported by package name, as TypeScript source
+- **Date:** 2026-10-29 · **Status:** Accepted
+- **Context:** The shared package (D-006) has no build step. The risk was that Node refuses to strip types from files under `node_modules`, and pnpm links workspace packages there.
+- **Decision:** Scripts and the API both import `@portfolio/rag` by name (a `workspace:*` dev dependency). Its `exports` point straight at `./src/*.ts`. Node resolves the symlink to the real path in `packages/rag`, so type stripping works. Checked in four places: Node scripts (baseline output byte-identical), root `tsc`, the Workers vitest pool (`apps/api/test/rag-package.spec.ts`), and a `wrangler deploy --dry-run` bundle.
+- **Consequences:** No relative-import fallback is needed. Package code must stay erasable-syntax TypeScript with `.ts` import extensions and no `node:` imports. Running Node with `--preserve-symlinks` would break this.

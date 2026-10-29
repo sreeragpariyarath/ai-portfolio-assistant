@@ -4,12 +4,13 @@ export {
   POINT_ID_NAMESPACE,
   assertIngestable,
   contentHash,
+  planIngest,
   pointId,
   toPayload,
   uuidV5,
   validateVector,
 } from "./ingest.ts";
-export type { PointPayload } from "./ingest.ts";
+export type { IngestPlan, PlannedRecord, PointPayload } from "./ingest.ts";
 export { documentInput, queryInput } from "./embedding-input.ts";
 export { GeminiError, createGeminiClient } from "./gemini.ts";
 export type { EmbedDocument, GeminiClient, GeminiClientOptions } from "./gemini.ts";

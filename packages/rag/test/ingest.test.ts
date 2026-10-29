@@ -5,6 +5,7 @@ import {
   POINT_ID_NAMESPACE,
   assertIngestable,
   contentHash,
+  planIngest,
   pointId,
   toPayload,
   uuidV5,
@@ -147,5 +148,75 @@ describe("toPayload", () => {
     assert.equal(payload.valid_from, "2023-01-01");
     assert.equal(payload.valid_until, "2024-01-01");
     assert.ok(!("project_id" in toPayload(record(), "abc123", MODEL, DIMS)));
+  });
+});
+
+describe("planIngest", () => {
+  const options = { model: MODEL, dims: DIMS };
+  const a = record({ id: "a", title: "A", content: "Alpha" });
+  const b = record({ id: "b", title: "B", content: "Beta" });
+
+  async function stored(records: KnowledgeRecord[], model = MODEL, dims = DIMS) {
+    return Promise.all(
+      records.map(async (r) => ({
+        id: await pointId(r.id),
+        payload: toPayload(r, await contentHash(r, model, dims), model, dims) as unknown as Record<string, unknown>,
+      })),
+    );
+  }
+
+  it("upserts everything on the first run", async () => {
+    const plan = await planIngest([a, b], [], options);
+    assert.deepEqual(plan.toUpsert.map((p) => p.record.id), ["a", "b"]);
+    assert.equal(plan.unchanged.length, 0);
+    assert.deepEqual(plan.toDelete, []);
+  });
+
+  it("changes nothing on a rerun", async () => {
+    const plan = await planIngest([a, b], await stored([a, b]), options);
+    assert.equal(plan.toUpsert.length, 0);
+    assert.deepEqual(plan.unchanged.map((p) => p.record.id), ["a", "b"]);
+    assert.deepEqual(plan.toDelete, []);
+  });
+
+  it("re-embeds only the edited record", async () => {
+    const edited = { ...b, content: "Beta, revised" };
+    const plan = await planIngest([a, edited], await stored([a, b]), options);
+    assert.deepEqual(plan.toUpsert.map((p) => p.record.id), ["b"]);
+    assert.deepEqual(plan.unchanged.map((p) => p.record.id), ["a"]);
+  });
+
+  it("deletes the point of a removed record", async () => {
+    const plan = await planIngest([a], await stored([a, b]), options);
+    assert.deepEqual(plan.toDelete, [await pointId("b")]);
+    assert.equal(plan.toUpsert.length, 0);
+  });
+
+  it("deletes a record made private and never upserts it", async () => {
+    // The caller filters to public records, so a now-private record is simply absent.
+    const plan = await planIngest([a], await stored([a, b]), options);
+    assert.deepEqual(plan.toDelete, [await pointId("b")]);
+    assert.ok(plan.toUpsert.every((p) => p.record.id !== "b"));
+  });
+
+  it("refuses a private record handed to it by mistake", async () => {
+    await assert.rejects(planIngest([{ ...b, visibility: "private" }], [], options), /privacy check/);
+  });
+
+  it("re-embeds everything when the model or dimensions change", async () => {
+    const existing = await stored([a, b]);
+    assert.equal((await planIngest([a, b], existing, { model: "other-model", dims: DIMS })).toUpsert.length, 2);
+    assert.equal((await planIngest([a, b], existing, { model: MODEL, dims: 256 })).toUpsert.length, 2);
+  });
+
+  it("re-embeds when the stored payload metadata disagrees with a matching hash", async () => {
+    const existing = await stored([a]);
+    existing[0]!.payload.embedding_model = "stale";
+    assert.equal((await planIngest([a], existing, options)).toUpsert.length, 1);
+  });
+
+  it("deletes points that have no matching record, such as strays", async () => {
+    const plan = await planIngest([a], [...(await stored([a])), { id: "stray", payload: {} }], options);
+    assert.deepEqual(plan.toDelete, ["stray"]);
   });
 });

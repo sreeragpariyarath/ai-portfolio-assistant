@@ -77,6 +77,53 @@ export function pointId(recordId: string): Promise<string> {
   return uuidV5(recordId, POINT_ID_NAMESPACE);
 }
 
+export interface PlannedRecord {
+  record: KnowledgeRecord;
+  id: string;
+  hash: string;
+}
+
+export interface IngestPlan {
+  toUpsert: PlannedRecord[];
+  unchanged: PlannedRecord[];
+  // Point ids whose record is gone, made private, or has no readable record_id.
+  toDelete: string[];
+}
+
+// Decides what an ingest run must do, without touching the network.
+// `publicRecords` must already be filtered to public ones; each is re-checked here.
+export async function planIngest(
+  publicRecords: KnowledgeRecord[],
+  existingPoints: { id: string; payload: Record<string, unknown> }[],
+  options: { model: string; dims: number },
+): Promise<IngestPlan> {
+  const stored = new Map<string, Record<string, unknown>>();
+  const wanted = new Set<string>();
+  for (const point of existingPoints) stored.set(point.id, point.payload);
+
+  const toUpsert: PlannedRecord[] = [];
+  const unchanged: PlannedRecord[] = [];
+  for (const record of publicRecords) {
+    assertIngestable(record);
+    const planned = {
+      record,
+      id: await pointId(record.id),
+      hash: await contentHash(record, options.model, options.dims),
+    };
+    wanted.add(planned.id);
+    const payload = stored.get(planned.id);
+    const current =
+      payload !== undefined &&
+      payload.content_hash === planned.hash &&
+      payload.embedding_model === options.model &&
+      payload.embedding_dimensions === options.dims;
+    (current ? unchanged : toUpsert).push(planned);
+  }
+
+  const toDelete = existingPoints.filter((point) => !wanted.has(point.id)).map((point) => point.id);
+  return { toUpsert, unchanged, toDelete };
+}
+
 export function toPayload(record: KnowledgeRecord, hash: string, model: string, dims: number): PointPayload {
   const payload: PointPayload = {
     record_id: record.id,

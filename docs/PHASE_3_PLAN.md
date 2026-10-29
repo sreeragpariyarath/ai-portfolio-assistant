@@ -54,7 +54,7 @@ Add `vars` (`QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL`, `ALLOWED_ORI
 ### 3.3 Route and request validation (Claude) (done 2026-10-29)
 `POST /api/chat`: JSON only, body `{ question: string }`, the question trimmed and 1 to 500 characters, the body capped at 4 KB. CORS for `ALLOWED_ORIGIN`, including the `OPTIONS` preflight. Errors use `jsonResponse`. Tests with `SELF.fetch`: each error status, the CORS headers, and the health route unchanged.
 
-### 3.4 Retrieval and context in the Worker (Claude)
+### 3.4 Retrieval and context in the Worker (Claude) (done 2026-10-29)
 Build the BM25 index once per isolate from the bundled corpus (module scope), run `denseSearch` and `hybridSearch` from `@portfolio/rag`, take the top 8, re-check `visibility === "public"` against the bundled corpus, and assemble the context with each record's ID, type, title, verification status, valid-until date and content. Tests with mocked Gemini and Qdrant: private IDs never reach the context, a Qdrant hit missing from the bundled corpus is dropped, and BM25 still answers if dense search fails (degraded mode, logged).
 
 ### 3.5 Prompt and answer parsing (Claude)

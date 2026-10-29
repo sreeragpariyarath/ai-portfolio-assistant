@@ -51,7 +51,7 @@ A script (`pnpm corpus:build`) validates the data and writes `apps/api/src/gener
 ### 3.2 Worker config and env (Claude)
 Add `vars` (`QDRANT_COLLECTION`, `GEMINI_MODEL`, `EMBEDDING_MODEL`, `ALLOWED_ORIGIN`) to `wrangler.jsonc`, and the secrets `GEMINI_API_KEY`, `QDRANT_URL` and `QDRANT_API_KEY` to `.dev.vars` (add a `.dev.vars.example`). Run `pnpm cf-typegen` and switch `index.ts` to the generated `Env`. Update `docs/SETUP.md`. The D1 binding stays until Phase 5.
 
-### 3.3 Route and request validation (Claude)
+### 3.3 Route and request validation (Claude) (done 2026-10-29)
 `POST /api/chat`: JSON only, body `{ question: string }`, the question trimmed and 1 to 500 characters, the body capped at 4 KB. CORS for `ALLOWED_ORIGIN`, including the `OPTIONS` preflight. Errors use `jsonResponse`. Tests with `SELF.fetch`: each error status, the CORS headers, and the health route unchanged.
 
 ### 3.4 Retrieval and context in the Worker (Claude)

@@ -5,7 +5,11 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 2 task 2.3 (the `pnpm eval:retrieval` runner; the owner has approved its live run).
+Next: Phase 2 task 2.4 (try a few RRF k and candidate-depth settings on the development cases and keep the simplest one that is not clearly worse).
+
+- Built `pnpm eval:retrieval`: runs BM25, dense (Qdrant) and hybrid on the same 40 eval cases with the same scoring as the baseline, prints a table and writes it to `evals/results/retrieval-comparison.md`. Question embeddings are cached in a git-ignored file (`evals/.cache/`), so reruns make no Gemini calls. Refactored the baseline so the BM25 scoring is shared; `pnpm eval:baseline` output is byte-identical. Options `--k=` and `--depth=` for tuning.
+- Live run, approved by the owner: 40 new Gemini query embeddings and read-only Qdrant searches; the rerun used 40 cached embeddings and 0 Gemini calls. Results (default k=60, depth 20): BM25 Recall@5 85.7% / Recall@10 95.0%, list question 2/10; dense 95.7% / 96.4%, list 10/10; hybrid 95.7% / 99.3%, list 10/10. No private record retrieved by any method. E015 still misses two decision records at k=5 with dense and hybrid.
+- Tests: `pnpm test:scripts` 128 pass (7 new: BM25 scored the same as the baseline, a perfect dense ranking scores 100%, hybrid falls back to BM25 when dense is empty, list cases fuse every candidate, a leaked private record is reported, the table format, the embedding cache), both type-checks clean, API `vitest run` 8 pass, `pnpm eval:validate` ok.
 
 - Opened draft PR #4 for Phase 2 so CI runs on the branch.
 - Added dense search to `packages/rag`: it embeds the question and asks Qdrant for the closest public records, always sending the public-only filter, and drops any result that has no record id or is not marked public (a second safety net). A version that takes a ready-made vector lets the eval cache question embeddings. Mocked tests only, nothing run against Gemini or Qdrant. `pnpm test:scripts` 121 pass (5 new), both type-checks clean, API `vitest run` 8 pass, `pnpm eval:validate` ok.

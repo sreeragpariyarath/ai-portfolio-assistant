@@ -50,15 +50,35 @@ export interface BaselineReport {
   privateRecordsRetrieved: string[];
 }
 
+export function publicRecordsOf(corpus: Corpus): Corpus["records"] {
+  return corpus.records.filter((record) => record.visibility === "public");
+}
+
+// How many results a case needs: list cases ask for every matching record, ranked cases the largest k.
+export function depthFor(evalCase: EvalSet["cases"][number], publicCount: number): number {
+  return evalCase.scoring === "list" ? publicCount : Math.max(...KS);
+}
+
 export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {
   // Private records are removed before indexing, so they can never be retrieved.
-  const publicRecords = corpus.records.filter((record) => record.visibility === "public");
+  const publicRecords = publicRecordsOf(corpus);
+  const index = buildIndex(publicRecords.map((record) => ({ id: record.id, text: `${record.title} ${record.content}` })));
+  const rankings = new Map(
+    evalSet.cases.map((evalCase) => [
+      evalCase.id,
+      search(index, evalCase.question, depthFor(evalCase, publicRecords.length)),
+    ]),
+  );
+  return scoreRankings(corpus, evalSet, rankings);
+}
+
+// Scores any retriever's rankings (case id -> hits, best first) with the same metrics as the BM25 baseline.
+export function scoreRankings(corpus: Corpus, evalSet: EvalSet, rankings: Map<string, Hit[]>): BaselineReport {
+  const publicRecords = publicRecordsOf(corpus);
   const privateIds = new Set(
     corpus.records.filter((record) => record.visibility !== "public").map((record) => record.id),
   );
-  const index = buildIndex(publicRecords.map((record) => ({ id: record.id, text: `${record.title} ${record.content}` })));
 
-  // List cases search the whole index; ranked cases only need the largest k.
   const results: CaseResult[] = evalSet.cases.map((evalCase) => {
     const scoring = evalCase.scoring === "list" ? "list" : "ranked";
     return {
@@ -66,7 +86,7 @@ export function runBaseline(corpus: Corpus, evalSet: EvalSet): BaselineReport {
       question: evalCase.question,
       scoring,
       expected: evalCase.expectedEvidenceIds,
-      retrieved: search(index, evalCase.question, scoring === "list" ? publicRecords.length : Math.max(...KS)),
+      retrieved: (rankings.get(evalCase.id) ?? []).slice(0, depthFor(evalCase, publicRecords.length)),
     };
   });
 

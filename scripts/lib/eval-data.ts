@@ -1,32 +1,21 @@
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RECORD_TYPES, VISIBILITIES } from "@portfolio/rag";
+import type { KnowledgeRecord } from "@portfolio/rag";
+
+// Shared with the Worker, so they live in @portfolio/rag; re-exported for the scripts.
+export { RECORD_TYPES, VISIBILITIES };
+export type { KnowledgeRecord };
 
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const RECORDS_FILE = "data/knowledge/synthetic-records.v3.json";
 export const EVAL_FILE = "evals/retrieval-eval.v3.json";
 
 export const BEHAVIORS = ["answer", "qualify", "abstain", "refuse"] as const;
-export const RECORD_TYPES = ["profile", "project", "contribution", "decision"] as const;
-export const VISIBILITIES = ["public", "private"] as const;
 // "ranked" cases are scored with Recall@k; "list" cases ask for every matching record
 // and are scored by completeness instead.
 export const SCORING_MODES = ["ranked", "list"] as const;
-
-export interface KnowledgeRecord {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  verificationStatus: string;
-  isSynthetic: boolean;
-  visibility: string;
-  createdAt: string;
-  updatedAt: string;
-  validFrom?: string;
-  validUntil?: string;
-  projectId?: string;
-}
 
 export interface EvalCase {
   id: string;

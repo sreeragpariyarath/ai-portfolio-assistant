@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-29
-Next: Phase 1 task 1.2 (move metrics and record types into the package).
+Next: Phase 1 task 1.3 (ingestion helpers: hashing, point IDs, payload).
+
+- Moved the recall metric and the record types into `packages/rag`, and moved the BM25 and recall tests there too. Added a test that fails if any package file imports a `node:` module (checked it fails on a deliberately bad file, then removed that file). `pnpm eval:baseline` is still byte-identical, `pnpm test:scripts` 33 pass, `pnpm typecheck:scripts` clean, API `vitest run` 4 pass.
 
 - Installed the GitHub CLI on the PC (winget, already logged in). Opened and merged the Phase 0 PR, then started the Phase 1 branch from `main`.
 - Created the shared package `packages/rag` and moved BM25 into it. Checked that it loads everywhere it will be used: `pnpm eval:baseline` output is byte-identical to before, `pnpm test:scripts` 28 pass, `pnpm typecheck:scripts` clean, API tests (`pnpm vitest run`) 4 pass including a new one that runs BM25 inside the Workers runtime, and `wrangler deploy --dry-run` bundles it (nothing deployed). Recorded as D-011.

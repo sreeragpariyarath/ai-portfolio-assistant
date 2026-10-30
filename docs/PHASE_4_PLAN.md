@@ -23,7 +23,7 @@ Before writing any code in Phase 4, re-read the specific guide for each file (fo
 ## Decisions
 **Decided with the owner (2026-10-30):** the visual direction (D-018), the fluid source (D-019), hosting on Cloudflare, and the work split: **Claude builds the code and tests; the owner tests in a real browser and on a real phone.** The owner supplies the logo, avatar and name for task 4.5.
 
-**Recommended, waiting for the owner's OK (D-020): one Cloudflare Worker serves both the web app and the API.**
+**Decided (D-020, accepted 2026-10-30): one Cloudflare Worker serves both the web app and the API.**
 - The web app is built as a **static export** (`output: "export"`): plain files, no Next server. The home page, chat view and record pages are static shells; the chat happens in the browser, which calls the API.
 - The existing API Worker serves those files through its static assets setting (`assets.directory`) and runs its code only for `/api/*` (`run_worker_first`).
 - The browser calls the relative path `/api/chat`: same origin, so **no CORS in production** and **no API URL baked into the build**. For local development the web app (port 3000) calls the Worker (port 8787) through `NEXT_PUBLIC_API_BASE_URL=http://localhost:8787`, using the CORS support already built.
@@ -39,10 +39,10 @@ Facts behind the recommendation (checked 2026-10-30):
 - Workers static assets: a request that matches a file is served without running Worker code, `run_worker_first` can be limited to `/api/*`, and "requests to static assets are free and unlimited". Requests to `/api/*` count as Worker requests, so the Free plan's request limit applies to chat calls only.
 - Next's static export does not support: route handlers that rely on the request, Server Actions, rewrites, redirects, headers, `proxy`, ISR, draft mode, intercepting routes, or the default image loader. This plan uses none of them. Dynamic routes need `generateStaticParams` (the record pages will have it).
 
-**Checks before relying on it (done inside task 4.1):**
-1. `next build` with `output: "export"` together with `cacheComponents: true`. The guide read does not say whether they work together; if not, turn `cacheComponents` off for this app, since it uses no caching.
+**Checks (1 done; 2 to 4 inside task 4.1):**
+1. **Done:** static export with `cacheComponents` does **not** work: a throwaway copy of `apps/web` built with `output: "export"` (Next 16.4.3, 2026-10-30) failed with `Invariant: PPR cannot be enabled in export mode` while `cacheComponents` was `true`, whatever `partialPrefetching` was set to, and built cleanly (with `out/index.html`) once both were `false`. So 4.1 turns both flags off.
 2. `next/image` with `unoptimized` (or plain `img`), because the default image loader is not supported in a static export.
-3. The max number of files and file size for static assets on Cloudflare's platform limits page (the billing page does not give numbers).
+3. **Done:** Cloudflare's limits page gives 20,000 static files per version and 25 MiB per file on the Free plan, and 100,000 Worker requests a day.
 4. How a missing path behaves: `not_found_handling: "404-page"` so unknown pages get the web app's 404 instead of the API's JSON 404.
 
 **Cost of option C:** web and API deploy together (one web build, then one `wrangler deploy`), so a web-only change redeploys the Worker. The API's Vitest pool reads `wrangler.jsonc`; an `assets.directory` that does not exist could break the API tests and CI, so 4.1 must handle that (for example a committed placeholder folder, or building the web app first in CI).
@@ -100,13 +100,13 @@ The libraries found do real refraction with an SVG `feDisplacementMap` through `
 ## Tasks
 Each task is one commit with a daily log entry, using the same loop as earlier phases (tests and checks first, descriptive message, no AI attribution, feature branch and draft PR). Run `pnpm --filter web lint` and `pnpm --filter web build` for every task that touches `apps/web`.
 
-### 4.0 Close the open decision (docs only)
-Owner confirms option C (or picks A or B); D-020 moves from Proposed to Accepted. The logo, avatar and name arrive by task 4.5.
+### 4.0 Close the open decision (done)
+The owner accepted option C on 2026-10-30 (D-020). The logo, avatar and name arrive by task 4.5.
 
 ### 4.1 Environment, static export and Worker assets
 - Run the four checks listed under Decisions and record the results in D-020.
 - Add `NEXT_PUBLIC_API_BASE_URL` (empty in production, `http://localhost:8787` for local development) to `.env.example` and `apps/web/.env.local.example`, with no secret values, and document it in `docs/SETUP.md`.
-- Set `output: "export"` in `apps/web/next.config.ts`, keeping the existing Tailwind turbopack rule.
+- Set `output: "export"` in `apps/web/next.config.ts` and set `cacheComponents` and `partialPrefetching` to `false` (static export rejects them; see check 1), keeping the existing Tailwind turbopack rule. Update `CLAUDE.md` to match.
 - In `apps/api/wrangler.jsonc` add `assets` (`directory` pointing at the web export, `run_worker_first: ["/api/*"]`, `not_found_handling: "404-page"`), run `pnpm cf-typegen`, and keep the API tests and CI green without a web build (placeholder folder or a CI web build step).
 - Tests: a small module that reads and validates the base URL (empty means same origin); the existing API tests still pass; `/api/health` is still answered by the Worker code.
 
@@ -149,7 +149,7 @@ The browser checks in 4.10 call the real API, which calls Gemini for generation.
 - **Glass on iPhones:** the library route is Chromium-only. Mitigation: the 4.5b spike, with option B as the fallback plan.
 - **Licence:** the MIT notice must stay with the ported code. Mitigation: keep the header and add the notices file in 4.4.
 - **Static export limits:** no server features in the web app. Mitigation: the plan needs none; the four checks in 4.1 catch surprises early.
-- **`cacheComponents` with static export:** may not be compatible. Mitigation: turn it off for this app if the build says so.
+- **`cacheComponents` with static export:** confirmed incompatible by a test build. Mitigation: both flags are turned off in 4.1; the app does not use them.
 - **Free plan request limit:** chat calls count as Worker requests, and over the limit they get 429 instead of the static page. Mitigation: the API already rate-limits per client; static pages are free and unlimited.
 - **Deploying web and API together:** a web-only change redeploys the Worker. Mitigation: acceptable for a portfolio; revisit in Phase 5 if it gets in the way.
 - **Free quota:** repeated test questions use the daily generation quota. Mitigation: use eval questions and keep checks few.

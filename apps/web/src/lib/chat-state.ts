@@ -2,6 +2,7 @@ import { friendlyMessage, normalizeErrorCode } from "./chat-client.ts";
 import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
 import { splitCitations } from "./citations.ts";
+import type { CardKind } from "./portfolio-cards.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
 // function. Each question is answered on its own (the API takes no history); the list is only what
@@ -19,6 +20,8 @@ export interface ChatMessage {
   truncated: boolean;
   // A friendly, fixed sentence; never the server's own wording.
   error?: string;
+  // Set on stored replies (task 4.11): the card shown under `text`. No assistant call was made for it.
+  card?: CardKind;
 }
 
 export interface ChatState {
@@ -29,6 +32,7 @@ export interface ChatState {
 
 export type ChatAction =
   | { type: "ask"; id: string; question: string }
+  | { type: "show"; id: string; question: string; card: CardKind; intro: string }
   | { type: "event"; id: string; event: ChatEvent }
   | { type: "fail"; id: string; code: ChatErrorCode; retryAfterSeconds?: number }
   | { type: "stop"; id: string }
@@ -61,6 +65,19 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           ...stopped.messages,
           { id: `${action.id}:q`, role: "user", text: action.question, status: "done", citations: [], truncated: false },
           { id: action.id, role: "assistant", text: "", status: "streaming", citations: [], truncated: false },
+        ],
+      };
+    }
+
+    case "show": {
+      // A stored card needs no request, so nothing is left streaming; a running answer is stopped.
+      const stopped = state.activeId === null ? state : chatReducer(state, { type: "stop", id: state.activeId });
+      return {
+        activeId: null,
+        messages: [
+          ...stopped.messages,
+          { id: `${action.id}:q`, role: "user", text: action.question, status: "done", citations: [], truncated: false },
+          { id: action.id, role: "assistant", text: action.intro, status: "done", citations: [], truncated: false, card: action.card },
         ],
       };
     }
@@ -125,6 +142,8 @@ export function behaviorNote(behavior: Behavior | undefined): string | null {
   }
 }
 
+const CARD_NAMES: Record<CardKind, string> = { profile: "Profile card", projects: "Project cards", skills: "Skill groups", contact: "Contact card" };
+
 // What a screen reader hears: only finished answers (or why one failed), never each streamed word.
 export function announcementFor(messages: ChatMessage[]): string {
   for (let i = messages.length - 1; i >= 0; i--) {
@@ -133,6 +152,7 @@ export function announcementFor(messages: ChatMessage[]): string {
     if (message.status === "streaming") return "";
     if (message.status === "error") return message.error ?? "";
     if (message.status === "stopped") return "Answer stopped.";
+    if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown below.`;
     const text = splitCitations(message.text)
       .map((segment) => (segment.type === "text" ? segment.text : ""))
       .join("")

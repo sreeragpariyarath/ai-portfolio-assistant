@@ -83,6 +83,7 @@ pnpm dev:api                                         # open http://localhost:878
 
 - `NEXT_PUBLIC_API_BASE_URL` is empty in production, so the browser calls the same-origin path `/api/chat`. Next inlines
   `NEXT_PUBLIC_` values **at build time**, so changing it needs a rebuild. It must be an origin only (no path).
+- **Restart `pnpm dev:api` after every web build.** `wrangler dev` reads the list of files in `apps/web/out` when it starts; if you rebuild (or switch branches and rebuild) while it runs, it can serve the page but answer 404 for its stylesheet, and the site shows unstyled (a huge black logo). Stop it (Ctrl+C), build, start it again, then hard refresh (Ctrl+Shift+R).
 - The export must exist before `wrangler deploy` (or `wrangler dev`) can serve the site: build the web app first. The API tests
   do not need it.
 - A static export cannot use `cacheComponents` or `partialPrefetching`, so both are off in `apps/web/next.config.ts`.

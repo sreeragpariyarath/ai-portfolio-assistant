@@ -5,9 +5,9 @@ import { ProjectCarousel } from "./project-cards";
 import { SkillsCardView } from "./skills-card";
 
 // A stored reply: one sentence, then the card. Nothing here talks to the assistant.
-export function CardReply({ text, card }: { text: string; card: CardKind }) {
+export function CardReply({ text, card, animate = false }: { text: string; card: CardKind; animate?: boolean }) {
   return (
-    <div className="text-[0.95rem] leading-relaxed text-neutral-800">
+    <div data-animate={animate} className={`text-[0.95rem] leading-relaxed text-neutral-800 ${animate ? "anim-rise" : ""}`}>
       {card === "profile" ? (
         <>
           <ProfileCardView />

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
+import type { CardKind } from "@/lib/portfolio-cards";
 import { SITE, STARTERS } from "@/lib/site";
 import { FluidBackground } from "./fluid-background";
 import { LiquidGlass } from "./liquid-glass";
@@ -10,7 +11,7 @@ import { StarterIcon } from "./starter-icon";
 
 // The one-screen home page: no scrolling, pure white, water that follows the mouse or a finger.
 // `onAsk` starts the chat (task 4.6). Until it is given, the chips fill the input and sending is off.
-export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question: string) => void; restoreFocus?: boolean }) {
+export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question: string, card?: CardKind) => void; restoreFocus?: boolean }) {
   const [question, setQuestion] = useState("");
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,9 +42,9 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
     if (canSend) onAsk(question.trim());
   }
 
-  function pickStarter(text: string) {
+  function pickStarter(text: string, card?: CardKind) {
     if (onAsk) {
-      onAsk(text);
+      onAsk(text, card);
     } else {
       setQuestion(text);
       inputRef.current?.focus();
@@ -126,7 +127,7 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
               <LiquidGlass radius={16} bezel={10} strength={12} className="h-[clamp(3.4rem,7.5dvh,4.5rem)] transition-transform active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100">
                 <button
                   type="button"
-                  onClick={() => pickStarter(starter.question)}
+                  onClick={() => pickStarter(starter.question, starter.card)}
                   className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl text-gray-700 transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
                 >
                   <StarterIcon id={starter.id} />

@@ -147,7 +147,7 @@ describe("announcementFor", () => {
 
   it("adds the note for an answer that is not a plain answer", () => {
     const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
-    assert.equal(announcementFor(state.messages), "I don't have that. (Not in my records)");
+    assert.equal(announcementFor(state.messages), "I don't have that. (Not something I have on record)");
   });
 
   it("reads the friendly error, or that the answer was stopped", () => {
@@ -167,5 +167,34 @@ describe("announcementFor", () => {
     });
     assert.equal(announcementFor(state.messages), "Partial answer The answer was cut short.");
     assert.equal(announcementFor(ask(state, "a2").messages), "");
+  });
+});
+
+describe("stored cards", () => {
+  const show = { type: "show", id: "answer-1", question: "Projects", card: "projects", intro: "Here are some things I've built." } as const;
+
+  it("adds the question and a finished card reply without leaving anything streaming", () => {
+    const state = chatReducer(initialChatState, show);
+    assert.equal(state.activeId, null);
+    assert.deepEqual(
+      state.messages.map((message) => [message.role, message.status, message.card]),
+      [
+        ["user", "done", undefined],
+        ["assistant", "done", "projects"],
+      ],
+    );
+    assert.equal(state.messages[1]?.text, "Here are some things I've built.");
+  });
+
+  it("stops an answer that was still streaming", () => {
+    const streaming = chatReducer(initialChatState, { type: "ask", id: "answer-0", question: "Hi" });
+    const state = chatReducer(streaming, show);
+    assert.equal(state.messages[1]?.status, "stopped");
+    assert.equal(state.activeId, null);
+  });
+
+  it("is announced once, naming the card", () => {
+    const state = chatReducer(initialChatState, show);
+    assert.equal(announcementFor(state.messages), "Here are some things I've built. Project cards shown below.");
   });
 });

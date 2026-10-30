@@ -160,7 +160,7 @@ In-house SVG displacement filter through `backdrop-filter: url()` (`src/componen
 
 ### 4.6 Chat view (done)
 - `src/components/portfolio-app.tsx`: the page. Home screen until the first question, then the chat. Leaving home unmounts the water effect (it stops and gives the GPU back). One answer at a time: a new question cancels the request still running; leaving the page cancels it too.
-- `src/components/chat-view.tsx`: the conversation in the reference layout (small avatar at the top, which goes back home; question bubbles; answers streaming in with typing dots before the first words; quick-question pills that can be hidden; the liquid-glass input at the bottom, whose send button becomes a stop button while an answer streams). It follows new text only while the visitor is near the bottom. Citations show as small numbers with a "Sources" row once the answer is done; 4.7 turns them into links. Answers that are not plain answers get a short note ("Partly supported by my records", "Not in my records", "I can't share that"); errors show a fixed friendly sentence, never the server's words.
+- `src/components/chat-view.tsx`: the conversation in the reference layout (small avatar at the top, which goes back home; question bubbles; answers streaming in with typing dots before the first words; quick-question pills that can be hidden; the liquid-glass input at the bottom, whose send button becomes a stop button while an answer streams). It follows new text only while the visitor is near the bottom. Citations show as small numbers with a "Sources" row once the answer is done; 4.7 turns them into links. Answers that are not plain answers get a short note ("I can only confirm part of this", "Not something I have on record", "That one stays private"; D-025); errors show a fixed friendly sentence, never the server's words.
 - `src/lib/chat-state.ts` (a reducer: ask, meta, token, done, server error, client failure, stop, reset; late events from a replaced answer are ignored) and `src/lib/citations.ts` (splits `[record-id]` out of the text and numbers them), both pure and tested.
 - Checked in a real browser with a fake API (no Gemini calls): a streamed answer with three citations, the "demo busy" message with the wait time, and a stream cut off mid-answer (the text stays, with "The answer was cut off").
 
@@ -200,17 +200,23 @@ Cost: 3 generation calls and 3 query embeddings (out of about 500 generation and
 
 Small polish noticed, not fixed: a citation number can leave a little gap before the full stop that follows it.
 
-### 4.11 Rich cards and stored chip content (planned, after 4.10; before the switch to the owner's real data)
+### 4.11 Rich cards and stored chip content (done 2026-10-30; the switch to the owner's real data follows)
 Requested by the owner from the reference page: a profile card, a swipeable project carousel whose cards open a detail pop-up, and a contact card with an email link and social links.
 
 Decided with the owner (2026-10-30):
 - **Pressing a chip shows stored content instantly, with no Gemini call.** Me: a profile card and a stored intro message. Projects: swipeable project cards; pressing one opens a pop-up with its details, tags, links and image. Skills: grouped skill tags. Contact: a card with the email (approved for display) and links (LinkedIn, GitHub, portfolio); **a phone number is never shown or stored**. Fun: to be decided.
 - **Typed questions still go to the assistant** (retrieval and Gemini as now). When an answer cites a project, its card can be shown too.
 - **Images:** the owner will supply project images; placeholders until then.
-- **Data:** optional fields (tagline, period, tech tags, links, image) are added to the records, with dummy values now and the real ones at the real-data switch (D-022).
+- **Data:** the display content (profile card, project cards with tagline, period, tech tags, links and image, skill groups, contact links, stored messages) lives in its **own file** (for example `data/site/portfolio-cards.v1.json`, with its own validator and a public-only copy bundled into the web app), **not** in the knowledge records. That keeps what the assistant retrieves, ingests and is evaluated on untouched. Each project card points to its knowledge record by id, so "learn more" can open the record page. Dummy values now, the owner's real ones at the real-data switch (D-022). (This replaces the earlier idea of adding the fields to the records.)
 - **Order:** finish 4.10, then these cards, then the real-data switch, then Phase 5 (deployment).
 
 Still open: the wording of the stored messages, what the Fun chip shows, and whether a typed "who are you" should also use the stored message (the default is no, so the assistant stays honest about what it retrieves). The pop-up needs keyboard focus kept inside it, Esc to close, and a proper name for screen readers, tested in the existing Playwright and axe suite. The cards copy the layout idea of the reference page, never its content, photos or code.
+
+**Result (D-026):**
+- Me, Projects, Skills and Contact show a stored card instantly (`apps/web/src/components/cards/`); Fun still asks the assistant. The content is a typed file, `apps/web/src/lib/portfolio-cards.ts`, with dummy values and gradient placeholders for the project pictures.
+- Short typed requests ("show projects", "can u tell me which works are have u done", "what's your email", "who are you") show the cards too; longer questions go to the assistant. The phrase rules and their tests are in `card-intent.ts` and `card-intent.test.ts`.
+- The project pop-up is a native dialog (focus kept out of the page behind, Escape and the close button and the backdrop all close it, focus returns to the card).
+- Tested: 5 new Playwright and axe checks (cards with no `/api/chat` request, the dialog, typed requests, 360 and 1280 widths) and unit tests for the cards, the phrase rules and the reducer. Still open: what Fun shows, and the owner's real content and pictures.
 
 ## Live checkpoint
 Because the chips will show stored content (4.11), the 4.10 checks use **typed questions**, the ones that really reach Gemini: a normal question, a question whose answer is not in the records (to see the honest "not in my records" answer) and a trick question that tries to make the assistant ignore its rules or reveal something private (to see it refuse). The browser checks in 4.10 call the real API, which calls Gemini for generation. Each check is one generation call from the free quota (500 a day for the default model). That run needs the owner's go-ahead.

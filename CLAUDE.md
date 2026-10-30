@@ -70,7 +70,7 @@ Run `pnpm cf-typegen` after changing bindings in `apps/api/wrangler.jsonc`. Ther
 
 **Typed env:** `Env` comes from the generated `worker-configuration.d.ts`; never hand-write it. Non-secret settings (`QDRANT_COLLECTION`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`, `EMBEDDING_MODEL`, `ALLOWED_ORIGIN`) are `vars` in `wrangler.jsonc`. Secrets (`GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`) are listed under `secrets.required` there, never given a value: locally they live in the git-ignored `apps/api/.dev.vars` (template: `.dev.vars.example`), and deployed ones are set with `wrangler secret put`. After changing bindings, vars or secrets, run `pnpm cf-typegen` and commit the result.
 
-**Web app** is Next.js App Router under `apps/web/src/app/` (`layout.tsx`, `page.tsx`, `globals.css`). Tailwind v4 is wired through `@tailwindcss/turbopack` in `next.config.ts`, which uses a custom turbopack CSS rule. `next.config.ts` also enables `cacheComponents` and `partialPrefetching`, so check the Next docs before changing caching or prefetch behavior.
+**Web app** is Next.js App Router under `apps/web/src/app/` (`layout.tsx`, `page.tsx`, `globals.css`). Tailwind v4 is wired through `@tailwindcss/turbopack` in `next.config.ts`, which uses a custom turbopack CSS rule. `next.config.ts` also enables `cacheComponents` and `partialPrefetching`, so check the Next docs before changing caching or prefetch behavior. Phase 4 task 4.1 turns both off and switches to `output: "export"`, because a static export rejects them (D-020: one Worker serves the static web export and `/api/*`).
 
 ## Read before coding in these areas
 

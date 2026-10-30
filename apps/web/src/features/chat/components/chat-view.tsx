@@ -122,7 +122,19 @@ export function ChatView({
 
   useEffect(() => {
     const element = list.current;
-    if (element !== null && followBottom.current) element.scrollTop = element.scrollHeight;
+    if (element === null) return;
+    const last = messages[messages.length - 1];
+    if (last?.card !== undefined) {
+      // A stored card is tall: show it from its top (with the visitor's bubble above it), not its bottom.
+      const bubble = element.querySelector("ol")?.children[messages.length - 2] as HTMLElement | undefined;
+      if (bubble !== undefined) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        element.scrollTo({ top: Math.max(0, bubble.offsetTop - 12), behavior: reduce ? "auto" : "smooth" });
+        followBottom.current = false;
+        return;
+      }
+    }
+    if (followBottom.current) element.scrollTop = element.scrollHeight;
   }, [messages]);
 
   function send(text: string, card?: CardKind) {
@@ -163,14 +175,14 @@ export function ChatView({
         className="relative min-h-0 flex-1 overflow-y-auto px-4 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0171E3]"
       >
         <ol className="mx-auto flex max-w-3xl flex-col gap-6 py-4" aria-label={`Conversation with ${SITE.name}'s assistant`}>
-          {messages.map((message) =>
+          {messages.map((message, index) =>
             message.role === "user" ? (
               <li key={message.id} className="flex justify-center">
-                <p className="max-w-[85%] rounded-3xl bg-[#0171E3] px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere]">{message.text}</p>
+                <p className={`max-w-[85%] rounded-3xl bg-[#0171E3] px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
               </li>
             ) : (
               <li key={message.id}>
-                {message.card !== undefined ? <CardReply text={message.text} card={message.card} /> : <AssistantMessage message={message} />}
+                {message.card !== undefined ? <CardReply text={message.text} card={message.card} animate={index >= messages.length - 2} /> : <AssistantMessage message={message} />}
               </li>
             ),
           )}

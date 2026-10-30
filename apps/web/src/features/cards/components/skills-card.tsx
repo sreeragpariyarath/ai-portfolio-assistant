@@ -9,7 +9,7 @@ export function SkillsCardView() {
       </h2>
       <div className="mt-4 grid gap-5 sm:grid-cols-2">
         {SKILL_GROUPS.map((group, index) => (
-          <div key={group.name}>
+          <div key={group.name} className="stagger-item" style={{ "--i": index } as React.CSSProperties}>
             <h3 id={`skills-group-${index}`} className="text-xs font-semibold tracking-wide text-neutral-600 uppercase">
               {group.name}
             </h3>

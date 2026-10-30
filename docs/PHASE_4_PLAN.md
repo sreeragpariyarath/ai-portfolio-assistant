@@ -193,8 +193,20 @@ The owner has tested the page on a phone and it works. Still manual: listen with
 ### 4.10 Verification and record (docs)
 Run `pnpm --filter web lint` and `pnpm --filter web build`. Run `pnpm dev:api` with `pnpm dev:web` and ask one answer, one abstain and one injection question in the browser, recording what was seen (no secrets). Mark Phase 4 done in the roadmap and the daily log.
 
+### 4.11 Rich cards and stored chip content (planned, after 4.10; before the switch to the owner's real data)
+Requested by the owner from the reference page: a profile card, a swipeable project carousel whose cards open a detail pop-up, and a contact card with an email link and social links.
+
+Decided with the owner (2026-10-30):
+- **Pressing a chip shows stored content instantly, with no Gemini call.** Me: a profile card and a stored intro message. Projects: swipeable project cards; pressing one opens a pop-up with its details, tags, links and image. Skills: grouped skill tags. Contact: a card with the email (approved for display) and links (LinkedIn, GitHub, portfolio); **a phone number is never shown or stored**. Fun: to be decided.
+- **Typed questions still go to the assistant** (retrieval and Gemini as now). When an answer cites a project, its card can be shown too.
+- **Images:** the owner will supply project images; placeholders until then.
+- **Data:** optional fields (tagline, period, tech tags, links, image) are added to the records, with dummy values now and the real ones at the real-data switch (D-022).
+- **Order:** finish 4.10, then these cards, then the real-data switch, then Phase 5 (deployment).
+
+Still open: the wording of the stored messages, what the Fun chip shows, and whether a typed "who are you" should also use the stored message (the default is no, so the assistant stays honest about what it retrieves). The pop-up needs keyboard focus kept inside it, Esc to close, and a proper name for screen readers, tested in the existing Playwright and axe suite. The cards copy the layout idea of the reference page, never its content, photos or code.
+
 ## Live checkpoint
-The browser checks in 4.10 call the real API, which calls Gemini for generation. Each check is one generation call from the free quota (500 a day for the default model). That run needs the owner's go-ahead.
+Because the chips will show stored content (4.11), the 4.10 checks use **typed questions**, the ones that really reach Gemini: a normal question, a question whose answer is not in the records (to see the honest "not in my records" answer) and a trick question that tries to make the assistant ignore its rules or reveal something private (to see it refuse). The browser checks in 4.10 call the real API, which calls Gemini for generation. Each check is one generation call from the free quota (500 a day for the default model). That run needs the owner's go-ahead.
 
 ## Risks
 - **Fluid on white:** the original is tuned for black, so the white look may need shader changes, not only config. Mitigation: do it early (4.4 and 4.5) and review in a browser before building the chat view.

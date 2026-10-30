@@ -53,3 +53,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web lint
       - run: pnpm --filter web build
+      - name: Static export exists (the Worker serves it, D-020)
+        run: test -f apps/web/out/index.html && test -f apps/web/out/404.html

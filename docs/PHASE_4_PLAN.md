@@ -103,12 +103,14 @@ Each task is one commit with a daily log entry, using the same loop as earlier p
 ### 4.0 Close the open decision (done)
 The owner accepted option C on 2026-10-30 (D-020). The logo, avatar and name arrive by task 4.5.
 
-### 4.1 Environment, static export and Worker assets
-- Run the four checks listed under Decisions and record the results in D-020.
-- Add `NEXT_PUBLIC_API_BASE_URL` (empty in production, `http://localhost:8787` for local development) to `.env.example` and `apps/web/.env.local.example`, with no secret values, and document it in `docs/SETUP.md`.
-- Set `output: "export"` in `apps/web/next.config.ts` and set `cacheComponents` and `partialPrefetching` to `false` (static export rejects them; see check 1), keeping the existing Tailwind turbopack rule. Update `CLAUDE.md` to match.
-- In `apps/api/wrangler.jsonc` add `assets` (`directory` pointing at the web export, `run_worker_first: ["/api/*"]`, `not_found_handling: "404-page"`), run `pnpm cf-typegen`, and keep the API tests and CI green without a web build (placeholder folder or a CI web build step).
-- Tests: a small module that reads and validates the base URL (empty means same origin); the existing API tests still pass; `/api/health` is still answered by the Worker code.
+### 4.1 Environment, static export and Worker assets (done)
+- The four checks are recorded in D-020 (static export, flags off, file limits, 404 handling and the routing check with `wrangler dev`).
+- `NEXT_PUBLIC_API_BASE_URL` is documented in `apps/web/.env.local.example` and `docs/SETUP.md`: empty in production, `http://localhost:8787` for local development.
+- `apps/web/next.config.ts` uses `output: "export"` with `cacheComponents` and `partialPrefetching` off, keeping the Tailwind turbopack rule.
+- `apps/api/wrangler.jsonc` serves `../web/out` with `run_worker_first: ["/api/*"]` and `not_found_handling: "404-page"`. The API suite passes with and without the export folder.
+- `apps/web/src/lib/api-base-url.ts` (pure, tested) validates the base URL (empty means same origin; origin only, never echoes the rejected value) and `config.ts` reads it once, because Next inlines `NEXT_PUBLIC_` values only for a literal `process.env.NAME`.
+- **Testing convention for the rest of Phase 4:** web library code is plain erasable TypeScript with `.ts` import extensions, with tests beside it. The root `pnpm test:scripts` runs them (`apps/web/src/**/*.test.ts`) and the root `tsc` checks them. `apps/web/tsconfig.json` allows `.ts` imports.
+- CI: the web job fails if `apps/web/out/index.html` or `404.html` is missing.
 
 ### 4.2 SSE frame parser
 A pure TypeScript module that turns streamed bytes into `{ event, data }` frames, handling chunk boundaries and multi-byte characters. Tests with recorded frames, split at every position, and the error shapes.

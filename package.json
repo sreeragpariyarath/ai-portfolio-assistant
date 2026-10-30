@@ -12,7 +12,7 @@
     "eval:retrieval": "node --disable-warning=ExperimentalWarning scripts/retrieval-eval.ts",
     "eval:answers": "node --disable-warning=ExperimentalWarning scripts/answer-eval.ts",
     "typecheck:scripts": "tsc -p tsconfig.json",
-    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\"",
+    "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\" \"apps/web/src/**/*.test.ts\"",
     "corpus:build": "node --disable-warning=ExperimentalWarning scripts/build-corpus.ts",
     "corpus:check": "node --disable-warning=ExperimentalWarning scripts/build-corpus.ts --check",
     "env:check":"node --disable-warning=ExperimentalWarning scripts/check-env.ts",

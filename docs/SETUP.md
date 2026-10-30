@@ -66,3 +66,24 @@ pnpm dev          # wrangler dev; warns by name if a required secret is missing
 `.dev.vars` is git-ignored. Wrangler loads only the three required names from it. After editing
 `wrangler.jsonc`, run `pnpm cf-typegen` and commit the regenerated `worker-configuration.d.ts`; CI fails
 if it is out of date (`pnpm cf-typegen:check`).
+
+## 6. Web app (Phase 4)
+The web app (`apps/web`) is a **static export**, and the API Worker serves it together with `/api/*` (D-020). There are two ways to run it:
+
+```bash
+# A. Development with live reload: web on :3000 calling the Worker on :8787
+cd apps/web && cp .env.local.example .env.local     # sets NEXT_PUBLIC_API_BASE_URL=http://localhost:8787
+pnpm dev:api                                         # terminal 1
+pnpm dev:web                                         # terminal 2, then open http://localhost:3000
+
+# B. Exactly what production serves: one Worker, one address
+pnpm --filter web build                              # writes apps/web/out
+pnpm dev:api                                         # open http://localhost:8787 (page) and /api/health (API)
+```
+
+- `NEXT_PUBLIC_API_BASE_URL` is empty in production, so the browser calls the same-origin path `/api/chat`. Next inlines
+  `NEXT_PUBLIC_` values **at build time**, so changing it needs a rebuild. It must be an origin only (no path).
+- The export must exist before `wrangler deploy` (or `wrangler dev`) can serve the site: build the web app first. The API tests
+  do not need it.
+- A static export cannot use `cacheComponents` or `partialPrefetching`, so both are off in `apps/web/next.config.ts`.
+

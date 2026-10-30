@@ -6,8 +6,10 @@ import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
 import { announcementFor, behaviorNote } from "@/lib/chat-state";
 import type { ChatMessage } from "@/lib/chat-state";
 import { splitCitations } from "@/lib/citations";
+import type { CardKind } from "@/lib/portfolio-cards";
 import { recordPath } from "@/lib/records";
 import { SITE, STARTERS } from "@/lib/site";
+import { CardReply } from "./cards/card-reply";
 import { LiquidGlass } from "./liquid-glass";
 import { StarterIcon } from "./starter-icon";
 
@@ -98,7 +100,7 @@ export function ChatView({
 }: {
   messages: ChatMessage[];
   busy: boolean;
-  onAsk: (question: string) => void;
+  onAsk: (question: string, card?: CardKind) => void;
   onStop: () => void;
   onHome: () => void;
 }) {
@@ -120,11 +122,11 @@ export function ChatView({
     if (element !== null && followBottom.current) element.scrollTop = element.scrollHeight;
   }, [messages]);
 
-  function send(text: string) {
+  function send(text: string, card?: CardKind) {
     const trimmed = text.trim();
     if (trimmed === "") return;
     followBottom.current = true;
-    onAsk(trimmed);
+    onAsk(trimmed, card);
     setQuestion("");
     input.current?.focus({ preventScroll: true });
   }
@@ -165,7 +167,7 @@ export function ChatView({
               </li>
             ) : (
               <li key={message.id}>
-                <AssistantMessage message={message} />
+                {message.card !== undefined ? <CardReply text={message.text} card={message.card} /> : <AssistantMessage message={message} />}
               </li>
             ),
           )}
@@ -192,7 +194,7 @@ export function ChatView({
                 <li key={starter.id}>
                   <button
                     type="button"
-                    onClick={() => send(starter.question)}
+                    onClick={() => send(starter.question, starter.card)}
                     className="flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
                   >
                     <StarterIcon id={starter.id} />

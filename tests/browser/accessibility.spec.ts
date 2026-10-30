@@ -27,7 +27,7 @@ test("keyboard focus, quiet streaming, completed answer and sources", async ({ p
   await expect(input).toHaveCSS("outline-style", "none");
   await expect(page.locator(".question-pill")).toHaveCSS("outline-style", "solid");
   await expect(page.locator(".question-pill")).toHaveCSS("outline-color", "rgb(1, 113, 227)");
-  await input.fill("What did you build?");
+  await input.fill("Tell me about the booking app");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("textbox")).toBeFocused();
   await expect(page.getByRole("textbox")).toHaveCSS("outline-style", "none");
@@ -130,3 +130,97 @@ test("200 percent text stays reachable and scrollable", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Contact", exact: true })).toBeInViewport();
   await accessible(page);
 });
+
+// Stored cards (task 4.11): chips show them instantly, and nothing reaches the assistant.
+function countChatRequests(page: Page) {
+  const seen: string[] = [];
+  page.on("request", request => {
+    if (request.url().includes("/api/chat")) seen.push(request.url());
+  });
+  return seen;
+}
+
+test("chips show stored cards with no assistant call", async ({ page }) => {
+  const chatRequests = countChatRequests(page);
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Me", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Sreerag", level: 2 })).toBeVisible();
+  await expect(page.locator('main [aria-live="polite"]')).toContainText("Profile card shown below.");
+  await accessible(page);
+
+  await page.getByRole("button", { name: "Skills", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Skills", level: 2 })).toBeVisible();
+  await expect(page.getByText("Cloudflare Workers")).toBeVisible();
+  await accessible(page);
+
+  await page.getByRole("button", { name: "Contact", exact: true }).click();
+  const email = page.getByRole("link", { name: "hello@example.com" });
+  await expect(email).toHaveAttribute("href", "mailto:hello@example.com");
+  await expect(page.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute("href", /^https:\/\//);
+  await expect(page.locator("main")).not.toContainText(/\+?\d{1,3}[-. ]\d{3}[-. ]\d{3}[-. ]\d{4}/);
+  await accessible(page);
+
+  expect(chatRequests).toEqual([]);
+});
+
+test("a project card opens a dialog that traps focus, closes with Escape and returns focus", async ({ page }) => {
+  const chatRequests = countChatRequests(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Projects", exact: true }).click();
+  const card = page.getByRole("button", { name: /View details for AI Portfolio Assistant/ });
+  await card.focus();
+  await page.keyboard.press("Enter");
+
+  const dialog = page.getByRole("dialog", { name: "AI Portfolio Assistant" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /Source record/ })).toHaveAttribute("href", "/records/project-demo-001");
+  await accessible(page);
+
+  // Tab never reaches the page behind: focus stays in the dialog or leaves for the browser's own controls.
+  for (let i = 0; i < 8; i++) {
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => document.activeElement === document.body || document.activeElement?.closest("dialog") != null)).toBe(true);
+  }
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(card).toBeFocused();
+
+  // The close button and a click on the backdrop work too.
+  await card.click();
+  await page.getByRole("button", { name: "Close project details" }).click();
+  await expect(dialog).toBeHidden();
+  await card.click();
+  await page.mouse.click(5, 5);
+  await expect(dialog).toBeHidden();
+
+  expect(chatRequests).toEqual([]);
+});
+
+test("a short typed request shows the cards; a real question still reaches the assistant", async ({ page }) => {
+  const chatRequests = countChatRequests(page);
+  await page.goto("/");
+  await page.getByRole("textbox").fill("can u tell me which works are have u done");
+  await page.getByRole("textbox").press("Enter");
+  await expect(page.getByRole("heading", { name: "Projects", level: 2 })).toBeVisible();
+  expect(chatRequests).toEqual([]);
+
+  await page.getByRole("textbox").fill("Which projects used React and why?");
+  await page.getByRole("textbox").press("Enter");
+  await expect(page.locator('main [aria-live="polite"]')).toContainText("A completed answer");
+  expect(chatRequests.length).toBe(1);
+});
+
+for (const viewport of [{ width: 360, height: 640 }, { width: 1280, height: 800 }]) {
+  test(`cards fit and have no contrast problems at ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    for (const name of ["Me", "Projects", "Skills", "Contact"]) {
+      await page.getByRole("button", { name, exact: true }).click();
+      await noOverflow(page);
+    }
+    await accessible(page);
+    await page.screenshot({ path: testInfo.outputPath("cards.png"), fullPage: true });
+  });
+}

@@ -200,7 +200,7 @@ Cost: 3 generation calls and 3 query embeddings (out of about 500 generation and
 
 Small polish noticed, not fixed: a citation number can leave a little gap before the full stop that follows it.
 
-### 4.11 Rich cards and stored chip content (planned, after 4.10; before the switch to the owner's real data)
+### 4.11 Rich cards and stored chip content (done 2026-10-30; the switch to the owner's real data follows)
 Requested by the owner from the reference page: a profile card, a swipeable project carousel whose cards open a detail pop-up, and a contact card with an email link and social links.
 
 Decided with the owner (2026-10-30):
@@ -211,6 +211,12 @@ Decided with the owner (2026-10-30):
 - **Order:** finish 4.10, then these cards, then the real-data switch, then Phase 5 (deployment).
 
 Still open: the wording of the stored messages, what the Fun chip shows, and whether a typed "who are you" should also use the stored message (the default is no, so the assistant stays honest about what it retrieves). The pop-up needs keyboard focus kept inside it, Esc to close, and a proper name for screen readers, tested in the existing Playwright and axe suite. The cards copy the layout idea of the reference page, never its content, photos or code.
+
+**Result (D-026):**
+- Me, Projects, Skills and Contact show a stored card instantly (`apps/web/src/components/cards/`); Fun still asks the assistant. The content is a typed file, `apps/web/src/lib/portfolio-cards.ts`, with dummy values and gradient placeholders for the project pictures.
+- Short typed requests ("show projects", "can u tell me which works are have u done", "what's your email", "who are you") show the cards too; longer questions go to the assistant. The phrase rules and their tests are in `card-intent.ts` and `card-intent.test.ts`.
+- The project pop-up is a native dialog (focus kept out of the page behind, Escape and the close button and the backdrop all close it, focus returns to the card).
+- Tested: 5 new Playwright and axe checks (cards with no `/api/chat` request, the dialog, typed requests, 360 and 1280 widths) and unit tests for the cards, the phrase rules and the reducer. Still open: what Fun shows, and the owner's real content and pictures.
 
 ## Live checkpoint
 Because the chips will show stored content (4.11), the 4.10 checks use **typed questions**, the ones that really reach Gemini: a normal question, a question whose answer is not in the records (to see the honest "not in my records" answer) and a trick question that tries to make the assistant ignore its rules or reveal something private (to see it refuse). The browser checks in 4.10 call the real API, which calls Gemini for generation. Each check is one generation call from the free quota (500 a day for the default model). That run needs the owner's go-ahead.

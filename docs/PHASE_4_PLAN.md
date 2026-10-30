@@ -112,11 +112,13 @@ The owner accepted option C on 2026-10-30 (D-020). The logo, avatar and name arr
 - **Testing convention for the rest of Phase 4:** web library code is plain erasable TypeScript with `.ts` import extensions, with tests beside it. The root `pnpm test:scripts` runs them (`apps/web/src/**/*.test.ts`) and the root `tsc` checks them. `apps/web/tsconfig.json` allows `.ts` imports.
 - CI: the web job fails if `apps/web/out/index.html` or `404.html` is missing.
 
-### 4.2 SSE frame parser
-A pure TypeScript module that turns streamed bytes into `{ event, data }` frames, handling chunk boundaries and multi-byte characters. Tests with recorded frames, split at every position, and the error shapes.
+### 4.2 SSE frame parser (done)
+- `apps/web/src/lib/sse.ts`: `createSseParser()` turns streamed bytes into `{ event, data }` frames by the SSE line rules (LF, CRLF and CR endings including a CRLF split across chunks, comments, multi-line `data`, one leading space dropped, BOM dropped, no frame without `data`). `finish()` reports `incomplete` when a cut-off stream left bytes that never formed a frame, so the chat client can show an error instead of a half answer.
+- `apps/web/src/lib/chat-events.ts`: `decodeChatEvent(frame)` returns a typed `meta`, `token`, `done` or `error` event, `null` for an event name it does not know (so the server can add events), and throws `MalformedEventError` for a known event with a bad payload. The error message never contains the payload, which is server text.
+- Tests use the server's exact framing and cut a stream with multi-byte characters (accents, Japanese, an emoji) at **every byte position**, one byte at a time, and as one chunk, expecting identical frames.
 
 ### 4.3 Chat client
-A typed client `askQuestion(question, { signal })` that returns an async iterable of events and maps HTTP errors to a typed error with a code (never the raw body). Cancellation through `AbortController` when the visitor submits again or leaves. Tests with a mocked `fetch`.
+A typed client `askQuestion(question, { signal })` that returns an async iterable of `ChatEvent`s (using 4.2), treats an `incomplete` end or a `MalformedEventError` as a stream error, and maps HTTP errors to a typed error with a code (never the raw body). Cancellation through `AbortController` when the visitor submits again or leaves. Tests with a mocked `fetch`.
 
 ### 4.4 Fluid module (port of the locked source)
 Port `script.js` to `apps/web/src/lib/fluid/` as described above: keep the MIT header, remove the analytics, promo, GUI, keyboard and network-texture code, add `start`/`stop`/`destroy`, the pause rules, WebGL failure handling, the pixel-ratio cap and window-level pointer and touch input. Add the `THIRD_PARTY_NOTICES.md` entry. Tests cover the pure parts (resolution maths, colour generation, input routing that ignores interactive elements, the lifecycle calls on a stubbed context). The look itself is reviewed by the owner in a browser.

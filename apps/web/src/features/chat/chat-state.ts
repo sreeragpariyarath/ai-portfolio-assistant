@@ -3,7 +3,7 @@ import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
 import { pickAbstainLine, withoutFirstSentence } from "./abstain-lines.ts";
 import { splitCitations } from "./citations.ts";
-import type { CardKind } from "./portfolio-cards.ts";
+import type { CardKind } from "../cards/portfolio-cards.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
 // function. Each question is answered on its own (the API takes no history); the list is only what
@@ -159,7 +159,7 @@ export function announcementFor(messages: ChatMessage[]): string {
     if (message.status === "streaming") return "";
     if (message.status === "error") return message.error ?? "";
     if (message.status === "stopped") return "Answer stopped.";
-    if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown below.`;
+    if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown.`;
     const text = splitCitations(message.lead !== undefined ? `${message.lead} ${withoutFirstSentence(message.text)}` : message.text)
       .map((segment) => (segment.type === "text" ? segment.text : ""))
       .join("")

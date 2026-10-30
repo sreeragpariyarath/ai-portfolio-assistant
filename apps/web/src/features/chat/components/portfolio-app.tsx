@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { ChatClientError, askQuestion, isAbortError } from "@/lib/chat-client";
-import { chatReducer, initialChatState } from "@/lib/chat-state";
-import { matchCardIntent } from "@/lib/card-intent";
-import { CARD_INTROS } from "@/lib/portfolio-cards";
-import type { CardKind } from "@/lib/portfolio-cards";
+import { ChatClientError, askQuestion, isAbortError } from "@/features/chat/chat-client";
+import { chatReducer, initialChatState } from "@/features/chat/chat-state";
+import { matchCardIntent } from "@/features/cards/card-intent";
+import { CARD_INTROS } from "@/features/cards/portfolio-cards";
+import type { CardKind } from "@/features/cards/portfolio-cards";
 import { ChatView } from "./chat-view";
-import { HomeScreen } from "./home-screen";
-import { PerfOverlay } from "./perf-overlay";
+import { HomeScreen } from "@/features/home/components/home-screen";
+import { PerfOverlay } from "@/shared/perf/perf-overlay";
 
 // The whole page: the home screen until the first question, then the chat. Leaving the home screen
 // unmounts the water effect, which stops it and gives the GPU back.

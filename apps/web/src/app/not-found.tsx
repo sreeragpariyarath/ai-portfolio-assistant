@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { SITE } from "@/features/home/site";
 
 // The 404 page (also exported as 404.html, which the Worker serves for unknown paths). It keeps the
 // site's white look instead of the default page, which follows the system's dark mode.

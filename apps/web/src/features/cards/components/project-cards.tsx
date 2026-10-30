@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type { ProjectCard } from "@/lib/portfolio-cards";
-import { PROJECTS } from "@/lib/portfolio-cards";
-import { recordPath } from "@/lib/records";
+import type { ProjectCard } from "@/features/cards/portfolio-cards";
+import { PROJECTS } from "@/features/cards/portfolio-cards";
+import { recordPath } from "@/features/records/records";
 import { CARD_SURFACE, ExternalIcon, LINK_PILL, Pill } from "./card-shell";
 
 // The picture of a project: the owner's image when there is one, otherwise a soft gradient with the

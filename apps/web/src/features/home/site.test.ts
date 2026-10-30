@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { MAX_QUESTION_CHARS } from "./chat-client.ts";
+import { MAX_QUESTION_CHARS } from "../chat/chat-client.ts";
 import { SITE, STARTERS } from "./site.ts";
 
 describe("home page content", () => {

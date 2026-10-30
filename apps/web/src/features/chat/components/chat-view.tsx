@@ -2,17 +2,17 @@
 
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
-import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
-import { withoutFirstSentence } from "@/lib/abstain-lines";
-import { announcementFor, behaviorNote } from "@/lib/chat-state";
-import type { ChatMessage } from "@/lib/chat-state";
-import { splitCitations } from "@/lib/citations";
-import type { CardKind } from "@/lib/portfolio-cards";
-import { recordPath } from "@/lib/records";
-import { SITE, STARTERS } from "@/lib/site";
-import { CardReply } from "./cards/card-reply";
-import { LiquidGlass } from "./liquid-glass";
-import { StarterIcon } from "./starter-icon";
+import { MAX_QUESTION_CHARS } from "@/features/chat/chat-client";
+import { withoutFirstSentence } from "@/features/chat/abstain-lines";
+import { announcementFor, behaviorNote } from "@/features/chat/chat-state";
+import type { ChatMessage } from "@/features/chat/chat-state";
+import { splitCitations } from "@/features/chat/citations";
+import type { CardKind } from "@/features/cards/portfolio-cards";
+import { recordPath } from "@/features/records/records";
+import { SITE, STARTERS } from "@/features/home/site";
+import { CardReply } from "@/features/cards/components/card-reply";
+import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
+import { StarterIcon } from "@/features/home/components/starter-icon";
 
 function TypingDots() {
   return (

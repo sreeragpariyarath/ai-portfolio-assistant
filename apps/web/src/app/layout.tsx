@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE } from "@/lib/site";
+import { SITE } from "@/features/home/site";
 import "./globals.css";
 
 export const metadata: Metadata = {

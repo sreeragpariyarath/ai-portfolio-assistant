@@ -11,7 +11,7 @@ export const SITE = {
   recordsNote: "Demo record from a fictional dataset, used while the assistant is being built.",
 } as const;
 
-import type { CardKind } from "./portfolio-cards.ts";
+import type { CardKind } from "../cards/portfolio-cards.ts";
 
 export type StarterId = "me" | "projects" | "skills" | "fun" | "contact";
 

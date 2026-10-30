@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import corpus from "@/generated/public-corpus.json";
-import { findRecord, formatDate, recordPath, recordTypeLabel, verificationLabel } from "@/lib/records";
-import type { PublicRecord } from "@/lib/records";
-import { SITE } from "@/lib/site";
+import { findRecord, formatDate, recordPath, recordTypeLabel, verificationLabel } from "@/features/records/records";
+import type { PublicRecord } from "@/features/records/records";
+import { SITE } from "@/features/home/site";
 
 // One static page per public record, built from the same public-only bundle the API uses
 // (`pnpm corpus:build`). Private records are never in that bundle, so they can never get a page.

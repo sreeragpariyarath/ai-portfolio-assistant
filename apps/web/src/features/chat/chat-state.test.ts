@@ -198,7 +198,7 @@ describe("stored cards", () => {
 
   it("is announced once, naming the card", () => {
     const state = chatReducer(initialChatState, show);
-    assert.equal(announcementFor(state.messages), "Here are some things I've built. Project cards shown below.");
+    assert.equal(announcementFor(state.messages), "Here are some things I've built. Project cards shown.");
   });
 });
 

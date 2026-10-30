@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { createFpsMeter, perfRequested } from "@/lib/perf";
-import type { FpsReading } from "@/lib/perf";
+import { createFpsMeter, perfRequested } from "./perf";
+import type { FpsReading } from "./perf";
 
 // The address never changes while the page is open, so there is nothing to subscribe to.
 const noSubscription = () => () => {};

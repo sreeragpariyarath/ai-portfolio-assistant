@@ -146,7 +146,7 @@ test("chips show stored cards with no assistant call", async ({ page }) => {
 
   await page.getByRole("button", { name: "Me", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Sreerag", level: 2 })).toBeVisible();
-  await expect(page.locator('main [aria-live="polite"]')).toContainText("Profile card shown below.");
+  await expect(page.locator('main [aria-live="polite"]')).toContainText("Profile card shown.");
   await accessible(page);
 
   await page.getByRole("button", { name: "Skills", exact: true }).click();

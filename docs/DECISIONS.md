@@ -164,3 +164,9 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 - **Checked in a real browser (Chrome):** the filter is active (`backdrop-filter: url(#glass-…)` with a size-matched map), and in a zoomed screenshot the coloured streaks bend at the chip edges.
 - **Consequences:** Refraction works in Chromium browsers only (Chrome, Edge, Brave, Android Chrome). Safari, Firefox and every iOS browser get frosted glass (blur and saturation) with the same rim; the code picks this from the user agent. Option B stays the route if iPhones must show the same bending.
 
+## D-022: Finish Phase 4 on the synthetic data, then switch to the owner's real details
+- **Date:** 2026-10-30 · **Status:** Accepted
+- **Context:** The home page now shows the owner's name, but the assistant answers from the fictional "Alex Morgan" dataset (D-008). The owner shared a CV and wants the assistant to answer about them.
+- **Decision:** Keep the synthetic dataset while Phase 4 is built and tested. Once it works end to end, the owner provides full details and the knowledge records, eval questions, privacy checks (`assertIngestable` currently refuses anything not marked synthetic), Qdrant data and evaluations are redone for the real data, as a separate step that supersedes the synthetic-only part of D-008. The owner's **email may be shown** as contact information. A **phone number is never stored** in any file or shown by the assistant. Personal details are not written into memory or logs beyond what goes into the knowledge file.
+- **Consequences:** Until the switch, answers describe Alex Morgan while the page says sreerag; this is expected during testing. The headline ("AI Engineer") and the Fun chip are revisited with the real data.
+

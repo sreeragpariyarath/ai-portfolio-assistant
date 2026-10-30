@@ -147,7 +147,7 @@ describe("announcementFor", () => {
 
   it("adds the note for an answer that is not a plain answer", () => {
     const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
-    assert.equal(announcementFor(state.messages), "I don't have that. (Not in my records)");
+    assert.equal(announcementFor(state.messages), "I don't have that. (Not something I have on record)");
   });
 
   it("reads the friendly error, or that the answer was stopped", () => {

@@ -115,11 +115,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
 export function behaviorNote(behavior: Behavior | undefined): string | null {
   switch (behavior) {
     case "qualify":
-      return "Partly supported by my records";
+      return "I can only confirm part of this";
     case "abstain":
-      return "Not in my records";
+      return "Not something I have on record";
     case "refuse":
-      return "I can't share that";
+      return "That one stays private";
     default:
       return null;
   }

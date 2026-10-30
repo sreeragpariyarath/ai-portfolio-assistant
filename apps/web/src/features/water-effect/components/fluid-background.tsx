@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { createFluid } from "@/lib/fluid";
+import { createFluid } from "@/features/water-effect/fluid";
 
 // The water effect behind the home screen. While `active` is true it paints on a full-screen canvas
 // that ignores the pointer (so the controls above it keep working) and listens for the mouse and

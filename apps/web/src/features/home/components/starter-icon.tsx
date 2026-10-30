@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { StarterId } from "@/lib/site";
+import type { StarterId } from "@/features/home/site";
 
 // Small stroke icons, one colour each, as in the design. Drawn inline to avoid an icon dependency.
 const ICONS: Record<StarterId, { color: string; paths: ReactNode }> = {

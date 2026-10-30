@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { PROFILE } from "@/lib/portfolio-cards";
+import { PROFILE } from "@/features/cards/portfolio-cards";
 import { CARD_SURFACE, Pill } from "./card-shell";
 
 export function ProfileCardView() {

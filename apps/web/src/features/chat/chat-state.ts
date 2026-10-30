@@ -3,7 +3,7 @@ import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
 import { pickAbstainLine, withoutFirstSentence } from "./abstain-lines.ts";
 import { splitCitations } from "./citations.ts";
-import type { CardKind } from "./portfolio-cards.ts";
+import type { CardKind } from "../cards/portfolio-cards.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
 // function. Each question is answered on its own (the API takes no history); the list is only what

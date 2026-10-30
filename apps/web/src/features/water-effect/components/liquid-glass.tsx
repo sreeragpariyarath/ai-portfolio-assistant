@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { displacementPixels, supportsSvgBackdropFilter } from "@/lib/liquid-glass";
+import { displacementPixels, supportsSvgBackdropFilter } from "@/features/water-effect/liquid-glass";
 
 // A liquid-glass surface: the backdrop (the water) is bent at the rim like a lens, lightly blurred
 // and brightened, with a bright inner rim on top. Chromium browsers get the real refraction through

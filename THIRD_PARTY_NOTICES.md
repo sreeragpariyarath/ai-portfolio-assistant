@@ -5,7 +5,7 @@ This project includes code derived from the following open-source work. The lice
 ## WebGL Fluid Simulation
 
 - **Source:** https://github.com/PavelDoGreat/WebGL-Fluid-Simulation (`script.js`), by Pavel Dobryakov
-- **Used in:** `apps/web/src/lib/fluid/` (the water effect on the home page), as a TypeScript port. The shader code in `shaders.ts` is the original GLSL, unchanged apart from leaving out the demo's checkerboard backdrop. The other files are ported and restructured; each carries the licence header below.
+- **Used in:** `apps/web/src/features/water-effect/fluid/` (the water effect on the home page), as a TypeScript port. The shader code in `shaders.ts` is the original GLSL, unchanged apart from leaving out the demo's checkerboard backdrop. The other files are ported and restructured; each carries the licence header below.
 - **What was changed:** typed and split into modules; the demo's Google Analytics calls, promo popup and store links, dat.GUI panel, social buttons, keyboard shortcuts, screenshot capture and checkerboard backdrop were removed; the dithering texture is generated instead of downloaded; rendering is always transparent so the paint composites over a white page; mouse, touch and pen input uses pointer events on the window; and lifecycle, pause, fallback and cleanup code was added. See D-019 in `docs/DECISIONS.md`.
 - **Licence:** MIT
 

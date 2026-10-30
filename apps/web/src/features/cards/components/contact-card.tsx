@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CONTACT } from "@/lib/portfolio-cards";
+import { CONTACT } from "@/features/cards/portfolio-cards";
 import { CARD_SURFACE, ExternalIcon, LINK_PILL } from "./card-shell";
 
 export function ContactCardView() {

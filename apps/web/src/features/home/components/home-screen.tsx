@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
-import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
-import type { CardKind } from "@/lib/portfolio-cards";
-import { SITE, STARTERS } from "@/lib/site";
-import { FluidBackground } from "./fluid-background";
-import { LiquidGlass } from "./liquid-glass";
+import { MAX_QUESTION_CHARS } from "@/features/chat/chat-client";
+import type { CardKind } from "@/features/cards/portfolio-cards";
+import { SITE, STARTERS } from "@/features/home/site";
+import { FluidBackground } from "@/features/water-effect/components/fluid-background";
+import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
 import { StarterIcon } from "./starter-icon";
 
 // The one-screen home page: no scrolling, pure white, water that follows the mouse or a finger.

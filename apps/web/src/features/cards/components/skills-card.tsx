@@ -1,4 +1,4 @@
-import { SKILL_GROUPS } from "@/lib/portfolio-cards";
+import { SKILL_GROUPS } from "@/features/cards/portfolio-cards";
 import { CARD_SURFACE, Pill } from "./card-shell";
 
 export function SkillsCardView() {

@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["scripts/**/*.ts", "packages/rag/**/*.ts", "apps/web/src/lib/**/*.ts", "playwright.config.ts", "tests/browser/**/*.ts"]
+  "include": ["scripts/**/*.ts", "packages/rag/**/*.ts", "apps/web/src/features/**/*.ts", "apps/web/src/shared/**/*.ts", "playwright.config.ts", "tests/browser/**/*.ts"]
 }

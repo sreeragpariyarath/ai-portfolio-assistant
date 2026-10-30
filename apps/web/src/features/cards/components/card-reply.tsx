@@ -1,4 +1,4 @@
-import type { CardKind } from "@/lib/portfolio-cards";
+import type { CardKind } from "@/features/cards/portfolio-cards";
 import { ContactCardView } from "./contact-card";
 import { ProfileCardView } from "./profile-card";
 import { ProjectCarousel } from "./project-cards";

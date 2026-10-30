@@ -33,29 +33,31 @@ export interface FluidConfig {
   MAX_PIXEL_RATIO: number;
 }
 
+// The values of the reference page's own control panel (the owner copied them from its dat.GUI):
+// quality high, sim resolution 256, density diffusion 2.5, velocity diffusion 3.71, pressure 0.6,
+// vorticity 0, splat radius 0.23, shading on, colorful off, bloom on (intensity 1, threshold 1),
+// sunrays on (weight 1). They give the calm, water-like movement of that page.
 export const DEFAULT_CONFIG: FluidConfig = {
-  SIM_RESOLUTION: 128,
+  SIM_RESOLUTION: 256,
   DYE_RESOLUTION: 1024,
-  DENSITY_DISSIPATION: 1.5,
-  VELOCITY_DISSIPATION: 0.2,
-  PRESSURE: 0.8,
+  DENSITY_DISSIPATION: 2.5,
+  VELOCITY_DISSIPATION: 3.71,
+  PRESSURE: 0.6,
   PRESSURE_ITERATIONS: 20,
-  CURL: 30,
-  SPLAT_RADIUS: 0.25,
+  CURL: 0,
+  SPLAT_RADIUS: 0.23,
   SPLAT_FORCE: 6000,
   SHADING: true,
-  COLORFUL: true,
+  COLORFUL: false,
   COLOR_UPDATE_SPEED: 10,
-  // 0.5 looked right in a real browser (0.35 is pale, 0.8 is neon and mixed hues add up to white).
   COLOR_INTENSITY: 0.5,
-  // Bloom and sunrays add glow to a dark scene; on white they only wash the colour out.
-  BLOOM: false,
+  BLOOM: true,
   BLOOM_ITERATIONS: 8,
   BLOOM_RESOLUTION: 256,
-  BLOOM_INTENSITY: 0.8,
-  BLOOM_THRESHOLD: 0.6,
+  BLOOM_INTENSITY: 1,
+  BLOOM_THRESHOLD: 1,
   BLOOM_SOFT_KNEE: 0.7,
-  SUNRAYS: false,
+  SUNRAYS: true,
   SUNRAYS_RESOLUTION: 196,
   SUNRAYS_WEIGHT: 1.0,
   HOVER: true,

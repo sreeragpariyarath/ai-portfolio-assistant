@@ -58,21 +58,34 @@ describe("pointer state", () => {
 describe("resolveConfig", () => {
   const desktop = { mobile: false, linearFiltering: true };
 
-  it("is tuned for paint on a white page: no bloom, no sunrays, no start-up splats, mouse hover on", () => {
+  it("uses the values of the reference page's control panel: calm, water-like movement", () => {
     const config = resolveConfig({}, desktop);
-    assert.equal(config.BLOOM, false);
-    assert.equal(config.SUNRAYS, false);
+    assert.equal(config.SIM_RESOLUTION, 256);
+    assert.equal(config.DYE_RESOLUTION, 1024);
+    assert.equal(config.DENSITY_DISSIPATION, 2.5);
+    assert.equal(config.VELOCITY_DISSIPATION, 3.71);
+    assert.equal(config.PRESSURE, 0.6);
+    assert.equal(config.CURL, 0);
+    assert.equal(config.SPLAT_RADIUS, 0.23);
+    assert.equal(config.SHADING, true);
+    assert.equal(config.COLORFUL, false);
+    assert.deepEqual([config.BLOOM, config.BLOOM_INTENSITY, config.BLOOM_THRESHOLD], [true, 1, 1]);
+    assert.deepEqual([config.SUNRAYS, config.SUNRAYS_WEIGHT], [true, 1]);
+  });
+
+  it("starts pure white (no start-up splats) and lets a mouse stir by moving", () => {
+    const config = resolveConfig({}, desktop);
     assert.equal(config.INITIAL_SPLATS, 0);
     assert.equal(config.HOVER, true);
-    assert.equal(config.SHADING, true);
-    assert.equal(config.DYE_RESOLUTION, 1024);
   });
 
   it("applies overrides without changing the defaults object", () => {
+    const before = { ...DEFAULT_CONFIG };
     const config = resolveConfig({ CURL: 5, DENSITY_DISSIPATION: 3 }, desktop);
     assert.equal(config.CURL, 5);
     assert.equal(config.DENSITY_DISSIPATION, 3);
-    assert.equal(DEFAULT_CONFIG.CURL, 30);
+    assert.deepEqual(DEFAULT_CONFIG, before);
+    assert.notEqual(config, DEFAULT_CONFIG);
   });
 
   it("uses a smaller dye texture on phones, as the original does", () => {

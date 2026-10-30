@@ -117,8 +117,15 @@ The owner accepted option C on 2026-10-30 (D-020). The logo, avatar and name arr
 - `apps/web/src/lib/chat-events.ts`: `decodeChatEvent(frame)` returns a typed `meta`, `token`, `done` or `error` event, `null` for an event name it does not know (so the server can add events), and throws `MalformedEventError` for a known event with a bad payload. The error message never contains the payload, which is server text.
 - Tests use the server's exact framing and cut a stream with multi-byte characters (accents, Japanese, an emoji) at **every byte position**, one byte at a time, and as one chunk, expecting identical frames.
 
-### 4.3 Chat client
-A typed client `askQuestion(question, { signal })` that returns an async iterable of `ChatEvent`s (using 4.2), treats an `incomplete` end or a `MalformedEventError` as a stream error, and maps HTTP errors to a typed error with a code (never the raw body). Cancellation through `AbortController` when the visitor submits again or leaves. Tests with a mocked `fetch`.
+### 4.3 Chat client (done)
+`apps/web/src/lib/chat-client.ts`: `askQuestion(question, { signal, url, fetch })` is an async generator of `ChatEvent`s built on the 4.2 parser.
+- Checks the question first (trimmed, 1 to 500 characters counted like the API's `.length`) so a bad one does not use a rate-limited request.
+- Sends one `POST` with the trimmed question as JSON. HTTP errors become a `ChatClientError` with a code, the status and `retryAfterSeconds` (whole seconds only). The API's own codes win when this client knows them; otherwise the status decides (429 rate limited, 413 too large, 400 or 415 bad request, 5xx unavailable). A non-JSON body such as an HTML error page falls back to the status.
+- A 200 that is not an event stream, a malformed event, a stream that ends without `done` or `error`, a cut-off frame and a connection that dies mid-answer are all errors (`bad_response` or `stream_interrupted`), and the events already received were already yielded, so the page can keep the text shown.
+- A server `error` event is yielded like any other and ends the stream; `normalizeErrorCode` maps its code to one the client knows.
+- **Server wording is never shown.** Every `ChatClientError` message comes from a fixed table (`friendlyMessage`), with the wait time added for `rate_limited` and `demo_busy`.
+- Cancelling (`signal` aborted) passes the browser's `AbortError` through, not a `ChatClientError`; `isAbortError` lets the page tell them apart. The connection is released after `done`, `error`, an early `break` or a failure.
+- Tests use real `Response` and `ReadableStream` objects with a mocked `fetch`: no network, no Gemini.
 
 ### 4.4 Fluid module (port of the locked source)
 Port `script.js` to `apps/web/src/lib/fluid/` as described above: keep the MIT header, remove the analytics, promo, GUI, keyboard and network-texture code, add `start`/`stop`/`destroy`, the pause rules, WebGL failure handling, the pixel-ratio cap and window-level pointer and touch input. Add the `THIRD_PARTY_NOTICES.md` entry. Tests cover the pure parts (resolution maths, colour generation, input routing that ignores interactive elements, the lifecycle calls on a stubbed context). The look itself is reviewed by the owner in a browser.

@@ -63,10 +63,32 @@ describe("buildPrompt", () => {
     assert.ok(/Cite every factual claim/.test(SYSTEM_INSTRUCTION));
     assert.ok(/unverified/.test(SYSTEM_INSTRUCTION) && /valid_until/.test(SYSTEM_INSTRUCTION) && /conflict/.test(SYSTEM_INSTRUCTION));
     assert.ok(/phone number, salary/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/state only facts/i.test(SYSTEM_INSTRUCTION));
     assert.equal(buildPrompt("q", records).systemInstruction, SYSTEM_INSTRUCTION);
   });
 
   it("is deterministic", () => {
     assert.deepEqual(buildPrompt("q", records, { today: "2026-10-29" }), buildPrompt("q", records, { today: "2026-10-29" }));
+  });
+
+  it("sets a warm, human tone for non-answers without loosening any safety rule", () => {
+    assert.ok(/Tone:/.test(SYSTEM_INSTRUCTION));
+    // Friendly when it cannot answer, firm when it refuses.
+    assert.ok(/behavior abstain/.test(SYSTEM_INSTRUCTION) && /friendly/.test(SYSTEM_INSTRUCTION));
+    // Abstain is for nothing relevant; a partly answered question is qualify, not a flat "I don't know".
+    assert.ok(/hold nothing relevant/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/answer only part of the question \(behavior qualify\)/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/behavior refuse/.test(SYSTEM_INSTRUCTION) && /friendly but firm/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/do not hint that the protected detail exists/.test(SYSTEM_INSTRUCTION));
+    // Humour may never create a fact, and is kept small.
+    assert.ok(/Never joke your way into a claim/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/no sarcasm, no puns/i.test(SYSTEM_INSTRUCTION) && /at most one emoji/.test(SYSTEM_INSTRUCTION));
+    // The offered topics must come from the records.
+    assert.ok(/naming only topics that appear in the records/.test(SYSTEM_INSTRUCTION));
+    // No literal example sentence for the model to copy, and an offer of topics needs no citation.
+    assert.ok(!/make something up/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/needs no citation/.test(SYSTEM_INSTRUCTION));
+    // The original rules are still all there.
+    assert.ok(/Do not guess/.test(SYSTEM_INSTRUCTION) && /Never invent an id/.test(SYSTEM_INSTRUCTION));
   });
 });

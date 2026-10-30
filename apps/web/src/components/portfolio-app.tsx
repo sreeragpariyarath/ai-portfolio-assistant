@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { ChatClientError, askQuestion, isAbortError } from "@/lib/chat-client";
 import { chatReducer, initialChatState } from "@/lib/chat-state";
+import { matchCardIntent } from "@/lib/card-intent";
+import { CARD_INTROS } from "@/lib/portfolio-cards";
+import type { CardKind } from "@/lib/portfolio-cards";
 import { ChatView } from "./chat-view";
 import { HomeScreen } from "./home-screen";
 import { PerfOverlay } from "./perf-overlay";
@@ -33,13 +36,24 @@ export function PortfolioApp() {
     };
   }, []);
 
-  const ask = useCallback(async (question: string) => {
+  const ask = useCallback(async (question: string, chipCard?: CardKind) => {
     // One answer at a time: a new question cancels the request still running.
     controller.current?.abort();
-    const abort = new AbortController();
-    controller.current = abort;
     counter.current += 1;
     const id = `answer-${counter.current}`;
+
+    // A chip, or a short typed request for one ("show projects"), shows its stored card with no assistant call.
+    const card = chipCard ?? matchCardIntent(question);
+    if (card !== null) {
+      controller.current = null;
+      currentId.current = null;
+      dispatch({ type: "show", id, question, card, intro: CARD_INTROS[card] });
+      setView("chat");
+      return;
+    }
+
+    const abort = new AbortController();
+    controller.current = abort;
     currentId.current = id;
 
     dispatch({ type: "ask", id, question });
@@ -83,12 +97,12 @@ export function PortfolioApp() {
   return (
     <>
       {view === "home" ? (
-        <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question) => void ask(question)} />
+        <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question, card) => void ask(question, card)} />
       ) : (
         <ChatView
           messages={state.messages}
           busy={state.activeId !== null}
-          onAsk={(question) => void ask(question)}
+          onAsk={(question, card) => void ask(question, card)}
           onStop={stop}
           onHome={goHome}
         />

@@ -158,8 +158,11 @@ Built: `apps/web/src/components/home-screen.tsx` and `fluid-background.tsx`, `sr
 ### 4.5b Liquid glass spike (done: option A, D-021)
 In-house SVG displacement filter through `backdrop-filter: url()` (`src/components/liquid-glass.tsx`, maths in `src/lib/liquid-glass.ts` with tests). Refraction in Chromium browsers; frosted glass with the same rim in Safari, Firefox and iOS. Applied to the logo tile, input pill and chips. At the same time the home screen was scaled down to the reference's proportions after the owner found it too big (input about 29rem wide, chips about 72 px tall on a 966 px screen, headline up to 4rem, avatar up to 15rem), still sized from the screen height.
 
-### 4.6 Chat view
-The client component that sends a question, streams the answer, shows the states, turns `[record-id]` citations into chips, and stops the fluid when the home screen is left. Check the Next guides for `'use client'` boundaries and `loading`/`error` files before adding them.
+### 4.6 Chat view (done)
+- `src/components/portfolio-app.tsx`: the page. Home screen until the first question, then the chat. Leaving home unmounts the water effect (it stops and gives the GPU back). One answer at a time: a new question cancels the request still running; leaving the page cancels it too.
+- `src/components/chat-view.tsx`: the conversation in the reference layout (small avatar at the top, which goes back home; question bubbles; answers streaming in with typing dots before the first words; quick-question pills that can be hidden; the liquid-glass input at the bottom, whose send button becomes a stop button while an answer streams). It follows new text only while the visitor is near the bottom. Citations show as small numbers with a "Sources" row once the answer is done; 4.7 turns them into links. Answers that are not plain answers get a short note ("Partly supported by my records", "Not in my records", "I can't share that"); errors show a fixed friendly sentence, never the server's words.
+- `src/lib/chat-state.ts` (a reducer: ask, meta, token, done, server error, client failure, stop, reset; late events from a replaced answer are ignored) and `src/lib/citations.ts` (splits `[record-id]` out of the text and numbers them), both pure and tested.
+- Checked in a real browser with a fake API (no Gemini calls): a streamed answer with three citations, the "demo busy" message with the wait time, and a stream cut off mid-answer (the text stays, with "The answer was cut off").
 
 ### 4.7 Record view and citation links
 Public record pages or anchors generated from the bundled public corpus. Only `visibility: public` records are present. A test confirms no private ID appears in the generated output.

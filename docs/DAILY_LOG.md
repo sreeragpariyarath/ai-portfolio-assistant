@@ -5,7 +5,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
 ## 2026-10-30
-Next: Phase 4 task 4.6 (the chat view). The owner should check the glass and sizes on a real screen, and still answer the open questions in the plan (whose facts the assistant tells, the headline, the Fun and Contact chips).
+Next: Phase 4 task 4.7 (citation links to the public records), then 4.8 to 4.10.
+
+- Phase 4 task 4.6 (PC). Built the chat: asking a question or pressing a chip opens it and stops the water effect; the answer streams in word by word with typing dots first, citations become small numbers with a "Sources" row, non-answers get a short note, and errors (busy, too many questions, cut off) show a fixed friendly sentence. A new question cancels the old one, and the send button turns into a stop button while answering. Checked in a real browser with a fake API, so no Gemini calls: a normal answer, the busy message and a cut-off answer all look right. `pnpm test:scripts` 385 pass (12 new for the chat state and citations), type-check, web lint and build pass. The real API has not been called from the page yet; that is the live check in 4.10.
 
 - Decided with the owner (D-022): finish and test Phase 4 on the synthetic Alex Morgan data, then switch to the owner's real details, which the owner will provide in full. The owner's email may be shown as contact; a phone number is never stored or shown. The owner reviewed the home page (sizes, water, glass) and is happy with it. Docs only.
 

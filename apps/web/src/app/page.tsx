@@ -1,5 +1,5 @@
-import { HomeScreen } from "@/components/home-screen";
+import { PortfolioApp } from "@/components/portfolio-app";
 
 export default function Home() {
-  return <HomeScreen />;
+  return <PortfolioApp />;
 }

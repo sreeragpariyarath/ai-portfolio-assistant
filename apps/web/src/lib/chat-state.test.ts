@@ -146,8 +146,11 @@ describe("announcementFor", () => {
   });
 
   it("adds the note for an answer that is not a plain answer", () => {
+    // An abstain reply opens with a stored line (see "abstain replies" below) instead of the model's first sentence.
     const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
-    assert.equal(announcementFor(state.messages), "I don't have that. (Not something I have on record)");
+    const lead = state.messages[1]?.lead;
+    assert.ok(lead !== undefined);
+    assert.equal(announcementFor(state.messages), `${lead} (Not something I have on record)`);
   });
 
   it("reads the friendly error, or that the answer was stopped", () => {
@@ -196,5 +199,27 @@ describe("stored cards", () => {
   it("is announced once, naming the card", () => {
     const state = chatReducer(initialChatState, show);
     assert.equal(announcementFor(state.messages), "Here are some things I've built. Project cards shown below.");
+  });
+});
+
+describe("abstain replies", () => {
+  const events = (behavior: "abstain" | "refuse") => {
+    let state = chatReducer(initialChatState, { type: "ask", id: "a1", question: "What is your favourite colour?" });
+    state = chatReducer(state, { type: "event", id: "a1", event: { type: "meta", behavior, behaviorValid: true, retrieved: [], degraded: false } });
+    state = chatReducer(state, { type: "event", id: "a1", event: { type: "token", text: "I do not have that. I can talk about projects." } });
+    return chatReducer(state, { type: "event", id: "a1", event: { type: "done", citations: [], invalidCitationsDropped: 0, truncated: false, model: "m" } });
+  };
+
+  it("gets a stored opening line, and the announcement swaps the model's first sentence for it", () => {
+    const state = events("abstain");
+    const lead = state.messages[1]?.lead;
+    assert.ok(lead !== undefined && lead.length > 20);
+    assert.equal(announcementFor(state.messages), `${lead} I can talk about projects. (Not something I have on record)`);
+  });
+
+  it("never gets one on a refusal", () => {
+    const state = events("refuse");
+    assert.equal(state.messages[1]?.lead, undefined);
+    assert.match(announcementFor(state.messages), /^I do not have that\. I can talk about projects\./);
   });
 });

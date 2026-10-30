@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
+import { withoutFirstSentence } from "@/lib/abstain-lines";
 import { announcementFor, behaviorNote } from "@/lib/chat-state";
 import type { ChatMessage } from "@/lib/chat-state";
 import { splitCitations } from "@/lib/citations";
@@ -26,17 +27,19 @@ function TypingDots() {
 function AssistantMessage({ message }: { message: ChatMessage }) {
   // While streaming, the API has already removed invalid citations; once done, only the final list counts.
   const allowed = message.status === "done" ? new Set(message.citations) : undefined;
-  const segments = splitCitations(message.text, allowed);
+  const body = message.lead !== undefined ? withoutFirstSentence(message.text) : message.text;
+  const segments = splitCitations(body, allowed);
   const note = behaviorNote(message.behavior);
 
   return (
     <div className="text-[0.95rem] leading-relaxed text-neutral-800" aria-busy={message.status === "streaming"}>
-      {message.text === "" && message.status === "streaming" ? (
+      {message.lead !== undefined ? <p className="mb-2 font-medium text-neutral-900">{message.lead}</p> : null}
+      {body === "" && message.lead === undefined && message.status === "streaming" ? (
         <>
           <TypingDots />
           <span className="sr-only">Thinking…</span>
         </>
-      ) : (
+      ) : body === "" ? null : (
         <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">
           {segments.map((segment, index) =>
             segment.type === "text" ? (

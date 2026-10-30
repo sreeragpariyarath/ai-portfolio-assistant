@@ -224,3 +224,26 @@ for (const viewport of [{ width: 360, height: 640 }, { width: 1280, height: 800 
     await page.screenshot({ path: testInfo.outputPath("cards.png"), fullPage: true });
   });
 }
+
+test("an I-don't-know reply opens with a stored line; a refusal does not", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("textbox").fill("nothing");
+  await page.getByRole("textbox").press("Enter");
+  const live = page.locator('main [aria-live="polite"]');
+  await expect(live).toContainText("I can tell you about the projects instead.");
+  const announced = (await live.innerText()).replace(/\s+/g, " ");
+  expect(announced).not.toContain("I do not have that information");
+  await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(0);
+  await expect(page.locator("ol").getByText("I can tell you about the projects instead.")).toBeVisible();
+  await expect(page.locator("ol").getByText("Not something I have on record")).toBeVisible();
+  await accessible(page);
+  const lead = await page.locator("li p.font-medium").last().innerText();
+  expect(lead.length).toBeGreaterThan(20);
+  expect(announced.startsWith(lead)).toBe(true);
+
+  await page.getByRole("textbox").fill("private");
+  await page.getByRole("textbox").press("Enter");
+  await expect(page.locator("ol").getByText("That one stays private")).toBeVisible();
+  await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
+  await expect(page.locator("li p.font-medium")).toHaveCount(1);
+});

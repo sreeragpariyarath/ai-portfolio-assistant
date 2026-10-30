@@ -1,6 +1,7 @@
 import { friendlyMessage, normalizeErrorCode } from "./chat-client.ts";
 import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
+import { pickAbstainLine, withoutFirstSentence } from "./abstain-lines.ts";
 import { splitCitations } from "./citations.ts";
 import type { CardKind } from "./portfolio-cards.ts";
 
@@ -22,6 +23,8 @@ export interface ChatMessage {
   error?: string;
   // Set on stored replies (task 4.11): the card shown under `text`. No assistant call was made for it.
   card?: CardKind;
+  // A stored opening line that replaces the model's own first sentence on an abstain reply.
+  lead?: string;
 }
 
 export interface ChatState {
@@ -88,7 +91,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       if (state.activeId !== id) return state;
       switch (event.type) {
         case "meta":
-          return update(state, id, (message) => ({ ...message, behavior: event.behavior }));
+          return update(state, id, (message) => ({
+            ...message,
+            behavior: event.behavior,
+            ...(event.behavior === "abstain" ? { lead: pickAbstainLine(id) } : {}),
+          }));
         case "token":
           return update(state, id, (message) => ({ ...message, text: message.text + event.text }));
         case "done":
@@ -153,7 +160,7 @@ export function announcementFor(messages: ChatMessage[]): string {
     if (message.status === "error") return message.error ?? "";
     if (message.status === "stopped") return "Answer stopped.";
     if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown below.`;
-    const text = splitCitations(message.text)
+    const text = splitCitations(message.lead !== undefined ? `${message.lead} ${withoutFirstSentence(message.text)}` : message.text)
       .map((segment) => (segment.type === "text" ? segment.text : ""))
       .join("")
       // Removing a citation can leave a space before punctuation ("built it ."); close it up.

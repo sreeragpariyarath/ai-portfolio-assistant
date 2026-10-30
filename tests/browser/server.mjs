@@ -18,6 +18,15 @@ createServer(async (req, res) => {
     }
     res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-store" });
     const send = (event, data) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+    if (question === "nothing" || question === "private") {
+      const behavior = question === "nothing" ? "abstain" : "refuse";
+      send("meta", { behavior, behaviorValid: true, retrieved: [], degraded: false });
+      send("token", { text: "I do not have that information. " });
+      send("token", { text: "I can tell you about the projects instead." });
+      send("done", { citations: [], invalidCitationsDropped: 0, truncated: false, model: "fixture" });
+      res.end();
+      return;
+    }
     send("meta", { behavior: "answer", behaviorValid: true, retrieved: ["project-demo-006"], degraded: false });
     if (question !== "stop") send("token", { text: "A completed answer " });
     const timer = setTimeout(() => {

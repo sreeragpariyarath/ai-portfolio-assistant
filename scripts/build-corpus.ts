@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import {
-  PUBLIC_CORPUS_FILE,
+  PUBLIC_CORPUS_FILES,
   buildPublicCorpus,
   normalizeNewlines,
   serializePublicCorpus,
@@ -10,7 +10,8 @@ import { EVAL_FILE, RECORDS_FILE, REPO_ROOT, loadJson } from "./lib/eval-data.ts
 import type { Corpus } from "./lib/eval-data.ts";
 import { validateEvalData } from "./validate-eval.ts";
 
-// `pnpm corpus:build` writes the bundle the Worker ships. `--check` only compares and fails if the committed file is stale.
+// `pnpm corpus:build` writes the public records the Worker and the web app ship (the same content in
+// both places). `--check` only compares and fails if a committed copy is stale.
 function main(): number {
   const check = process.argv.includes("--check");
 
@@ -33,21 +34,26 @@ function main(): number {
 
   const built = buildPublicCorpus(corpus as Corpus);
   const next = serializePublicCorpus(built);
-  const target = resolve(REPO_ROOT, PUBLIC_CORPUS_FILE);
-
   if (check) {
-    const current = existsSync(target) ? normalizeNewlines(readFileSync(target, "utf8")) : undefined;
-    if (current !== next) {
-      console.error(`${PUBLIC_CORPUS_FILE} is missing or stale. Run "pnpm corpus:build" and commit the result.`);
+    const stale = PUBLIC_CORPUS_FILES.filter((file) => {
+      const target = resolve(REPO_ROOT, file);
+      const current = existsSync(target) ? normalizeNewlines(readFileSync(target, "utf8")) : undefined;
+      return current !== next;
+    });
+    if (stale.length > 0) {
+      for (const file of stale) console.error(`${file} is missing or stale. Run "pnpm corpus:build" and commit the result.`);
       return 1;
     }
-    console.log(`ok: ${PUBLIC_CORPUS_FILE} is current (${built.records.length} public records)`);
+    console.log(`ok: ${PUBLIC_CORPUS_FILES.join(" and ")} are current (${built.records.length} public records)`);
     return 0;
   }
 
-  mkdirSync(dirname(target), { recursive: true });
-  writeFileSync(target, next, "utf8");
-  console.log(`wrote ${built.records.length} public records to ${PUBLIC_CORPUS_FILE}`);
+  for (const file of PUBLIC_CORPUS_FILES) {
+    const target = resolve(REPO_ROOT, file);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, next, "utf8");
+    console.log(`wrote ${built.records.length} public records to ${file}`);
+  }
   return 0;
 }
 

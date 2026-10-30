@@ -1,26 +1,38 @@
 @import "tailwindcss";
 
+/* The design is pure white (D-018), so there is no dark mode. */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Segoe UI is installed on Windows; other systems fall back to their own UI font. */
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+.question-input:focus {
+  outline: none;
+}
+
+html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-visible) {
+  outline: 2px solid #0171e3;
+  outline-offset: 3px;
+}
+
+/* At zoomed/short viewports, let visitors scroll to every home control. */
+@media (max-height: 500px), (max-width: 320px) {
+  .home-screen {
+    touch-action: pan-y pinch-zoom;
+  }
 }

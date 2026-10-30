@@ -66,3 +66,36 @@ pnpm dev          # wrangler dev; warns by name if a required secret is missing
 `.dev.vars` is git-ignored. Wrangler loads only the three required names from it. After editing
 `wrangler.jsonc`, run `pnpm cf-typegen` and commit the regenerated `worker-configuration.d.ts`; CI fails
 if it is out of date (`pnpm cf-typegen:check`).
+
+## 6. Web app (Phase 4)
+The web app (`apps/web`) is a **static export**, and the API Worker serves it together with `/api/*` (D-020). There are two ways to run it:
+
+```bash
+# A. Development with live reload: web on :3000 calling the Worker on :8787
+cd apps/web && cp .env.local.example .env.local     # sets NEXT_PUBLIC_API_BASE_URL=http://localhost:8787
+pnpm dev:api                                         # terminal 1
+pnpm dev:web                                         # terminal 2, then open http://localhost:3000
+
+# B. Exactly what production serves: one Worker, one address
+pnpm --filter web build                              # writes apps/web/out
+pnpm dev:api                                         # open http://localhost:8787 (page) and /api/health (API)
+```
+
+- `NEXT_PUBLIC_API_BASE_URL` is empty in production, so the browser calls the same-origin path `/api/chat`. Next inlines
+  `NEXT_PUBLIC_` values **at build time**, so changing it needs a rebuild. It must be an origin only (no path).
+- The export must exist before `wrangler deploy` (or `wrangler dev`) can serve the site: build the web app first. The API tests
+  do not need it.
+- A static export cannot use `cacheComponents` or `partialPrefetching`, so both are off in `apps/web/next.config.ts`.
+
+## 7. Measuring performance on a real device (Phase 4, task 4.9)
+Open the site with `?perf` on the end of the address. A small readout in the bottom-left corner shows the page's frame rate, the worst frame in the last second, and the window size and pixel ratio. Move the mouse (or drag a finger) around to stir the water and watch the numbers: 60 is smooth, under 30 is a problem. Nothing is measured without `?perf`.
+
+```bash
+pnpm --filter web build      # build the site
+pnpm dev:api                 # serves it at http://localhost:8787  (open http://localhost:8787/?perf)
+```
+
+- **A second computer:** pull the branch, run the two commands above and open the address on that machine.
+- **A phone on the same Wi-Fi:** run `pnpm dev:api --ip 0.0.0.0` (**without** an extra `--` before the flag: with it, wrangler ignores the flag and stays on localhost), find the computer's address on the network (for example 192.168.1.20 from `ipconfig`) and open `http://192.168.1.20:8787/?perf` on the phone. This makes the dev server reachable by everyone on that network, so use a network you trust and stop it (Ctrl+C) when you are done. Windows may ask to allow Node through the firewall; allow it for private networks only. Forwarding of `--ip` and `--port` was checked on localhost only; the `0.0.0.0` form itself has not been run.
+- Asking questions is not needed to measure the water, so no Gemini quota is used.
+- Download sizes: `pnpm web:size` (after the build) prints what a visitor downloads.

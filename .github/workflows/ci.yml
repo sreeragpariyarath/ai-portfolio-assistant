@@ -27,6 +27,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm eval:validate
+      - name: Public record bundles are current (API and web)
+        run: pnpm corpus:check
       - run: pnpm test:scripts
       - run: pnpm typecheck:scripts
       - name: Worker types are current
@@ -53,3 +55,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web lint
       - run: pnpm --filter web build
+      - name: Static export exists (the Worker serves it, D-020)
+        run: test -f apps/web/out/index.html && test -f apps/web/out/404.html
+      - name: Install browser for accessibility tests
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Keyboard, responsive and accessibility checks (mocked API)
+        run: pnpm test:web:a11y

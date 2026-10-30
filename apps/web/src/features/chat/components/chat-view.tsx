@@ -178,7 +178,7 @@ export function ChatView({
           {messages.map((message, index) =>
             message.role === "user" ? (
               <li key={message.id} className="flex justify-center">
-                <p className={`max-w-[85%] rounded-3xl bg-[#0171E3] px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
+                <p className={`max-w-[85%] glass-bubble rounded-3xl px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
               </li>
             ) : (
               <li key={message.id}>

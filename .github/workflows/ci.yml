@@ -27,6 +27,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm eval:validate
+      - name: Public record bundles are current (API and web)
+        run: pnpm corpus:check
       - run: pnpm test:scripts
       - run: pnpm typecheck:scripts
       - name: Worker types are current

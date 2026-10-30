@@ -164,8 +164,11 @@ In-house SVG displacement filter through `backdrop-filter: url()` (`src/componen
 - `src/lib/chat-state.ts` (a reducer: ask, meta, token, done, server error, client failure, stop, reset; late events from a replaced answer are ignored) and `src/lib/citations.ts` (splits `[record-id]` out of the text and numbers them), both pure and tested.
 - Checked in a real browser with a fake API (no Gemini calls): a streamed answer with three citations, the "demo busy" message with the wait time, and a stream cut off mid-answer (the text stays, with "The answer was cut off").
 
-### 4.7 Record view and citation links
-Public record pages or anchors generated from the bundled public corpus. Only `visibility: public` records are present. A test confirms no private ID appears in the generated output.
+### 4.7 Record view and citation links (done)
+- `pnpm corpus:build` now writes the same public-only bundle to `apps/api/src/generated/` and `apps/web/src/generated/` (every record passes the same privacy guard as ingestion), and `pnpm corpus:check`, now a CI step, fails if either copy is stale.
+- `src/app/records/[id]/page.tsx`: one static page per public record (`generateStaticParams`, `dynamicParams = false`, so any other id is a 404): type, title, content, status, dates, a link to the related project, and a note that this is demo data while the fictional dataset is in use (D-022).
+- In the chat, the citation numbers and the "Sources" chips link to these pages in a new tab, so the conversation stays put.
+- `src/lib/records.ts` (path, lookup, labels, dates) is pure and tested. A test checks the web bundle holds every public record and no private id or content, and a scan of the whole built site found the private record nowhere.
 
 ### 4.8 Accessibility and responsive pass
 Keyboard-only walk-through, a screen-reader check of the live region, phone width at 360 px, contrast over the coloured water, and reduced-motion behaviour.

@@ -2,6 +2,9 @@ import { assertIngestable } from "@portfolio/rag";
 import type { Corpus, KnowledgeRecord } from "./eval-data.ts";
 
 export const PUBLIC_CORPUS_FILE = "apps/api/src/generated/public-corpus.json";
+// The web app ships the same public records, for the pages that citations link to (Phase 4 task 4.7).
+export const WEB_PUBLIC_CORPUS_FILE = "apps/web/src/generated/public-corpus.json";
+export const PUBLIC_CORPUS_FILES = [PUBLIC_CORPUS_FILE, WEB_PUBLIC_CORPUS_FILE] as const;
 
 // What the Worker needs to search and cite a record. `visibility` and `isSynthetic` are left out on purpose:
 // everything in the bundle is public and synthetic by construction.

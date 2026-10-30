@@ -6,6 +6,7 @@ import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
 import { behaviorNote } from "@/lib/chat-state";
 import type { ChatMessage } from "@/lib/chat-state";
 import { splitCitations } from "@/lib/citations";
+import { recordPath } from "@/lib/records";
 import { SITE, STARTERS } from "@/lib/site";
 import { LiquidGlass } from "./liquid-glass";
 import { StarterIcon } from "./starter-icon";
@@ -40,13 +41,17 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
               <span key={index}>{segment.text}</span>
             ) : (
               <sup key={index} className="mx-0.5">
-                <span
-                  title={segment.id}
-                  className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600"
+                {/* A new tab, so the conversation stays where it is. */}
+                <a
+                  href={recordPath(segment.id)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Source: ${segment.id}`}
+                  className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-[#0171E3] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0171E3]"
                 >
                   {segment.n}
-                  <span className="sr-only">, source {segment.id}</span>
-                </span>
+                  <span className="sr-only">, open source {segment.id} in a new tab</span>
+                </a>
               </sup>
             ),
           )}
@@ -57,9 +62,16 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
         <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-neutral-500">
           <span>Sources:</span>
           {message.citations.map((id, index) => (
-            <span key={id} className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-neutral-600">
+            <a
+              key={id}
+              href={recordPath(id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-neutral-600 hover:border-[#0171E3] hover:text-[#0171E3] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0171E3]"
+            >
               {index + 1}. {id}
-            </span>
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
           ))}
         </div>
       ) : null}

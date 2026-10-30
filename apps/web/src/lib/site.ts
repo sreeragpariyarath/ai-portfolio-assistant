@@ -7,6 +7,8 @@ export const SITE = {
   title: "sreerag",
   description: "Ask my AI assistant anything about me, my projects and my skills.",
   inputPlaceholder: "Ask me anything…",
+  // Shown on every record page while the assistant uses the fictional dataset (D-022).
+  recordsNote: "Demo record from a fictional dataset, used while the assistant is being built.",
 } as const;
 
 export type StarterId = "me" | "projects" | "skills" | "fun" | "contact";

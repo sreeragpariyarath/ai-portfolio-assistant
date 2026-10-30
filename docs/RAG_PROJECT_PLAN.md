@@ -50,14 +50,14 @@ Each phase ends runnable and is committed separately.
 - Answer-level evals: expected behavior, `requiredFacts` present, `forbiddenClaims` absent, valid citations, injection and private-data probes. Rule-based first, optional LLM judge later. Run in the Workers vitest pool with mocked Gemini/Qdrant, plus an opt-in live eval script.
 - **Done when:** the answer-level eval passes at a recorded threshold.
 
-### Phase 4: Next.js chat UI (`apps/web`) (core done, tasks 4.1 to 4.10; rich cards 4.11 next; see PHASE_4_PLAN.md)
-- Read `apps/web/AGENTS.md` and the relevant guide in `apps/web/node_modules/next/dist/docs/` first. This Next version has breaking changes, and `cacheComponents` and `partialPrefetching` are enabled.
+### Phase 4: Next.js chat UI (`apps/web`) (done, tasks 4.1 to 4.11; see PHASE_4_PLAN.md)
+- Read `apps/web/AGENTS.md` and the relevant guide in `apps/web/node_modules/next/dist/docs/` first. This Next version has breaking changes. `cacheComponents` and `partialPrefetching` are off because the app is a static export (D-020).
 - Streaming chat, citation chips linking to source records, suggested questions, loading/error/"demo busy" states, responsive and accessible. API base URL comes from an env var.
 - **Done when:** a visitor can ask a question and get a streamed, cited answer, and `pnpm --filter web build` and `pnpm --filter web lint` pass.
 
 ### Phase 5: Cleanup and deploy
 - Remove the D1 binding from `apps/api/wrangler.jsonc`, migrations `0001` and `0002`, the old ingest script and `embeddings:ingest:local`; run `pnpm cf-typegen`. Do not touch the remote D1 database without the owner's confirmation.
-- `wrangler secret put` for secrets; deploy the Worker and the web app (Vercel or Cloudflare); add a scheduled trigger that pings Qdrant to prevent suspension; document a `pnpm ingest` re-seed command.
+- `wrangler secret put` for secrets; deploy the Worker and the web app (one Cloudflare Worker serves both, D-020); add a scheduled trigger that pings Qdrant to prevent suspension; document a `pnpm ingest` re-seed command.
 - Confirm each remote action with the owner first.
 
 ### Phase 6: Portfolio polish

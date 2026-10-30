@@ -1,0 +1,3 @@
+# The generated Worker types are compared byte for byte by `pnpm cf-typegen:check`, so keep LF on every machine
+# (with core.autocrlf=true on Windows the check failed on an up-to-date file).
+apps/api/worker-configuration.d.ts text eol=lf

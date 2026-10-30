@@ -69,6 +69,7 @@ export function LiquidGlass({
         borderRadius: radius,
         backdropFilter: backdrop,
         WebkitBackdropFilter: frosted,
+        // Keep readable contrast even when the water beneath the control is dark.
         background: "rgba(255, 255, 255, 0.18)",
         boxShadow:
           "inset 0 1px 1px rgba(255,255,255,0.85), inset 0 -1px 1px rgba(255,255,255,0.35), inset 0 0 0 1px rgba(255,255,255,0.35), 0 4px 18px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.06)",

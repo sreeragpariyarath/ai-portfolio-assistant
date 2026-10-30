@@ -72,7 +72,7 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
           ) : null}
         </dl>
 
-        <p className="mt-10 text-xs text-neutral-400">{SITE.recordsNote}</p>
+        <p className="mt-10 text-xs text-neutral-500">{SITE.recordsNote}</p>
       </article>
     </main>
   );

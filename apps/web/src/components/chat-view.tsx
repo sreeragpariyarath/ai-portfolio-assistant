@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { MAX_QUESTION_CHARS } from "@/lib/chat-client";
-import { behaviorNote } from "@/lib/chat-state";
+import { announcementFor, behaviorNote } from "@/lib/chat-state";
 import type { ChatMessage } from "@/lib/chat-state";
 import { splitCitations } from "@/lib/citations";
 import { recordPath } from "@/lib/records";
@@ -15,7 +15,7 @@ function TypingDots() {
   return (
     <span className="inline-flex items-center gap-1 py-2" aria-hidden="true">
       {[0, 150, 300].map((delay) => (
-        <span key={delay} className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-500" style={{ animationDelay: `${delay}ms` }} />
+        <span key={delay} className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-500 motion-reduce:animate-none" style={{ animationDelay: `${delay}ms` }} />
       ))}
     </span>
   );
@@ -28,14 +28,14 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
   const note = behaviorNote(message.behavior);
 
   return (
-    <div className="text-[0.95rem] leading-relaxed text-neutral-800">
+    <div className="text-[0.95rem] leading-relaxed text-neutral-800" aria-busy={message.status === "streaming"}>
       {message.text === "" && message.status === "streaming" ? (
         <>
           <TypingDots />
           <span className="sr-only">Thinking…</span>
         </>
       ) : (
-        <p className="whitespace-pre-wrap">
+        <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">
           {segments.map((segment, index) =>
             segment.type === "text" ? (
               <span key={index}>{segment.text}</span>
@@ -80,7 +80,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
       {message.truncated ? <p className="mt-2 text-xs text-neutral-500">The answer was cut short.</p> : null}
       {message.status === "stopped" ? <p className="mt-2 text-xs text-neutral-500">Stopped.</p> : null}
       {message.status === "error" && message.error !== undefined ? (
-        <p role="alert" className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <p className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
           {message.error}
         </p>
       ) : null}
@@ -105,6 +105,12 @@ export function ChatView({
   const [question, setQuestion] = useState("");
   const [showStarters, setShowStarters] = useState(true);
   const inputId = useId();
+  const input = useRef<HTMLInputElement>(null);
+
+  // The chat replaces the home screen, so whatever had focus is gone: put it in the chat input.
+  useEffect(() => {
+    input.current?.focus();
+  }, []);
   const list = useRef<HTMLDivElement>(null);
   // Follow new text only while the visitor is at (or near) the bottom, so reading back is not interrupted.
   const followBottom = useRef(true);
@@ -120,16 +126,21 @@ export function ChatView({
     followBottom.current = true;
     onAsk(trimmed);
     setQuestion("");
+    input.current?.focus({ preventScroll: true });
   }
 
   return (
-    <main className="flex h-dvh w-screen flex-col bg-white">
-      <header className="flex justify-center pt-4 pb-1">
+    <main className="flex h-dvh w-full flex-col bg-white">
+      <h1 className="sr-only">Chat with {SITE.name}&apos;s assistant</h1>
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcementFor(messages)}
+      </div>
+      <header className="flex shrink-0 justify-center pt-4 pb-1">
         <button
           type="button"
           onClick={onHome}
           aria-label="Back to the home page"
-          className="rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+          className="rounded-full transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
         >
           <Image src="/avatar-placeholder.svg" alt="" width={48} height={48} unoptimized className="h-12 w-12" />
         </button>
@@ -141,13 +152,16 @@ export function ChatView({
           const element = event.currentTarget;
           followBottom.current = element.scrollHeight - element.scrollTop - element.clientHeight < 80;
         }}
-        className="flex-1 overflow-y-auto px-4"
+        tabIndex={0}
+        role="region"
+        aria-label="Conversation history"
+        className="relative min-h-0 flex-1 overflow-y-auto px-4 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0171E3]"
       >
-        <ol className="mx-auto flex max-w-3xl flex-col gap-6 py-4" aria-live="polite" aria-label={`Conversation with ${SITE.name}'s assistant`}>
+        <ol className="mx-auto flex max-w-3xl flex-col gap-6 py-4" aria-label={`Conversation with ${SITE.name}'s assistant`}>
           {messages.map((message) =>
             message.role === "user" ? (
               <li key={message.id} className="flex justify-center">
-                <p className="max-w-[85%] rounded-3xl bg-[#0171E3] px-4 py-2 text-[0.95rem] text-white">{message.text}</p>
+                <p className="max-w-[85%] rounded-3xl bg-[#0171E3] px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere]">{message.text}</p>
               </li>
             ) : (
               <li key={message.id}>
@@ -158,13 +172,13 @@ export function ChatView({
         </ol>
       </div>
 
-      <footer className="px-4 pb-4">
+      <footer className="shrink-0 px-4 pb-[max(clamp(1rem,6dvh,4rem),env(safe-area-inset-bottom))]">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
           <button
             type="button"
             onClick={() => setShowStarters((value) => !value)}
             aria-expanded={showStarters}
-            className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-700"
+            className="flex min-h-6 items-center gap-1 rounded text-xs text-neutral-500 hover:text-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className={showStarters ? "" : "rotate-180"}>
               <path d="m6 9 6 6 6-6" />
@@ -199,21 +213,25 @@ export function ChatView({
             <label htmlFor={inputId} className="sr-only">
               {SITE.inputPlaceholder}
             </label>
-            <LiquidGlass radius={999} bezel={12} strength={16} className="flex items-center bg-neutral-100/60 py-1.5 pr-1.5 pl-5">
+            <LiquidGlass radius={999} bezel={12} strength={16} className="question-pill flex items-center bg-neutral-100/60 py-1.5 pr-1.5 pl-5">
               <input
                 id={inputId}
+                ref={input}
                 type="text"
                 value={question}
                 onChange={(event) => setQuestion(event.target.value)}
                 maxLength={MAX_QUESTION_CHARS}
                 autoComplete="off"
                 placeholder="Ask me anything"
-                className="w-full border-none bg-transparent text-[0.95rem] text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
+                className="question-input min-w-0 w-full border-none bg-transparent text-base text-neutral-800 placeholder:text-neutral-600"
               />
               {busy ? (
                 <button
                   type="button"
-                  onClick={onStop}
+                  onClick={() => {
+                    onStop();
+                    input.current?.focus({ preventScroll: true });
+                  }}
                   aria-label="Stop the answer"
                   className="flex shrink-0 items-center justify-center rounded-full bg-neutral-800 p-2 text-white hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
                 >

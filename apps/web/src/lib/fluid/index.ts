@@ -30,7 +30,7 @@ SOFTWARE.
 //   const result = createFluid(canvas);
 //   if (result.ok) result.fluid.start();   // later: result.fluid.destroy()
 //   else /* plain white page: result.reason says why */;
-// The page should set `touch-action: none` on the home screen so a finger drag stirs the water
+// The page sets `touch-action: pinch-zoom` on the home screen so a finger drag stirs the water
 // instead of scrolling, and give the canvas `pointer-events: none` so it never blocks the controls.
 //
 // Use a NEW canvas element for every createFluid call. destroy() releases the GPU context, and a

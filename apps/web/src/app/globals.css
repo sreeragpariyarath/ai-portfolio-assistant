@@ -20,3 +20,19 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+.question-input:focus {
+  outline: none;
+}
+
+html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-visible) {
+  outline: 2px solid #0171e3;
+  outline-offset: 3px;
+}
+
+/* At zoomed/short viewports, let visitors scroll to every home control. */
+@media (max-height: 500px), (max-width: 320px) {
+  .home-screen {
+    touch-action: pan-y pinch-zoom;
+  }
+}

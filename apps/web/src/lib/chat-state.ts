@@ -1,6 +1,7 @@
 import { friendlyMessage, normalizeErrorCode } from "./chat-client.ts";
 import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
+import { splitCitations } from "./citations.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
 // function. Each question is answered on its own (the API takes no history); the list is only what
@@ -122,4 +123,25 @@ export function behaviorNote(behavior: Behavior | undefined): string | null {
     default:
       return null;
   }
+}
+
+// What a screen reader hears: only finished answers (or why one failed), never each streamed word.
+export function announcementFor(messages: ChatMessage[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const message = messages[i];
+    if (message === undefined || message.role !== "assistant") continue;
+    if (message.status === "streaming") return "";
+    if (message.status === "error") return message.error ?? "";
+    if (message.status === "stopped") return "Answer stopped.";
+    const text = splitCitations(message.text)
+      .map((segment) => (segment.type === "text" ? segment.text : ""))
+      .join("")
+      // Removing a citation can leave a space before punctuation ("built it ."); close it up.
+      .replace(/\s+([.,;:!?])/g, "$1")
+      .trim();
+    const note = behaviorNote(message.behavior);
+    const answer = note === null ? text : `${text} (${note})`;
+    return message.truncated ? `${answer} The answer was cut short.` : answer;
+  }
+  return "";
 }

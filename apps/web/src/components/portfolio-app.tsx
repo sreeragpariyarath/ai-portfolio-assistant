@@ -15,6 +15,23 @@ export function PortfolioApp() {
   const currentId = useRef<string | null>(null);
   const counter = useRef(0);
 
+  // Text fields match :focus-visible even after a mouse click. Show the pill's
+  // focus cue only when the visitor is navigating with Tab, not while typing.
+  useEffect(() => {
+    const root = document.documentElement;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab") root.removeAttribute("data-pointer-navigation");
+    };
+    const onPointerDown = () => root.setAttribute("data-pointer-navigation", "");
+    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown, true);
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      root.removeAttribute("data-pointer-navigation");
+    };
+  }, []);
+
   const ask = useCallback(async (question: string) => {
     // One answer at a time: a new question cancels the request still running.
     controller.current?.abort();
@@ -62,7 +79,7 @@ export function PortfolioApp() {
   // Leaving the page cancels any answer still streaming.
   useEffect(() => () => controller.current?.abort(), []);
 
-  if (view === "home") return <HomeScreen onAsk={(question) => void ask(question)} />;
+  if (view === "home") return <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question) => void ask(question)} />;
   return (
     <ChatView
       messages={state.messages}

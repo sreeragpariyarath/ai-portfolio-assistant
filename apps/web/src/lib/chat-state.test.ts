@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { friendlyMessage } from "./chat-client.ts";
-import { behaviorNote, chatReducer, initialChatState } from "./chat-state.ts";
+import { announcementFor, behaviorNote, chatReducer, initialChatState } from "./chat-state.ts";
 import type { ChatState } from "./chat-state.ts";
 import { citedIds, splitCitations } from "./citations.ts";
 
@@ -126,5 +126,46 @@ describe("splitCitations", () => {
       { type: "cite", id: "p-1", n: 1 },
       { type: "text", text: " first" },
     ]);
+  });
+});
+
+describe("announcementFor", () => {
+  const done = (state: ChatState, id: string, behavior?: "answer" | "abstain") => {
+    let next = state;
+    if (behavior) next = chatReducer(next, { type: "event", id, event: { type: "meta", behavior, behaviorValid: true, retrieved: [], degraded: false } });
+    return chatReducer(next, { type: "event", id, event: { type: "done", citations: ["p-1"], invalidCitationsDropped: 0, truncated: false, model: "m" } });
+  };
+
+  it("says nothing while an answer streams, so each word is not read out", () => {
+    assert.equal(announcementFor(token(ask(initialChatState, "a1"), "a1", "Half an ans").messages), "");
+  });
+
+  it("reads the finished answer without the citation markers", () => {
+    const state = done(token(ask(initialChatState, "a1"), "a1", "Alex built it [p-1]."), "a1");
+    assert.equal(announcementFor(state.messages), "Alex built it.");
+  });
+
+  it("adds the note for an answer that is not a plain answer", () => {
+    const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
+    assert.equal(announcementFor(state.messages), "I don't have that. (Not in my records)");
+  });
+
+  it("reads the friendly error, or that the answer was stopped", () => {
+    const failed = chatReducer(ask(initialChatState, "a1"), { type: "fail", id: "a1", code: "demo_busy" });
+    assert.equal(announcementFor(failed.messages), friendlyMessage("demo_busy"));
+    const stopped = chatReducer(ask(initialChatState, "a1"), { type: "stop", id: "a1" });
+    assert.equal(announcementFor(stopped.messages), "Answer stopped.");
+  });
+
+  it("is empty before anything was asked", () => {
+    assert.equal(announcementFor([]), "");
+  });
+
+  it("announces truncation and clears the previous answer for a new stream", () => {
+    const state = chatReducer(token(ask(initialChatState, "a1"), "a1", "Partial answer"), {
+      type: "event", id: "a1", event: { type: "done", citations: [], invalidCitationsDropped: 0, truncated: true, model: "m" },
+    });
+    assert.equal(announcementFor(state.messages), "Partial answer The answer was cut short.");
+    assert.equal(announcementFor(ask(state, "a2").messages), "");
   });
 });

@@ -170,3 +170,13 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 - **Decision:** Keep the synthetic dataset while Phase 4 is built and tested. Once it works end to end, the owner provides full details and the knowledge records, eval questions, privacy checks (`assertIngestable` currently refuses anything not marked synthetic), Qdrant data and evaluations are redone for the real data, as a separate step that supersedes the synthetic-only part of D-008. The owner's **email may be shown** as contact information. A **phone number is never stored** in any file or shown by the assistant. Personal details are not written into memory or logs beyond what goes into the knowledge file.
 - **Consequences:** Until the switch, answers describe Alex Morgan while the page says sreerag; this is expected during testing. The headline ("AI Engineer") and the Fun chip are revisited with the real data.
 
+
+## D-023: Keep controls accessible when the home screen needs more space
+- **Date:** 2026-10-30 · **Status:** Accepted by the owner on 2026-10-30 (implemented in task 4.8)
+- **Context:** D-018's fixed one-screen layout clipped controls at short heights and enlarged text; translucent controls could lose contrast over coloured water. The owner had asked for no scrolling on the home page; this relaxes that only where the content cannot fit. The owner confirmed it is fine and tested it on a phone.
+- **Decision:** Preserve the one-screen layout at ordinary sizes, but allow vertical scrolling and wrapping when content needs more space. Preserve pinch zoom and allow touch scrolling on overflowing layouts. The glass controls keep their light surface with dark text (the input text and placeholder were darkened); no extra white backing was added. Contrast over the coloured water cannot be machine-checked, because axe cannot read pixels drawn on a canvas, so it stays an owner check by eye. This supersedes D-018's absolute no-scrolling constraint for accessibility.
+- **Verification:** Add development-only Playwright and axe dependencies to test the production export using a local mock SSE server. CI runs keyboard, reflow and accessibility checks without upstream API calls. These checks supplement the owner's native screen-reader and phone checks.
+
+## D-024: The headline is "Full Stack Engineer"
+- **Date:** 2026-10-30 · **Status:** Accepted
+- **Decision:** The home page headline is "Full Stack Engineer" (`SITE.headline` in `apps/web/src/lib/site.ts`), chosen by the owner. It replaces the reference page's "AI Engineer" that the earlier plan and D-022 mention.

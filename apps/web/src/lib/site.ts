@@ -3,7 +3,7 @@
 export const SITE = {
   name: "sreerag",
   greeting: "Hey, I'm",
-  headline: "AI Engineer",
+  headline: "Full Stack Engineer",
   title: "sreerag",
   description: "Ask my AI assistant anything about me, my projects and my skills.",
   inputPlaceholder: "Ask me anything…",

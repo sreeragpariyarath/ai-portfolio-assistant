@@ -3,7 +3,7 @@
 // The demo listens on its canvas, but here the canvas sits behind the page, so every event is
 // listened for on the window. Pointer events cover mouse, touch and pen in one set. Nothing calls
 // preventDefault (the demo did, for touch, which would block taps on the input and chips); a touch
-// drag stays ours because the page sets `touch-action: none` on the home screen.
+// drag stays ours on the normal home screen; pinch zoom is always available and short layouts allow scrolling.
 
 import { toCanvasPixels } from "./pointers.ts";
 import type { FluidEnv } from "./env.ts";

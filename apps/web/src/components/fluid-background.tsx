@@ -18,21 +18,34 @@ export function FluidBackground({ active = true }: { active?: boolean }) {
     const container = holder.current;
     if (!active || container === null) return;
 
-    const canvas = document.createElement("canvas");
-    canvas.setAttribute("aria-hidden", "true");
-    canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none";
-    container.appendChild(canvas);
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let dispose = () => {};
+    const syncMotion = () => {
+      dispose();
+      dispose = () => {};
+      if (motion.matches) return;
+      const canvas = document.createElement("canvas");
+      canvas.setAttribute("aria-hidden", "true");
+      canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none";
+      container.appendChild(canvas);
 
-    const result = createFluid(canvas);
-    if (!result.ok) {
-      canvas.remove();
-      return;
-    }
-    result.fluid.start();
+      const result = createFluid(canvas);
+      if (!result.ok) {
+        canvas.remove();
+        return;
+      }
+      result.fluid.start();
 
+      dispose = () => {
+        result.fluid.destroy();
+        canvas.remove();
+      };
+    };
+    syncMotion();
+    motion.addEventListener("change", syncMotion);
     return () => {
-      result.fluid.destroy();
-      canvas.remove();
+      motion.removeEventListener("change", syncMotion);
+      dispose();
     };
   }, [active]);
 

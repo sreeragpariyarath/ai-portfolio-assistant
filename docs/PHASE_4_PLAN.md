@@ -151,7 +151,7 @@ Built: `apps/web/src/components/home-screen.tsx` and `fluid-background.tsx`, `sr
 
 ### Open questions for the owner (from 4.5)
 1. **Whose facts does the assistant tell?** The page now says "Hey, I'm sreerag", but the answers come from the synthetic dataset about the persona "Alex Morgan" (D-008: fictional, no real personal data). Asking "Who are you?" will answer about Alex. Options: keep the dataset as a demo and say so on the page, rename the persona to sreerag in the dataset (still fictional or only facts the owner is happy to publish), or replace the dataset with the owner's real public details (a data decision with privacy rules).
-2. **Headline.** "AI Engineer" is the reference page's wording, used because the instruction was "exact same". It is one line in `src/lib/site.ts`; say what the headline should be.
+2. **Headline.** Decided: "Full Stack Engineer" (D-024).
 3. **Fun and Contact chips.** The dataset has nothing about hobbies or contact details (and contact details are private by rule), so those two chips lead to an honest "I don't have that" answer. Keep, or change the labels or questions?
 4. **Avatar.** The placeholder stays until the owner supplies an image.
 
@@ -172,6 +172,12 @@ In-house SVG displacement filter through `backdrop-filter: url()` (`src/componen
 
 ### 4.8 Accessibility and responsive pass
 Keyboard-only walk-through, a screen-reader check of the live region, phone width at 360 px, contrast over the coloured water, and reduced-motion behaviour.
+
+**Coding and automated checks complete (2026-10-30); owner device checks pending.** Visible input focus, focus on entering/leaving chat and after Stop, keyboard-scrollable history, one completion/error announcement channel, heading order, pinch zoom, long-word wrapping, darker text on the glass (contrast over the water is still an owner check), dynamic reduced-motion handling, and the white custom 404 are implemented. Short viewports and enlarged text can scroll instead of clipping controls; the normal home layout still fits one screen (D-023).
+
+`pnpm --filter web build`, then `pnpm test:web:a11y` runs Playwright and axe against the static export with a local mock SSE API. First install Chromium with `pnpm exec playwright install chromium`. CI runs this too. Coverage includes keyboard focus, quiet streaming, completed answers, errors, Stop, source tabs, 360×640 and 320×300 layouts, long strings, 200% text, record/404 pages and changing reduced-motion settings. No Gemini or Qdrant calls.
+
+The owner has tested the page on a phone and it works. Still manual: listen with an actual screen reader, and check Safari's glass fallback on an iPhone. Automated ARIA/axe checks are not a native screen-reader or physical-device certification. Performance measurements remain task 4.9 and the approved live API run remains 4.10.
 
 ### 4.9 Performance check
 Measure frame rate on the owner's low-spec laptop and a phone, confirm the effect stops drawing when hidden or left, and check the production bundle size of the fluid module. Record numbers in the daily log.

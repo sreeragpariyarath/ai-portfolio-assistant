@@ -21,15 +21,31 @@ Before writing any code in Phase 4, re-read the specific guide for each file (fo
 - CORS: only the origin in the API's `ALLOWED_ORIGIN` is allowed. The browser sends the request from the Next app, so that origin must match.
 
 ## Decisions
-**Decided with the owner (2026-10-30):** the visual direction (D-018) and the fluid source (D-019), below.
+**Decided with the owner (2026-10-30):** the visual direction (D-018), the fluid source (D-019), hosting on Cloudflare, and the work split: **Claude builds the code and tests; the owner tests in a real browser and on a real phone.** The owner supplies the logo, avatar and name for task 4.5.
 
-**Still open (answer before task 4.1 and 4.10):**
-1. **How the browser reaches the API.**
-   - *Option A (proposed):* the browser calls the Worker directly at `NEXT_PUBLIC_API_BASE_URL`. Simple, streams natively. Trade-off: the URL is inlined at build time (changing the Worker URL needs a rebuild), and CORS must match the web origin.
-   - *Option B:* a Next route handler proxies to the Worker. Hides the URL and avoids CORS, but adds a hop, and the proxy must pass the stream through without buffering.
-   Recommendation: A, since it matches the existing CORS design and the streaming path is simpler. To be recorded as D-020.
-2. **Hosting for the web app.** Phase 5 covers deployment; Phase 4 only needs a working local build.
-3. **Who builds what.** Proposal: Claude builds the code and tests, the owner reviews the visuals in a real browser and on a real phone (WebGL, touch and glass cannot be fully judged from screenshots).
+**Recommended, waiting for the owner's OK (D-020): one Cloudflare Worker serves both the web app and the API.**
+- The web app is built as a **static export** (`output: "export"`): plain files, no Next server. The home page, chat view and record pages are static shells; the chat happens in the browser, which calls the API.
+- The existing API Worker serves those files through its static assets setting (`assets.directory`) and runs its code only for `/api/*` (`run_worker_first`).
+- The browser calls the relative path `/api/chat`: same origin, so **no CORS in production** and **no API URL baked into the build**. For local development the web app (port 3000) calls the Worker (port 8787) through `NEXT_PUBLIC_API_BASE_URL=http://localhost:8787`, using the CORS support already built.
+
+| Option | CORS | API URL baked in at build | Next server needed on Cloudflare | Notes |
+|---|---|---|---|---|
+| A. Browser calls a separately hosted Worker | needed | yes | depends on the web host | simplest code, but two hosts and a rebuild to change the URL |
+| B. Next route handler proxies to the Worker | no | no | **yes** | needs vinext or OpenNext on Workers; extra hop; must pass the stream through unbuffered |
+| **C. One Worker: static export plus `/api/*` (recommended)** | **no (production)** | **no** | **no** | web and API deploy together; static export limits (below) |
+
+Facts behind the recommendation (checked 2026-10-30):
+- Cloudflare now recommends **vinext** (a Vite plugin that reimplements the Next API, "in beta") for Next.js on Workers, with OpenNext as a fallback. Next's own docs say Cloudflare's adapter is not yet a verified adapter. Option C avoids depending on either.
+- Workers static assets: a request that matches a file is served without running Worker code, `run_worker_first` can be limited to `/api/*`, and "requests to static assets are free and unlimited". Requests to `/api/*` count as Worker requests, so the Free plan's request limit applies to chat calls only.
+- Next's static export does not support: route handlers that rely on the request, Server Actions, rewrites, redirects, headers, `proxy`, ISR, draft mode, intercepting routes, or the default image loader. This plan uses none of them. Dynamic routes need `generateStaticParams` (the record pages will have it).
+
+**Checks before relying on it (done inside task 4.1):**
+1. `next build` with `output: "export"` together with `cacheComponents: true`. The guide read does not say whether they work together; if not, turn `cacheComponents` off for this app, since it uses no caching.
+2. `next/image` with `unoptimized` (or plain `img`), because the default image loader is not supported in a static export.
+3. The max number of files and file size for static assets on Cloudflare's platform limits page (the billing page does not give numbers).
+4. How a missing path behaves: `not_found_handling: "404-page"` so unknown pages get the web app's 404 instead of the API's JSON 404.
+
+**Cost of option C:** web and API deploy together (one web build, then one `wrangler deploy`), so a web-only change redeploys the Worker. The API's Vitest pool reads `wrangler.jsonc`; an `assets.directory` that does not exist could break the API tests and CI, so 4.1 must handle that (for example a committed placeholder folder, or building the web app first in CI).
 
 ## Visual direction (decided: D-018)
 Reference: a template-based portfolio (`aaabadcode.com`, "Powered by Fastfolio"). We copy the **idea**, not its content, name, avatar, logo or code.
@@ -84,11 +100,15 @@ The libraries found do real refraction with an SVG `feDisplacementMap` through `
 ## Tasks
 Each task is one commit with a daily log entry, using the same loop as earlier phases (tests and checks first, descriptive message, no AI attribution, feature branch and draft PR). Run `pnpm --filter web lint` and `pnpm --filter web build` for every task that touches `apps/web`.
 
-### 4.0 Close the open decisions (docs only)
-Owner answers the three open decisions. Record the API URL approach as D-020. Owner supplies the logo, avatar and name.
+### 4.0 Close the open decision (docs only)
+Owner confirms option C (or picks A or B); D-020 moves from Proposed to Accepted. The logo, avatar and name arrive by task 4.5.
 
-### 4.1 Environment and config
-Add `NEXT_PUBLIC_API_BASE_URL` to `.env.example` and `apps/web/.env.local.example` with no secret values, and document it in `docs/SETUP.md`. Confirm `next.config.ts` keeps `cacheComponents` and `partialPrefetching`. Tests: a small module that reads and validates the base URL and fails with a clear message if it is missing.
+### 4.1 Environment, static export and Worker assets
+- Run the four checks listed under Decisions and record the results in D-020.
+- Add `NEXT_PUBLIC_API_BASE_URL` (empty in production, `http://localhost:8787` for local development) to `.env.example` and `apps/web/.env.local.example`, with no secret values, and document it in `docs/SETUP.md`.
+- Set `output: "export"` in `apps/web/next.config.ts`, keeping the existing Tailwind turbopack rule.
+- In `apps/api/wrangler.jsonc` add `assets` (`directory` pointing at the web export, `run_worker_first: ["/api/*"]`, `not_found_handling: "404-page"`), run `pnpm cf-typegen`, and keep the API tests and CI green without a web build (placeholder folder or a CI web build step).
+- Tests: a small module that reads and validates the base URL (empty means same origin); the existing API tests still pass; `/api/health` is still answered by the Worker code.
 
 ### 4.2 SSE frame parser
 A pure TypeScript module that turns streamed bytes into `{ event, data }` frames, handling chunk boundaries and multi-byte characters. Tests with recorded frames, split at every position, and the error shapes.
@@ -128,7 +148,10 @@ The browser checks in 4.10 call the real API, which calls Gemini for generation.
 - **Touch input vs. a page full of controls:** blocking default touch behaviour could stop taps on the input. Mitigation: window-level input that ignores interactive elements, tested on a real phone.
 - **Glass on iPhones:** the library route is Chromium-only. Mitigation: the 4.5b spike, with option B as the fallback plan.
 - **Licence:** the MIT notice must stay with the ported code. Mitigation: keep the header and add the notices file in 4.4.
-- **Build-time API URL:** Option A bakes the URL into the build. Mitigation: document the rebuild step in `docs/SETUP.md`.
+- **Static export limits:** no server features in the web app. Mitigation: the plan needs none; the four checks in 4.1 catch surprises early.
+- **`cacheComponents` with static export:** may not be compatible. Mitigation: turn it off for this app if the build says so.
+- **Free plan request limit:** chat calls count as Worker requests, and over the limit they get 429 instead of the static page. Mitigation: the API already rate-limits per client; static pages are free and unlimited.
+- **Deploying web and API together:** a web-only change redeploys the Worker. Mitigation: acceptable for a portfolio; revisit in Phase 5 if it gets in the way.
 - **Free quota:** repeated test questions use the daily generation quota. Mitigation: use eval questions and keep checks few.
 - **Accessibility regressions:** a streaming region can be noisy and colour behind text can lower contrast. Mitigation: throttle announcements, keep text on blurred or solid surfaces, and test with a screen reader.
 

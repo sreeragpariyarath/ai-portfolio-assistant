@@ -36,3 +36,48 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
     touch-action: pan-y pinch-zoom;
   }
 }
+
+/* Entrance motion for the newest chat messages (stored cards and the visitor's bubble). Off for visitors who
+   ask for reduced motion. A card's items can stagger: give them .stagger-item and --i (their position). */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.anim-pop {
+  animation: pop-in 320ms cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+
+.anim-rise {
+  animation: rise-in 560ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+}
+
+[data-animate="true"] .stagger-item {
+  animation: rise-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(260ms + var(--i, 0) * 80ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop,
+  .anim-rise,
+  [data-animate="true"] .stagger-item {
+    animation: none;
+  }
+}

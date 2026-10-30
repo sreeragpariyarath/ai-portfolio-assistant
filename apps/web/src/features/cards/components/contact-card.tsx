@@ -42,8 +42,8 @@ export function ContactCardView() {
       </div>
 
       <ul className="mt-4 flex flex-wrap gap-2" aria-label="Profiles and links">
-        {CONTACT.links.map((link) => (
-          <li key={link.href}>
+        {CONTACT.links.map((link, index) => (
+          <li key={link.href} className="stagger-item" style={{ "--i": index + 1 } as React.CSSProperties}>
             <a href={link.href} target="_blank" rel="noopener noreferrer" className={LINK_PILL}>
               {link.label}
               <ExternalIcon />

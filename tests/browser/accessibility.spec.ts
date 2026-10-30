@@ -247,3 +247,18 @@ test("an I-don't-know reply opens with a stored line; a refusal does not", async
   await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
   await expect(page.locator("li p.font-medium")).toHaveCount(1);
 });
+
+test("a new card slides in, but not for visitors who ask for reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skills", exact: true }).click();
+  const reply = page.locator('[data-animate="true"]');
+  await expect(reply).toHaveCSS("animation-name", "rise-in");
+  await expect(page.locator(".anim-pop")).toHaveCSS("animation-name", "pop-in");
+  await expect(page.locator(".stagger-item").first()).toHaveCSS("animation-name", "rise-in");
+  // It settles fully visible.
+  await expect(reply).toHaveCSS("opacity", "1");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(reply).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".anim-pop")).toHaveCSS("animation-name", "none");
+});

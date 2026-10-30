@@ -151,8 +151,8 @@ export function ProjectCarousel() {
       </div>
 
       <ul ref={track} className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pt-1 pb-5 [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden">
-        {PROJECTS.map((project) => (
-          <li key={project.id} className="w-[min(17rem,78vw)] shrink-0 snap-start">
+        {PROJECTS.map((project, index) => (
+          <li key={project.id} className="stagger-item w-[min(17rem,78vw)] shrink-0 snap-start" style={{ "--i": index } as React.CSSProperties}>
             <button
               type="button"
               onClick={() => setOpen(project)}

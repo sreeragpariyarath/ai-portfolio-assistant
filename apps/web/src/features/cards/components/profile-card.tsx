@@ -31,8 +31,8 @@ export function ProfileCardView() {
           Hey <span aria-hidden="true">👋</span> {PROFILE.bio}
         </p>
         <ul className="mt-4 flex flex-wrap gap-2" aria-label="At a glance">
-          {PROFILE.facts.map((fact) => (
-            <li key={fact}>
+          {PROFILE.facts.map((fact, index) => (
+            <li key={fact} className="stagger-item" style={{ "--i": index } as React.CSSProperties}>
               <Pill>{fact}</Pill>
             </li>
           ))}

@@ -155,8 +155,8 @@ Built: `apps/web/src/components/home-screen.tsx` and `fluid-background.tsx`, `sr
 3. **Fun and Contact chips.** The dataset has nothing about hobbies or contact details (and contact details are private by rule), so those two chips lead to an honest "I don't have that" answer. Keep, or change the labels or questions?
 4. **Avatar.** The placeholder stays until the owner supplies an image.
 
-### 4.5b Liquid glass spike
-A throwaway page testing glass approach A and B over the live fluid: how it looks over moving colours, what Chrome, Firefox and an iPhone show, and the GPU cost. Record the outcome as D-021, then apply the winner to the input, chips and buttons.
+### 4.5b Liquid glass spike (done: option A, D-021)
+In-house SVG displacement filter through `backdrop-filter: url()` (`src/components/liquid-glass.tsx`, maths in `src/lib/liquid-glass.ts` with tests). Refraction in Chromium browsers; frosted glass with the same rim in Safari, Firefox and iOS. Applied to the logo tile, input pill and chips. At the same time the home screen was scaled down to the reference's proportions after the owner found it too big (input about 29rem wide, chips about 72 px tall on a 966 px screen, headline up to 4rem, avatar up to 15rem), still sized from the screen height.
 
 ### 4.6 Chat view
 The client component that sends a question, streams the answer, shows the states, turns `[record-id]` citations into chips, and stops the fluid when the home screen is left. Check the Next guides for `'use client'` boundaries and `loading`/`error` files before adding them.

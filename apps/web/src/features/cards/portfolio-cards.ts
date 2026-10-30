@@ -9,6 +9,8 @@ export interface ProfileCard {
   name: string;
   headline: string;
   location: string;
+  // Replace with the owner's photo (a path under /public, placeholder: false) when it is supplied.
+  photo: { src: string; alt: string; placeholder: boolean };
   bio: string;
   // Short, plain facts shown as small pills.
   facts: readonly string[];
@@ -45,12 +47,14 @@ export const PROFILE: ProfileCard = {
   name: "Sreerag",
   headline: "Full Stack Engineer",
   location: "Kerala, India",
-  bio: "I build web products from the database to the pixels. Ask my assistant anything about my work, or use the quick cards below.",
+  photo: { src: "/avatar-placeholder.svg", alt: "Portrait of Sreerag (placeholder)", placeholder: true },
+  bio: "I'm a full stack engineer who builds web products from the database to the pixels.",
   facts: ["Full stack", "TypeScript", "Cloud and AI"],
 };
 
+// Shown under the profile header, so it reads as the "about me" text (dummy until the real wording).
 export const PROFILE_INTRO =
-  "Hi, I'm Sreerag, a full stack engineer. This is a quick look at who I am. You can also type any question and my assistant will answer from my portfolio.";
+  "Hi, I'm Sreerag, a full stack engineer. I build web products from the database to the pixels, and lately I've been working on AI search and assistants.\n\nThis page is a portfolio you can talk to. Pick a card below, or type any question and my assistant will answer from my portfolio. What brings you here?";
 
 export const PROJECTS: readonly ProjectCard[] = [
   {

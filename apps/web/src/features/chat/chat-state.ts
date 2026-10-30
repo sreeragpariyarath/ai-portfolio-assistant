@@ -159,7 +159,7 @@ export function announcementFor(messages: ChatMessage[]): string {
     if (message.status === "streaming") return "";
     if (message.status === "error") return message.error ?? "";
     if (message.status === "stopped") return "Answer stopped.";
-    if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown below.`;
+    if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown.`;
     const text = splitCitations(message.lead !== undefined ? `${message.lead} ${withoutFirstSentence(message.text)}` : message.text)
       .map((segment) => (segment.type === "text" ? segment.text : ""))
       .join("")

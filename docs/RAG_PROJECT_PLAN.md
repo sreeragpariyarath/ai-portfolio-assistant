@@ -50,7 +50,7 @@ Each phase ends runnable and is committed separately.
 - Answer-level evals: expected behavior, `requiredFacts` present, `forbiddenClaims` absent, valid citations, injection and private-data probes. Rule-based first, optional LLM judge later. Run in the Workers vitest pool with mocked Gemini/Qdrant, plus an opt-in live eval script.
 - **Done when:** the answer-level eval passes at a recorded threshold.
 
-### Phase 4: Next.js chat UI (`apps/web`) (core done, tasks 4.1 to 4.10; rich cards 4.11 next; see PHASE_4_PLAN.md)
+### Phase 4: Next.js chat UI (`apps/web`) (done, tasks 4.1 to 4.11; the switch to the owner's real details is a separate step, D-022; see PHASE_4_PLAN.md)
 - Read `apps/web/AGENTS.md` and the relevant guide in `apps/web/node_modules/next/dist/docs/` first. This Next version has breaking changes, and `cacheComponents` and `partialPrefetching` are enabled.
 - Streaming chat, citation chips linking to source records, suggested questions, loading/error/"demo busy" states, responsive and accessible. API base URL comes from an env var.
 - **Done when:** a visitor can ask a question and get a streamed, cited answer, and `pnpm --filter web build` and `pnpm --filter web lint` pass.

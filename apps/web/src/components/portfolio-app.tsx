@@ -5,6 +5,7 @@ import { ChatClientError, askQuestion, isAbortError } from "@/lib/chat-client";
 import { chatReducer, initialChatState } from "@/lib/chat-state";
 import { ChatView } from "./chat-view";
 import { HomeScreen } from "./home-screen";
+import { PerfOverlay } from "./perf-overlay";
 
 // The whole page: the home screen until the first question, then the chat. Leaving the home screen
 // unmounts the water effect, which stops it and gives the GPU back.
@@ -79,14 +80,20 @@ export function PortfolioApp() {
   // Leaving the page cancels any answer still streaming.
   useEffect(() => () => controller.current?.abort(), []);
 
-  if (view === "home") return <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question) => void ask(question)} />;
   return (
-    <ChatView
-      messages={state.messages}
-      busy={state.activeId !== null}
-      onAsk={(question) => void ask(question)}
-      onStop={stop}
-      onHome={goHome}
-    />
+    <>
+      {view === "home" ? (
+        <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question) => void ask(question)} />
+      ) : (
+        <ChatView
+          messages={state.messages}
+          busy={state.activeId !== null}
+          onAsk={(question) => void ask(question)}
+          onStop={stop}
+          onHome={goHome}
+        />
+      )}
+      <PerfOverlay />
+    </>
   );
 }

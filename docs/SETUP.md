@@ -87,3 +87,15 @@ pnpm dev:api                                         # open http://localhost:878
   do not need it.
 - A static export cannot use `cacheComponents` or `partialPrefetching`, so both are off in `apps/web/next.config.ts`.
 
+## 7. Measuring performance on a real device (Phase 4, task 4.9)
+Open the site with `?perf` on the end of the address. A small readout in the bottom-left corner shows the page's frame rate, the worst frame in the last second, and the window size and pixel ratio. Move the mouse (or drag a finger) around to stir the water and watch the numbers: 60 is smooth, under 30 is a problem. Nothing is measured without `?perf`.
+
+```bash
+pnpm --filter web build      # build the site
+pnpm dev:api                 # serves it at http://localhost:8787  (open http://localhost:8787/?perf)
+```
+
+- **A second computer:** pull the branch, run the two commands above and open the address on that machine.
+- **A phone on the same Wi-Fi:** run `pnpm dev:api --ip 0.0.0.0` (**without** an extra `--` before the flag: with it, wrangler ignores the flag and stays on localhost), find the computer's address on the network (for example 192.168.1.20 from `ipconfig`) and open `http://192.168.1.20:8787/?perf` on the phone. This makes the dev server reachable by everyone on that network, so use a network you trust and stop it (Ctrl+C) when you are done. Windows may ask to allow Node through the firewall; allow it for private networks only. Forwarding of `--ip` and `--port` was checked on localhost only; the `0.0.0.0` form itself has not been run.
+- Asking questions is not needed to measure the water, so no Gemini quota is used.
+- Download sizes: `pnpm web:size` (after the build) prints what a visitor downloads.

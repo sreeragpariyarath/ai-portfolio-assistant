@@ -179,8 +179,14 @@ Keyboard-only walk-through, a screen-reader check of the live region, phone widt
 
 The owner has tested the page on a phone and it works. Still manual: listen with an actual screen reader, and check Safari's glass fallback on an iPhone. Automated ARIA/axe checks are not a native screen-reader or physical-device certification. Performance measurements remain task 4.9 and the approved live API run remains 4.10.
 
-### 4.9 Performance check
-Measure frame rate on the owner's low-spec laptop and a phone, confirm the effect stops drawing when hidden or left, and check the production bundle size of the fluid module. Record numbers in the daily log.
+### 4.9 Performance check (measured here; the owner's device numbers are pending)
+**Download size** (`pnpm web:size`, production export, gzipped): the home page loads **197 KB of JavaScript**, of which about 165 KB is React and Next. Our own code (the water effect, the glass and the chat) is one chunk of **22.6 KB**. CSS is 5.4 KB and the two images 12 KB (the traced logo is 11 KB). The command can also fail a build over a size limit (`--max-gzip-kb=N`); no limit is set yet.
+
+**Behaviour, checked in a real browser** (headless Chromium driven by Playwright against the production export with the mock API, no Gemini calls): while the tab is hidden the water makes **0 draw calls** and resumes when the tab is visible; opening the chat **removes the water canvas** and drawing stays at 0; going back home creates a new canvas and drawing resumes. One frame is 28 draw calls (the 20 pressure steps plus the rest).
+
+**Frame rate: not yet measured on real hardware.** This PC's automation browser renders in software (SwiftShader, on the CPU), where the effect runs at 7 to 14 fps, so those numbers say nothing about a real GPU and are not used. The settings are the reference page's own (simulation 128, dye 1440), with our pixel ratio capped at 1.5 where the reference is uncapped, so the load is no heavier than the page the owner says runs smoothly on the low-spec laptop.
+
+**The measuring tool:** add `?perf` to the address and a small readout shows the page's frame rate, the worst frame in the last second, the window size and pixel ratio (nothing runs without the flag). See `docs/SETUP.md` for how to run it on the laptop and the phone. If the readout shows well under 30 fps while stirring, the next step is an automatic quality drop (smaller dye texture, shading off) on slow devices.
 
 ### 4.10 Verification and record (docs)
 Run `pnpm --filter web lint` and `pnpm --filter web build`. Run `pnpm dev:api` with `pnpm dev:web` and ask one answer, one abstain and one injection question in the browser, recording what was seen (no secrets). Mark Phase 4 done in the roadmap and the daily log.

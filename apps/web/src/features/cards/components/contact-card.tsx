@@ -24,7 +24,7 @@ export function ContactCardView() {
       </h2>
       <p className="mt-1 text-sm text-neutral-600">Email is the quickest way to reach me.</p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl bg-neutral-50 p-3">
+      <div className="mt-4 flex flex-wrap items-center gap-2 glass-inset rounded-2xl p-3">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#262626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <rect x="3" y="5" width="18" height="14" rx="2.5" />
           <path d="m3.5 7 8.5 6 8.5-6" />

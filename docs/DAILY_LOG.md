@@ -4,6 +4,11 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
+## 2026-10-31
+Next: the owner's list of website and chat UI changes, one at a time; then the real-data switch (data in progress) and Phase 5 deploy.
+
+- Glass question bubble (laptop), asked by the owner: the visitor's question in the chat was a flat blue box. It is now a glossy blue glass pill: a lit top rim, a soft inner glow at the bottom edge and a blue shadow, in `.glass-bubble` in `app/globals.css`. The page behind it is white, so real see-through glass would show nothing; the blue is kept dark enough for white text. The owner also reported that the Me card showed with no animation; that was an old build (the terminal was on a stale branch). Checked in headless Chromium that the card fades in over about a second with the tags following, and that "reduce motion" was off; after pulling `main`, rebuilding and restarting `dev:api` the owner confirmed it works. Tested: `pnpm --filter web lint` and `build` pass, `pnpm test:scripts` 448 pass, `pnpm typecheck:scripts` clean, `pnpm test:web:a11y` 14 pass (axe contrast included), and a screenshot of the new bubble.
+
 ## 2026-10-30
 Next: the owner reviews and merges PR #7 (Phase 4, tasks 4.1 to 4.10), then task 4.11 (rich cards and stored chip content) on a new branch. A phone frame-rate reading is optional and can wait for the deployed site. The owner also wants rich cards in the chat (a project carousel with detail pop-ups, as on the reference page); that is not in the plan yet and needs a decision on order and data.
 

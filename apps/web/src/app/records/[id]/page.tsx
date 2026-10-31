@@ -32,7 +32,7 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
   return (
     <main className="min-h-dvh bg-white px-4 py-10">
       <article className="mx-auto max-w-2xl">
-        <Link href="/" className="text-sm text-neutral-500 hover:text-[#0171E3]">
+        <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-900">
           ← {SITE.name}
         </Link>
 
@@ -64,7 +64,7 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
             <>
               <dt className="text-neutral-500">Project</dt>
               <dd>
-                <Link href={recordPath(project.id)} className="text-[#0171E3] hover:underline">
+                <Link href={recordPath(project.id)} className="text-neutral-900 hover:underline">
                   {project.title}
                 </Link>
               </dd>

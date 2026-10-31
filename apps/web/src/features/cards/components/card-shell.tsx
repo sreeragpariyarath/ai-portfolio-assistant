@@ -16,4 +16,4 @@ export function ExternalIcon() {
 }
 
 export const LINK_PILL =
-  "inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3.5 py-2 text-sm font-medium text-neutral-800 transition-colors hover:border-[#0171E3] hover:text-[#0171E3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]";
+  "inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3.5 py-2 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900";

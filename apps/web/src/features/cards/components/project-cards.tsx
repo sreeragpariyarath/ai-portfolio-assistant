@@ -55,7 +55,7 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
             type="button"
             onClick={() => dialog.current?.close()}
             aria-label="Close project details"
-            className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+            className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
               <path d="M6 6l12 12M18 6 6 18" />
@@ -74,7 +74,7 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
           <ul className="mt-2 space-y-1.5 text-[0.95rem] text-neutral-700">
             {project.highlights.map((highlight) => (
               <li key={highlight} className="flex gap-2">
-                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0171E3]" />
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-800" />
                 {highlight}
               </li>
             ))}
@@ -120,7 +120,7 @@ function Arrow({ direction }: { direction: "previous" | "next" }) {
 }
 
 const ARROW_BUTTON =
-  "flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:border-[#0171E3] hover:text-[#0171E3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]";
+  "flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900";
 
 // A row of project cards that scrolls and snaps sideways; pressing a card opens its details.
 export function ProjectCarousel() {
@@ -156,7 +156,7 @@ export function ProjectCarousel() {
             <button
               type="button"
               onClick={() => setOpen(project)}
-              className={`${CARD_SURFACE} group block h-full w-full overflow-hidden text-left transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3] motion-reduce:transition-none motion-reduce:hover:translate-y-0`}
+              className={`${CARD_SURFACE} group block h-full w-full overflow-hidden text-left transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:transition-none motion-reduce:hover:translate-y-0`}
             >
               <ProjectArt project={project} className="h-36 w-full" />
               <span className="block p-4">
@@ -168,7 +168,7 @@ export function ProjectCarousel() {
                     <Pill key={tech}>{tech}</Pill>
                   ))}
                 </span>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[#0171E3]">
+                <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-neutral-900">
                   View details
                   <span className="sr-only"> for {project.title}</span>
                   <Arrow direction="next" />

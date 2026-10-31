@@ -47,7 +47,7 @@ export const PROFILE: ProfileCard = {
   name: "Sreerag",
   headline: "Full Stack Engineer",
   location: "Kerala, India",
-  photo: { src: "/avatar-placeholder.svg", alt: "Portrait of Sreerag (placeholder)", placeholder: true },
+  photo: { src: "/sreerag.webp", alt: "Portrait of Sreerag P", placeholder: false },
   bio: "I'm a full stack engineer who builds web products from the database to the pixels.",
   facts: ["Full stack", "TypeScript", "Cloud and AI"],
 };

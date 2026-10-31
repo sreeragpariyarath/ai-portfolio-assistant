@@ -111,7 +111,7 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
               type="submit"
               disabled={!canSend}
               aria-label="Send question"
-              className="flex shrink-0 items-center justify-center rounded-full bg-[#0171E3] p-2 text-white transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3] disabled:opacity-60"
+              className="flex shrink-0 items-center justify-center glass-send rounded-full p-2 text-white transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:opacity-60 motion-reduce:transition-none motion-reduce:hover:scale-100"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14" />
@@ -128,7 +128,7 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
                 <button
                   type="button"
                   onClick={() => pickStarter(starter.question, starter.card)}
-                  className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl text-gray-700 transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+                  className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl text-gray-700 transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
                 >
                   <StarterIcon id={starter.id} />
                   <span className="text-xs font-medium sm:text-[0.8rem]">{starter.label}</span>

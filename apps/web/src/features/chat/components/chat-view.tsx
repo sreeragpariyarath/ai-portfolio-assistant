@@ -52,7 +52,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`Source: ${segment.id}`}
-                  className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-[#0171E3] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0171E3]"
+                  className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-neutral-900 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
                 >
                   {segment.n}
                   <span className="sr-only">, open source {segment.id} in a new tab</span>
@@ -72,7 +72,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
               href={recordPath(id)}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-neutral-600 hover:border-[#0171E3] hover:text-[#0171E3] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0171E3]"
+              className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-neutral-600 hover:border-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
             >
               {index + 1}. {id}
               <span className="sr-only"> (opens in a new tab)</span>
@@ -157,7 +157,7 @@ export function ChatView({
           type="button"
           onClick={onHome}
           aria-label="Back to the home page"
-          className="rounded-full transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+          className="rounded-full transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
         >
           <Image src="/avatar-placeholder.svg" alt="" width={48} height={48} unoptimized className="h-12 w-12" />
         </button>
@@ -172,13 +172,13 @@ export function ChatView({
         tabIndex={0}
         role="region"
         aria-label="Conversation history"
-        className="relative min-h-0 flex-1 overflow-y-auto px-4 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0171E3]"
+        className="relative min-h-0 flex-1 overflow-y-auto px-4 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-neutral-900"
       >
         <ol className="mx-auto flex max-w-3xl flex-col gap-6 py-4" aria-label={`Conversation with ${SITE.name}'s assistant`}>
           {messages.map((message, index) =>
             message.role === "user" ? (
               <li key={message.id} className="flex justify-center">
-                <p className={`max-w-[85%] glass-bubble rounded-3xl px-4 py-2 text-[0.95rem] text-white [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
+                <p className={`max-w-[85%] glass-bubble rounded-3xl px-4 py-2 text-[0.95rem] text-neutral-900 [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
               </li>
             ) : (
               <li key={message.id}>
@@ -195,7 +195,7 @@ export function ChatView({
             type="button"
             onClick={() => setShowStarters((value) => !value)}
             aria-expanded={showStarters}
-            className="flex min-h-6 items-center gap-1 rounded text-xs text-neutral-500 hover:text-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+            className="flex min-h-6 items-center gap-1 rounded text-xs text-neutral-500 hover:text-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className={showStarters ? "" : "rotate-180"}>
               <path d="m6 9 6 6 6-6" />
@@ -210,7 +210,7 @@ export function ChatView({
                   <button
                     type="button"
                     onClick={() => send(starter.question, starter.card)}
-                    className="flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+                    className="flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
                   >
                     <StarterIcon id={starter.id} />
                     {starter.label}
@@ -250,7 +250,7 @@ export function ChatView({
                     input.current?.focus({ preventScroll: true });
                   }}
                   aria-label="Stop the answer"
-                  className="flex shrink-0 items-center justify-center rounded-full bg-neutral-800 p-2 text-white hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+                  className="flex shrink-0 items-center justify-center rounded-full bg-neutral-800 p-2 text-white hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <rect x="7" y="7" width="10" height="10" rx="2" />
@@ -261,7 +261,7 @@ export function ChatView({
                   type="submit"
                   disabled={question.trim() === ""}
                   aria-label="Send question"
-                  className="flex shrink-0 items-center justify-center rounded-full bg-[#0171E3] p-2 text-white transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3] disabled:opacity-60"
+                  className="flex shrink-0 items-center justify-center glass-send rounded-full p-2 text-white transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:opacity-60 motion-reduce:transition-none motion-reduce:hover:scale-100"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M12 19V5" />

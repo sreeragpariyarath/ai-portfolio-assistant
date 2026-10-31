@@ -11,7 +11,7 @@ export default function NotFound() {
       <p className="mt-3 max-w-md text-neutral-600">The link may be old, or the record it pointed to is not public.</p>
       <Link
         href="/"
-        className="mt-8 rounded-full bg-[#0171E3] px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0171E3]"
+        className="mt-8 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
       >
         Back to {SITE.name}
       </Link>

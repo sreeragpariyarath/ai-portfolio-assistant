@@ -40,6 +40,8 @@ export interface SkillGroup {
 
 export interface ContactCard {
   email: string;
+  // One short line about availability, shown with a small green dot. No location or phone number.
+  note: string;
   links: readonly { label: string; href: string }[];
 }
 
@@ -117,6 +119,7 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
 // example.com addresses are reserved for examples; the real ones come with the real-data switch.
 export const CONTACT: ContactCard = {
   email: "hello@example.com",
+  note: "Open to full-stack roles",
   links: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/example" },
     { label: "GitHub", href: "https://github.com/example" },

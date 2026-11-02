@@ -84,47 +84,9 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     inset 0 1px 0 #fff,
-    inset 0 -16px 26px -20px rgba(15, 23, 42, 0.14),
+    inset 0 -14px 22px -20px rgba(15, 23, 42, 0.08),
     0 0 0 1px rgba(15, 23, 42, 0.06),
-    0 24px 54px -24px rgba(15, 23, 42, 0.32);
-}
-
-/* A recessed glass well inside a card (the email row). */
-.glass-inset {
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow:
-    inset 0 1px 3px rgba(15, 23, 42, 0.1),
-    inset 0 0 0 1px rgba(15, 23, 42, 0.05),
-    0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-/* Small raised glass buttons (links, Copy). */
-.glass-pill {
-  background: linear-gradient(180deg, #fff, rgba(243, 244, 247, 0.85));
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    inset 0 1px 0 #fff,
-    0 0 0 1px rgba(15, 23, 42, 0.1),
-    0 5px 12px -6px rgba(15, 23, 42, 0.28);
-  transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.glass-pill:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 #fff,
-    0 0 0 1px rgba(15, 23, 42, 0.18),
-    0 9px 18px -8px rgba(15, 23, 42, 0.34);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glass-pill {
-    transition: none;
-  }
-
-  .glass-pill:hover {
-    transform: none;
-  }
+    0 18px 40px -26px rgba(15, 23, 42, 0.22);
 }
 
 /* The send button: dark charcoal glass with a lit rim. */

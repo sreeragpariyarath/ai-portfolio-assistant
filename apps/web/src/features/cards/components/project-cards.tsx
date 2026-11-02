@@ -9,7 +9,7 @@ import { CARD_SURFACE, ExternalIcon, LINK_PILL, Pill } from "./card-shell";
 
 // The picture of a project: the owner's image when there is one, otherwise a soft gradient with the
 // project's initial, so the cards look finished before the real pictures arrive.
-function ProjectArt({ project, className }: { project: ProjectCard; className: string }) {
+function ProjectArt({ project, className, showLetter = true }: { project: ProjectCard; className: string; showLetter?: boolean }) {
   if (project.image !== undefined) {
     return <Image src={project.image} alt="" width={640} height={360} unoptimized className={`${className} object-cover`} />;
   }
@@ -17,7 +17,7 @@ function ProjectArt({ project, className }: { project: ProjectCard; className: s
     <div className={`${className} relative overflow-hidden`} style={{ backgroundImage: `linear-gradient(135deg, ${project.colors[0]}, ${project.colors[1]})` }} aria-hidden="true">
       <div className="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-white/25" />
       <div className="absolute -bottom-10 left-6 h-28 w-28 rounded-full bg-white/20" />
-      <span className="absolute bottom-3 left-4 text-5xl leading-none font-black text-white/80 select-none">{project.title.charAt(0)}</span>
+      {showLetter ? <span className="absolute bottom-3 left-4 text-5xl leading-none font-black text-white/80 select-none">{project.title.charAt(0)}</span> : null}
     </div>
   );
 }
@@ -120,12 +120,26 @@ function Arrow({ direction }: { direction: "previous" | "next" }) {
 }
 
 const ARROW_BUTTON =
-  "flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900";
+  "flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/70 text-neutral-700 transition-colors hover:bg-white hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:pointer-events-none disabled:opacity-35";
 
 // A row of project cards that scrolls and snaps sideways; pressing a card opens its details.
 export function ProjectCarousel() {
   const [open, setOpen] = useState<ProjectCard | null>(null);
+  const [edges, setEdges] = useState({ start: true, end: false });
   const track = useRef<HTMLUListElement>(null);
+
+  // Tells the arrows when there is nothing more to scroll to.
+  function updateEdges() {
+    const element = track.current;
+    if (element === null) return;
+    setEdges({ start: element.scrollLeft <= 2, end: element.scrollLeft + element.clientWidth >= element.scrollWidth - 2 });
+  }
+
+  useEffect(() => {
+    updateEdges();
+    window.addEventListener("resize", updateEdges);
+    return () => window.removeEventListener("resize", updateEdges);
+  }, []);
 
   function scrollBy(direction: -1 | 1) {
     const element = track.current;
@@ -136,42 +150,47 @@ export function ProjectCarousel() {
 
   return (
     <section aria-labelledby="projects-card-title">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <h2 id="projects-card-title" className="text-lg font-bold text-neutral-950">
           Projects
         </h2>
         <div className="flex gap-2">
-          <button type="button" onClick={() => scrollBy(-1)} aria-label="Previous projects" className={ARROW_BUTTON}>
+          <button type="button" onClick={() => scrollBy(-1)} disabled={edges.start} aria-label="Previous projects" className={ARROW_BUTTON}>
             <Arrow direction="previous" />
           </button>
-          <button type="button" onClick={() => scrollBy(1)} aria-label="Next projects" className={ARROW_BUTTON}>
+          <button type="button" onClick={() => scrollBy(1)} disabled={edges.end} aria-label="Next projects" className={ARROW_BUTTON}>
             <Arrow direction="next" />
           </button>
         </div>
       </div>
 
-      <ul ref={track} className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pt-1 pb-10 -mb-5 [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden">
+      <ul
+        ref={track}
+        onScroll={updateEdges}
+        className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto scroll-smooth px-4 pt-2 pb-10 -mb-5 [mask-image:linear-gradient(to_right,transparent,#000_14px,#000_calc(100%-14px),transparent)] [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden"
+      >
         {PROJECTS.map((project, index) => (
-          <li key={project.id} className="stagger-item w-[min(17rem,78vw)] shrink-0 snap-start" style={{ "--i": index } as React.CSSProperties}>
+          <li key={project.id} className="stagger-item w-[min(15.75rem,72vw)] shrink-0 snap-start" style={{ "--i": index } as React.CSSProperties}>
             <button
               type="button"
               onClick={() => setOpen(project)}
-              className={`${CARD_SURFACE} group block h-full w-full overflow-hidden text-left transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:transition-none motion-reduce:hover:translate-y-0`}
+              className={`${CARD_SURFACE} group relative block h-[22rem] w-full overflow-hidden text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:transition-none motion-reduce:hover:translate-y-0`}
             >
-              <ProjectArt project={project} className="h-36 w-full" />
-              <span className="block p-4">
-                <span className="block text-xs font-semibold tracking-wide text-neutral-600 uppercase">{project.period}</span>
-                <span className="mt-1 block text-base font-bold text-neutral-950">{project.title}</span>
-                <span className="mt-1 block text-sm text-neutral-600">{project.tagline}</span>
-                <span className="mt-3 flex flex-wrap gap-1.5">
-                  {project.tech.slice(0, 3).map((tech) => (
-                    <Pill key={tech}>{tech}</Pill>
-                  ))}
-                </span>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-neutral-900">
-                  View details
-                  <span className="sr-only"> for {project.title}</span>
-                  <Arrow direction="next" />
+              <span className="absolute inset-0 block">
+                <ProjectArt project={project} className="h-full w-full" showLetter={false} />
+              </span>
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-3/5 bg-gradient-to-b from-black/60 via-black/25 to-transparent" />
+              <span className="absolute inset-x-0 top-0 block p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]">
+                <span className="block text-sm font-semibold">{project.period}</span>
+                <span className="mt-1 block text-2xl leading-tight font-bold">{project.title}</span>
+              </span>
+              <span className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-2xl border border-white/30 bg-black/30 px-4 py-3 text-white backdrop-blur-md">
+                <span className="line-clamp-2 text-sm">{project.tagline}</span>
+                <span className="flex shrink-0 items-center gap-1 text-sm font-medium">
+                  <span className="sr-only">View details for {project.title}</span>
+                  <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+                    <Arrow direction="next" />
+                  </span>
                 </span>
               </span>
             </button>

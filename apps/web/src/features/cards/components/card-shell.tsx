@@ -16,4 +16,4 @@ export function ExternalIcon() {
 }
 
 export const LINK_PILL =
-  "glass-pill inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium text-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900";
+  "inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/70 px-3.5 py-2 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-300 hover:bg-white hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900";

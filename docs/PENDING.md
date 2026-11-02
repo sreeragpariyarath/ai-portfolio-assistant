@@ -56,6 +56,9 @@ The owner will add these from the home machine. A Claude session there should re
 - Add a scheduled ping to Qdrant so the free cluster is not suspended; document the re-seed command (`pnpm ingest`) in `docs/SETUP.md`.
 - Measure frame rate on a phone with `?perf` on the deployed site.
 
+## After Phase 6: MVP 2 (planned)
+The owner approved the MVP 2 ideas on 2 Nov 2026; the plan is **`docs/MVP_2_PLAN.md`**: follow-up questions, a "paste a job description" match, an owner-only unanswered-questions log, thumbs up and down, a CV download and contact path, and later chunked ingestion. Start only after Phase 5 and 6 are done and the site has had a few days of real use.
+
 ## Later: Phase 6, portfolio polish
 README rewrite (architecture, honest current-versus-planned, setup, evaluation table, limits and quotas, design decisions), a demo GIF, and the optional extras listed in `RAG_PROJECT_PLAN.md`.
 

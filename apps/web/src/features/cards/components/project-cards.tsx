@@ -46,16 +46,18 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
       onClick={(event) => {
         if (event.target === event.currentTarget) event.currentTarget.close();
       }}
-      className="m-auto max-h-[88dvh] w-[min(94vw,36rem)] overflow-y-auto overscroll-contain rounded-3xl border-0 bg-white p-0 text-neutral-800 shadow-2xl backdrop:bg-neutral-900/40 backdrop:backdrop-blur-sm"
+      className="glass-panel m-auto max-h-[88dvh] w-[min(94vw,36rem)] overflow-y-auto overscroll-contain rounded-3xl p-0 text-neutral-800 backdrop:bg-neutral-900/25 backdrop:backdrop-blur-md"
     >
       <div>
         <div className="relative">
-          <ProjectArt project={project} className="h-44 w-full sm:h-52" />
+          <div className="p-2 pb-0">
+            <ProjectArt project={project} className="h-44 w-full overflow-hidden rounded-[1.25rem] sm:h-52" />
+          </div>
           <button
             type="button"
             onClick={() => dialog.current?.close()}
             aria-label="Close project details"
-            className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+            className="glass-card absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full text-neutral-800 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
               <path d="M6 6l12 12M18 6 6 18" />
@@ -71,9 +73,9 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
           <p className="mt-4 text-[0.95rem] leading-relaxed text-neutral-700">{project.description}</p>
 
           <h3 className="mt-5 text-xs font-semibold tracking-wide text-neutral-600 uppercase">Highlights</h3>
-          <ul className="mt-2 space-y-1.5 text-[0.95rem] text-neutral-700">
+          <ul className="glass-inset mt-2 space-y-2 rounded-2xl p-4 text-[0.95rem] text-neutral-700">
             {project.highlights.map((highlight) => (
-              <li key={highlight} className="flex gap-2">
+              <li key={highlight} className="flex gap-2.5">
                 <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-800" />
                 {highlight}
               </li>

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { findRecord, formatDate, recordPath, recordTypeLabel, verificationLabel } from "./records.ts";
+import { findRecord, formatDate, recordPath, recordTypeLabel, sourceChips, verificationLabel } from "./records.ts";
 import type { PublicRecord } from "./records.ts";
 
 // Paths are from the repo root, where `pnpm test:scripts` runs (import.meta is not available here:
@@ -55,5 +55,33 @@ describe("record helpers", () => {
     assert.equal(formatDate("2026-10-03"), "3 Oct 2026");
     assert.equal(formatDate("2026-13-01"), "2026-13-01");
     assert.equal(formatDate("soon"), "soon");
+  });
+});
+
+describe("sourceChips", () => {
+  const records = [
+    { id: "a", title: "First" },
+    { id: "b", title: "Second" },
+    { id: "c", title: "Third" },
+    { id: "d", title: "Fourth" },
+  ];
+
+  it("shows readable titles in citation order, with their citation numbers", () => {
+    assert.deepEqual(sourceChips(["b", "a"], records, "answer"), [
+      { id: "b", n: 1, title: "Second" },
+      { id: "a", n: 2, title: "First" },
+    ]);
+  });
+
+  it("shows at most three", () => {
+    assert.equal(sourceChips(["a", "b", "c", "d"], records, "answer").length, 3);
+    assert.equal(sourceChips(["a", "b", "c", "d"], records, "qualify", 2).length, 2);
+  });
+
+  it("shows none for an I-don't-know or a refusal, and skips ids the site does not ship", () => {
+    assert.deepEqual(sourceChips(["a"], records, "abstain"), []);
+    assert.deepEqual(sourceChips(["a"], records, "refuse"), []);
+    assert.deepEqual(sourceChips(["missing", "a"], records, undefined), [{ id: "a", n: 2, title: "First" }]);
+    assert.deepEqual(sourceChips([], records, "answer"), []);
   });
 });

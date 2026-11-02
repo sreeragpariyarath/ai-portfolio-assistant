@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { friendlyMessage } from "./chat-client.ts";
-import { announcementFor, behaviorNote, chatReducer, initialChatState } from "./chat-state.ts";
+import { announcementFor, chatReducer, initialChatState } from "./chat-state.ts";
 import type { ChatState } from "./chat-state.ts";
 import { citedIds, splitCitations } from "./citations.ts";
 
@@ -87,14 +87,6 @@ describe("chatReducer", () => {
   });
 });
 
-describe("behaviorNote", () => {
-  it("explains every answer that is not a plain answer", () => {
-    assert.equal(behaviorNote("answer"), null);
-    assert.equal(behaviorNote(undefined), null);
-    for (const behavior of ["qualify", "abstain", "refuse"] as const) assert.ok((behaviorNote(behavior) ?? "").length > 5);
-  });
-});
-
 describe("splitCitations", () => {
   it("splits text and numbers citations by first appearance", () => {
     const segments = splitCitations("A [p-1] and B [d-2], again A [p-1].");
@@ -150,7 +142,7 @@ describe("announcementFor", () => {
     const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
     const lead = state.messages[1]?.lead;
     assert.ok(lead !== undefined);
-    assert.equal(announcementFor(state.messages), `${lead} (Not something I have on record)`);
+    assert.equal(announcementFor(state.messages), lead);
   });
 
   it("reads the friendly error, or that the answer was stopped", () => {
@@ -214,7 +206,7 @@ describe("abstain replies", () => {
     const state = events("abstain");
     const lead = state.messages[1]?.lead;
     assert.ok(lead !== undefined && lead.length > 20);
-    assert.equal(announcementFor(state.messages), `${lead} I can talk about projects. (Not something I have on record)`);
+    assert.equal(announcementFor(state.messages), `${lead} I can talk about projects.`);
   });
 
   it("never gets one on a refusal", () => {

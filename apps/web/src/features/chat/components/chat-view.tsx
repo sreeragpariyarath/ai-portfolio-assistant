@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { MAX_QUESTION_CHARS } from "@/features/chat/chat-client";
 import { withoutFirstSentence } from "@/features/chat/abstain-lines";
-import { announcementFor, behaviorNote } from "@/features/chat/chat-state";
+import { announcementFor } from "@/features/chat/chat-state";
 import type { ChatMessage } from "@/features/chat/chat-state";
 import { splitCitations } from "@/features/chat/citations";
 import type { CardKind } from "@/features/cards/portfolio-cards";
-import { recordPath } from "@/features/records/records";
+import { recordPath, sourceChips } from "@/features/records/records";
 import { SITE, STARTERS } from "@/features/home/site";
 import { CardReply } from "@/features/cards/components/card-reply";
 import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
@@ -24,12 +24,12 @@ function TypingDots() {
   );
 }
 
-function AssistantMessage({ message }: { message: ChatMessage }) {
+function AssistantMessage({ message, titles }: { message: ChatMessage; titles: readonly { id: string; title: string }[] }) {
   // While streaming, the API has already removed invalid citations; once done, only the final list counts.
   const allowed = message.status === "done" ? new Set(message.citations) : undefined;
   const body = message.lead !== undefined ? withoutFirstSentence(message.text) : message.text;
   const segments = splitCitations(body, allowed);
-  const note = behaviorNote(message.behavior);
+  const chips = message.status === "done" ? sourceChips(message.citations, titles, message.behavior) : [];
 
   return (
     <div className="text-[0.95rem] leading-relaxed text-neutral-800" aria-busy={message.status === "streaming"}>
@@ -51,11 +51,11 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
                   href={recordPath(segment.id)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Source: ${segment.id}`}
+                  title="Open this source"
                   className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-neutral-900 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
                 >
                   {segment.n}
-                  <span className="sr-only">, open source {segment.id} in a new tab</span>
+                  <span className="sr-only">, open source {segment.n} in a new tab</span>
                 </a>
               </sup>
             ),
@@ -63,25 +63,27 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
         </p>
       )}
 
-      {message.status === "done" && message.citations.length > 0 ? (
-        <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-neutral-500">
-          <span>Sources:</span>
-          {message.citations.map((id, index) => (
+      {chips.length > 0 ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+          <span>Where this comes from</span>
+          {chips.map((chip) => (
             <a
-              key={id}
-              href={recordPath(id)}
+              key={chip.id}
+              href={recordPath(chip.id)}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-neutral-600 hover:border-neutral-800 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
+              className="glass-card inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 font-medium text-neutral-700 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
             >
-              {index + 1}. {id}
+              <span aria-hidden="true" className="text-neutral-400">
+                {chip.n}
+              </span>
+              <span className="truncate">{chip.title}</span>
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           ))}
         </div>
       ) : null}
 
-      {note !== null && message.status !== "streaming" ? <p className="mt-2 text-xs text-neutral-500 italic">{note}</p> : null}
       {message.truncated ? <p className="mt-2 text-xs text-neutral-500">The answer was cut short.</p> : null}
       {message.status === "stopped" ? <p className="mt-2 text-xs text-neutral-500">Stopped.</p> : null}
       {message.status === "error" && message.error !== undefined ? (
@@ -109,6 +111,20 @@ export function ChatView({
 }) {
   const [question, setQuestion] = useState("");
   const [showStarters, setShowStarters] = useState(true);
+  // Record titles for the source chips. The record bundle is loaded the first time an answer cites something,
+  // so the home page does not carry it.
+  const [titles, setTitles] = useState<readonly { id: string; title: string }[]>([]);
+  const hasCitations = messages.some((message) => message.role === "assistant" && message.citations.length > 0);
+  useEffect(() => {
+    if (!hasCitations || titles.length > 0) return;
+    let cancelled = false;
+    void import("@/generated/public-corpus.json").then((module) => {
+      if (!cancelled) setTitles(module.default.records);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [hasCitations, titles.length]);
   const inputId = useId();
   const input = useRef<HTMLInputElement>(null);
 
@@ -182,7 +198,7 @@ export function ChatView({
               </li>
             ) : (
               <li key={message.id}>
-                {message.card !== undefined ? <CardReply text={message.text} card={message.card} animate={index >= messages.length - 2} /> : <AssistantMessage message={message} />}
+                {message.card !== undefined ? <CardReply text={message.text} card={message.card} animate={index >= messages.length - 2} /> : <AssistantMessage message={message} titles={titles} />}
               </li>
             ),
           )}

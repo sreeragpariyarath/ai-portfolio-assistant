@@ -23,7 +23,7 @@ The generator checks passed: unique ids, every expected evidence id exists and i
 10. Company-repository git history could not be shared, so company-project roles are the owner's account (`owner-stated`).
 
 ## Progress (2 Nov 2026, PC)
-Owner review: done (the owner read all records and found them fine). Step B items 1 to 5 are done on branch `feat/real-data-switch` (data promoted, guards updated, fake private fixture added, bundles rebuilt, cards and the Fun card filled, record-page note removed). Records were then corrected against the company repositories (84 records, 73 questions). **Still to do:** B6 (the voice and tone rewrite, labels and sources), then C (index: the owner gave the go-ahead for seeding on 2 Nov 2026) and D (one evaluation, needs go-ahead), E, F, G.
+Owner review: done (the owner read all records and found them fine). Step B items 1 to 5 are done on branch `feat/real-data-switch` (data promoted, guards updated, fake private fixture added, bundles rebuilt, cards and the Fun card filled, record-page note removed). Records were then corrected against the company repositories (84 records, 73 questions). B6 (the voice rewrite, no labels, friendlier sources) and C (Qdrant seeded with 82 records) are done. **Still to do:** D (one evaluation, needs the owner's go-ahead) and D (one evaluation, needs go-ahead), E, F, G.
 
 ## 3. Step plan (who does what, and which steps need the owner's go-ahead)
 

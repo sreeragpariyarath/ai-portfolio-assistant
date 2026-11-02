@@ -2,6 +2,8 @@
 
 The single list of what is left. Read it at the start of a session (it is the shared memory between the owner's two machines, like `DAILY_LOG.md`). Tick items off or delete them when done, and record decisions in `DECISIONS.md`. Last updated 2026-10-30, at the end of Phase 4.
 
+## Update 2 Nov 2026 (laptop): real data drafted, handoff to the PC
+The owner's real details have arrived and the drafts are in `data/portfolio/` (78 records, 66 questions, card content, open questions). The end-to-end plan, the decisions already taken and the approval gates are in **`docs/REAL_DATA_HANDOFF.md`** (decision **D-029**). The section "Owner, at home" below is now mostly done: what remains for the owner is to **review the drafts and answer `data/portfolio/open-questions.md`**, send project pictures (portrait crops; never the HRMS or PM-tool screenshots as they are), and say when to push the UI work that exists only on the laptop. Then Claude follows the handoff: code changes, then index and eval, each live step with the owner's go-ahead.
 ## Where we are
 Phases 0 to 4 are done and on `main` (PR #15 carries the last small commits; check it is merged). The site works end to end on the **fictional dataset** ("Alex Morgan", D-008): home page with water effect and liquid glass, streaming cited chat, stored cards for Me, Projects, Skills and Contact (dummy content), friendlier answer tone (D-025), stored funny "I don't know" lines (D-027), feature-folder layout (D-028).
 

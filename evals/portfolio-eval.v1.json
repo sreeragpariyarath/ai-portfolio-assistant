@@ -560,7 +560,8 @@
       ],
       "expectedBehavior": "answer",
       "requiredFacts": [
-        "6-hour and 24-hour staleness windows"
+        "grace period and billing retry subscriptions are re-checked after 6 hours",
+        "active and trial subscriptions after 24 hours"
       ],
       "forbiddenClaims": [
         "state which case uses which window"
@@ -570,17 +571,18 @@
     },
     {
       "id": "E032",
-      "category": "missing_evidence",
+      "category": "direct_fact",
       "question": "Which subscribers use the 6-hour refresh and which use the 24-hour one?",
       "expectedEvidenceIds": [
         "decision-lwh-002"
       ],
-      "expectedBehavior": "abstain",
+      "expectedBehavior": "answer",
       "requiredFacts": [
-        "the records do not say which case uses which window"
+        "grace period and billing retry use the 6-hour window",
+        "active and trial use the 24-hour window"
       ],
       "forbiddenClaims": [
-        "invent a rule for the two windows"
+        "claim a different window for a status"
       ],
       "split": "development",
       "isSynthetic": false
@@ -1302,6 +1304,92 @@
       ],
       "forbiddenClaims": [
         "claim two-factor sign-in"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E074",
+      "category": "direct_fact",
+      "question": "Has he mentored anyone?",
+      "expectedEvidenceIds": [
+        "profile-007"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "mentored three junior interns",
+        "two worked on Warvox and one on the PM tool"
+      ],
+      "forbiddenClaims": [
+        "claim he managed a whole team"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E075",
+      "category": "direct_fact",
+      "question": "How are Erris releases published?",
+      "expectedEvidenceIds": [
+        "project-erris-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "from GitHub Actions with Changesets",
+        "npm trusted publishing with provenance and no stored token"
+      ],
+      "forbiddenClaims": [
+        "claim a manual publish"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E076",
+      "category": "direct_fact",
+      "question": "When did he become full-time at Carina Softlabs?",
+      "expectedEvidenceIds": [
+        "profile-006"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "became full-time in Sep 2025",
+        "joined as an intern in Jul 2025"
+      ],
+      "forbiddenClaims": [
+        "claim Jun 2025"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E077",
+      "category": "missing_evidence",
+      "question": "Has he spoken at any conferences?",
+      "expectedEvidenceIds": [],
+      "expectedBehavior": "abstain",
+      "requiredFacts": [
+        "the records do not mention conference talks"
+      ],
+      "forbiddenClaims": [
+        "invent a conference talk"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E078",
+      "category": "direct_fact",
+      "question": "Is the source code of this assistant public?",
+      "expectedEvidenceIds": [
+        "project-portfolio-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "public on GitHub"
+      ],
+      "forbiddenClaims": [
+        "invent a repository address"
       ],
       "split": "development",
       "isSynthetic": false

@@ -105,7 +105,7 @@ export const PROJECTS: readonly ProjectCard[] = [
     ],
     tech: ["TypeScript", "Gemini", "Qdrant", "Cloudflare Workers", "Next.js"],
     colors: ["#7dd3fc", "#a78bfa"],
-    links: [],
+    links: [{ label: "Source code", href: "https://github.com/sreeragpariyarath/ai-portfolio-assistant" }],
     recordId: "project-portfolio-001",
   },
   {

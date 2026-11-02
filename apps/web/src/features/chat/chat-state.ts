@@ -135,20 +135,6 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
   }
 }
 
-// A short note shown under an answer that is not a plain answer, so visitors know why.
-export function behaviorNote(behavior: Behavior | undefined): string | null {
-  switch (behavior) {
-    case "qualify":
-      return "I can only confirm part of this";
-    case "abstain":
-      return "Not something I have on record";
-    case "refuse":
-      return "That one stays private";
-    default:
-      return null;
-  }
-}
-
 const CARD_NAMES: Record<CardKind, string> = { profile: "Profile card", projects: "Project cards", skills: "Skill groups", contact: "Contact card", fun: "Fun card" };
 
 // What a screen reader hears: only finished answers (or why one failed), never each streamed word.
@@ -166,9 +152,7 @@ export function announcementFor(messages: ChatMessage[]): string {
       // Removing a citation can leave a space before punctuation ("built it ."); close it up.
       .replace(/\s+([.,;:!?])/g, "$1")
       .trim();
-    const note = behaviorNote(message.behavior);
-    const answer = note === null ? text : `${text} (${note})`;
-    return message.truncated ? `${answer} The answer was cut short.` : answer;
+    return message.truncated ? `${text} The answer was cut short.` : text;
   }
   return "";
 }

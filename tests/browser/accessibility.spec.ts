@@ -38,7 +38,7 @@ test("keyboard focus, quiet streaming, completed answer and sources", async ({ p
   await expect(page.locator('main [aria-live="polite"]')).not.toContainText("[project-lwh-001]");
   await accessible(page);
   const popupPromise = context.waitForEvent("page");
-  await page.getByRole("link", { name: "1. project-lwh-001 (opens in a new tab)", exact: true }).click();
+  await page.getByRole("link", { name: "LearnWithHupe: what it is (opens in a new tab)", exact: true }).click();
   const popup = await popupPromise;
   await popup.waitForLoadState();
   await expect(popup.getByRole("heading", { level: 1 })).toBeVisible();
@@ -240,7 +240,9 @@ test("an I-don't-know reply opens with a stored line; a refusal does not", async
   expect(announced).not.toContain("I do not have that information");
   await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(0);
   await expect(page.locator("ol").getByText("I can tell you about the projects instead.")).toBeVisible();
-  await expect(page.locator("ol").getByText("Not something I have on record")).toBeVisible();
+  await expect(page.locator("ol").getByText("Not something I have on record")).toHaveCount(0);
+  // No sources under an I-don't-know.
+  await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
   await accessible(page);
   const lead = await page.locator("li p.font-medium").last().innerText();
   expect(lead.length).toBeGreaterThan(20);
@@ -248,7 +250,8 @@ test("an I-don't-know reply opens with a stored line; a refusal does not", async
 
   await page.getByRole("textbox").fill("private");
   await page.getByRole("textbox").press("Enter");
-  await expect(page.locator("ol").getByText("That one stays private")).toBeVisible();
+  await expect(page.locator("ol").getByText("That one stays private")).toHaveCount(0);
+  await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
   await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
   await expect(page.locator("li p.font-medium")).toHaveCount(1);
 });

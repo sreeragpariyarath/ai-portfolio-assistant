@@ -54,3 +54,27 @@ export function formatDate(date: string): string {
   const month = months[Number(match[2]) - 1];
   return month === undefined ? date : `${Number(match[3])} ${month} ${match[1]}`;
 }
+
+export interface SourceChip {
+  id: string;
+  // Its number among the answer's citations, the same number the inline marker shows.
+  n: number;
+  title: string;
+}
+
+// The sources shown under an answer: readable record titles, at most `max`. None for a reply that is not backed
+// by records (small talk, "I don't know", a refusal), and a cited id the site does not ship is skipped.
+export function sourceChips(
+  citations: readonly string[],
+  records: readonly { id: string; title: string }[],
+  behavior: string | undefined,
+  max = 3,
+): SourceChip[] {
+  if (behavior === "abstain" || behavior === "refuse") return [];
+  const chips: SourceChip[] = [];
+  citations.forEach((id, index) => {
+    const record = records.find((candidate) => candidate.id === id);
+    if (record !== undefined && chips.length < max) chips.push({ id, n: index + 1, title: record.title });
+  });
+  return chips;
+}

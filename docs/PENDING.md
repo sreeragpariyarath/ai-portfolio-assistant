@@ -10,6 +10,9 @@ The owner reviewed the records. They are now the active data (D-029): the record
 ## Update 2 Nov 2026 (PC, later): records checked against the company repositories
 The records were corrected from the Warvox, LearnWithHupe and PM and Sales repositories and five LearnWithHupe records were added (now 84 records, 82 public; 73 questions). **For the owner:** tell your team lead that a Firebase service-account key file is committed in the Project and Sales repository (it should be rotated and removed). The Socket.io (LearnWithHupe), ElevenLabs and HRMS 2025 facts are the owner's own account and stay `owner-stated`; they are not visible in the repositories checked, so expect to be asked about them in an interview.
 
+## Update 2 Nov 2026 (PC, voice): next is the evaluation
+Qdrant holds the 82 public real records and the voice rewrite is in (first person, plain English, no labels, readable sources; D-030). **Next:** run one live evaluation of data and voice together (`pnpm eval:retrieval` about 73 query embeddings, then `pnpm eval:answers --live` about 73 Gemini calls), with the owner's go-ahead, and read a sample of answers by hand (refusals, small talk, the unanswered-detail questions, anything about the first-person voice and the identity question). Then the remaining UI work and Phase 5.
+
 ## Where we are
 Phases 0 to 4 are done and on `main` (PR #15 carries the last small commits; check it is merged). The site works end to end on the **fictional dataset** ("Alex Morgan", D-008): home page with water effect and liquid glass, streaming cited chat, stored cards for Me, Projects, Skills and Contact (dummy content), friendlier answer tone (D-025), stored funny "I don't know" lines (D-027), feature-folder layout (D-028).
 

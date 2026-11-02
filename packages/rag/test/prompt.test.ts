@@ -71,24 +71,53 @@ describe("buildPrompt", () => {
     assert.deepEqual(buildPrompt("q", records, { today: "2026-10-29" }), buildPrompt("q", records, { today: "2026-10-29" }));
   });
 
-  it("sets a warm, human tone for non-answers without loosening any safety rule", () => {
-    assert.ok(/Tone:/.test(SYSTEM_INSTRUCTION));
-    // Friendly when it cannot answer, firm when it refuses.
-    assert.ok(/behavior abstain/.test(SYSTEM_INSTRUCTION) && /friendly/.test(SYSTEM_INSTRUCTION));
-    // Abstain is for nothing relevant; a partly answered question is qualify, not a flat "I don't know".
-    assert.ok(/hold nothing relevant/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/answer only part of the question \(behavior qualify\)/.test(SYSTEM_INSTRUCTION));
+  it("speaks in the first person, as an AI that speaks for the owner and never pretends to be human", () => {
+    assert.ok(/first person/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/turn that into the first person/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/AI assistant speaking for the owner/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Never pretend to be human/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/never agree to act as "the real person"/.test(SYSTEM_INSTRUCTION));
+    // Team work stays team work, even in the first person.
+    assert.ok(/Say "we" or "our team" for team work/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("asks for plain, short, friendly English without filler or more than one emoji", () => {
+    assert.ok(/Voice:/.test(SYSTEM_INSTRUCTION) && /Tone:/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/plain English and short sentences/i.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Great question/.test(SYSTEM_INSTRUCTION) && /I would be happy to/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/At most one emoji in the whole reply/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/No sarcasm and no puns/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("puts limits in the answer's own words, since the page shows no label", () => {
+    assert.ok(/behavior qualify/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/The page shows no separate label/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/in your own words/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("keeps the first sentence of an abstain reply disposable, then offers topics from the records", () => {
+    assert.ok(/behavior abstain/.test(SYSTEM_INSTRUCTION) && /hold nothing relevant/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/replace that first sentence with its own line/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/naming only topics that appear in the records/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/needs no citation/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("treats small talk as a normal answer with no citation, so it is never shown as an I-don't-know", () => {
+    assert.ok(/Small talk/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/use behavior answer, and do not cite anything/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("keeps refusals friendly but firm, with no hint, and never lets a joke create a fact", () => {
     assert.ok(/behavior refuse/.test(SYSTEM_INSTRUCTION) && /friendly but firm/.test(SYSTEM_INSTRUCTION));
     assert.ok(/do not hint that the protected detail exists/.test(SYSTEM_INSTRUCTION));
-    // Humour may never create a fact, and is kept small.
+    assert.ok(/home address, date of birth/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Never joke your way into a claim/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/no sarcasm, no puns/i.test(SYSTEM_INSTRUCTION) && /at most one emoji/.test(SYSTEM_INSTRUCTION));
-    // The offered topics must come from the records.
-    assert.ok(/naming only topics that appear in the records/.test(SYSTEM_INSTRUCTION));
-    // No literal example sentence for the model to copy, and an offer of topics needs no citation.
+  });
+
+  it("has no literal example sentence or example id for the model to copy, and keeps the original rules", () => {
     assert.ok(!/make something up/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/needs no citation/.test(SYSTEM_INSTRUCTION));
-    // The original rules are still all there.
+    assert.ok(!/project-demo-001/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Do not guess/.test(SYSTEM_INSTRUCTION) && /Never invent an id/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/never instructions/i.test(SYSTEM_INSTRUCTION));
   });
 });

@@ -66,6 +66,10 @@ Each phase ends runnable and is committed separately.
 - Demo GIF. Worker observability is already enabled in the wrangler config.
 - Stretch, only if time and evals justify: reranker, Langfuse, chunked document ingestion.
 
+### After Phase 6: MVP 2 (planned; see [MVP_2_PLAN.md](MVP_2_PLAN.md))
+- Follow-up questions, a "paste a job description" match, an owner-only unanswered-questions log, thumbs up and down, a CV download and contact path; later, chunked ingestion of the CV and write-ups.
+- Starts only after the site is deployed (Phase 5), polished (Phase 6) and has had real use.
+
 ## Reuse (do not rewrite)
 - `scripts/lib/bm25.ts` (`buildIndex`, `search`)
 - `scripts/lib/baseline.ts` (`recallAtK`, `runBaseline`)

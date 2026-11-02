@@ -25,7 +25,7 @@ Never in any file: a phone number, a salary, a home address, a date of birth, a 
 
 A quick re-check from the repo root: no run of 10 or more digits except the public App Store listing id, and no other email address. Then read the diff by eye for any colleague name, client name, internal company address, staging address or home address (do not keep a list of those words in the repo: the list itself would leak them).
 ```bash
-node -e "const t=require('fs').readFileSync('data/portfolio/records.draft.v1.json','utf8');console.log((t.replace(/idd{10}/g,'').match(/d{10,}/g)||[]), (t.match(/[w.+-]+@[w.-]+/g)||[]))"
+node -e "const t=require('fs').readFileSync('data/portfolio/records.draft.v1.json','utf8');console.log((t.replace(/id\d{10}/g,'').match(/\b\d{10,}\b/g)||[]), (t.match(/[\w.+-]+@[\w.-]+/g)||[]))"
 ```
 It must print two empty lists, apart from the owner's own public email address.
 

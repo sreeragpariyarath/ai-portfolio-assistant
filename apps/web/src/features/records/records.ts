@@ -36,6 +36,9 @@ export function recordTypeLabel(type: string): string {
 const STATUS_LABELS: Record<string, string> = {
   "reviewed-fixture": "Reviewed",
   "synthetic-fixture": "Example",
+  "verified-public": "Verified on a public page",
+  "verified-document": "Verified in a document",
+  "owner-stated": "Stated by the owner",
   unverified: "Unverified",
 };
 

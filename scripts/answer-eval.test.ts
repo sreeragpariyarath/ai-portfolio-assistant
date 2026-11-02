@@ -15,11 +15,11 @@ import {
   summarize,
 } from "./lib/answer-eval.ts";
 import type { CachedAnswer, CaseScore, RunDeps } from "./lib/answer-eval.ts";
-import { EVAL_FILE, RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
+import { SYNTHETIC_EVAL_FILE, SYNTHETIC_RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalCase, EvalSet } from "./lib/eval-data.ts";
 
-const dataset = loadJson(RECORDS_FILE) as Corpus;
-const cases = (loadJson(EVAL_FILE) as EvalSet).cases;
+const dataset = loadJson(SYNTHETIC_RECORDS_FILE) as Corpus;
+const cases = (loadJson(SYNTHETIC_EVAL_FILE) as EvalSet).cases;
 const markers = privateMarkers(dataset.records);
 const privateRecord = dataset.records.find((record) => record.visibility === "private")!;
 // A private number taken from the data at run time, so this file never contains one.

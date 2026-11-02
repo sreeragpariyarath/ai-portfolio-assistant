@@ -5,13 +5,13 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runBaseline } from "./lib/baseline.ts";
 import { EmbeddingCache } from "./lib/embedding-cache.ts";
-import { EVAL_FILE, RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
+import { SYNTHETIC_EVAL_FILE, SYNTHETIC_RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalSet } from "./lib/eval-data.ts";
 import { bm25Rankings, compareMethods, formatComparison } from "./lib/retrieval-eval.ts";
 import type { Rankings } from "./lib/retrieval-eval.ts";
 
-const corpus = loadJson(RECORDS_FILE) as Corpus;
-const evalSet = loadJson(EVAL_FILE) as EvalSet;
+const corpus = loadJson(SYNTHETIC_RECORDS_FILE) as Corpus;
+const evalSet = loadJson(SYNTHETIC_EVAL_FILE) as EvalSet;
 const config = { k: 60, depth: 20 };
 
 // A dense retriever that ranks every expected record first: an upper bound to test the scoring.

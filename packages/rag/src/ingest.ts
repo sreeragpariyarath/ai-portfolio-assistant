@@ -48,10 +48,14 @@ export function validateVector(values: unknown, dims: number): number[] {
   return values as number[];
 }
 
-// Defense in depth: nothing non-public or non-synthetic is ever embedded or stored.
-// The message names the record id only, never its content.
+// A real record must say where it came from: the owner's own account, a public page, or a document the owner showed.
+export const REAL_SOURCE_KINDS = ["owner_statement", "public_page", "document"] as const;
+
+// Defense in depth: nothing non-public is ever embedded or stored, and anything that is not marked synthetic
+// must name a known real source. The message names the record id only, never its content.
 export function assertIngestable(record: KnowledgeRecord): void {
-  if (record.visibility !== "public" || !record.isSynthetic) {
+  const known = record.isSynthetic || (REAL_SOURCE_KINDS as readonly string[]).includes(record.source?.kind ?? "");
+  if (record.visibility !== "public" || !known) {
     throw new Error(`Record "${record.id}" failed the privacy check.`);
   }
 }

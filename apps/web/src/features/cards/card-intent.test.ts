@@ -23,6 +23,9 @@ const cases: [string, ReturnType<typeof matchCardIntent>][] = [
   ["Who are you?", "profile"],
   ["who r u", "profile"],
   ["introduce yourself", "profile"],
+  ["what do you do for fun", "fun"],
+  ["what are your hobbies?", "fun"],
+  ["anime", "fun"],
   ["tell me about yourself", "profile"],
   // Real questions go to the assistant.
   ["Which projects used React and why?", null],

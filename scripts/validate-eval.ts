@@ -1,10 +1,13 @@
 import { resolve } from "node:path";
+import { REAL_SOURCE_KINDS } from "@portfolio/rag";
 import {
   BEHAVIORS,
   EVAL_FILE,
+  PORTFOLIO_RECORDS_FILE,
   RECORDS_FILE,
   RECORD_TYPES,
   SCORING_MODES,
+  SYNTHETIC_RECORDS_FILE,
   VISIBILITIES,
   loadJson,
 } from "./lib/eval-data.ts";
@@ -32,6 +35,15 @@ function leaksSecret(text: string): boolean {
   return PHONE.test(text) || SALARY.test(text);
 }
 
+// A run of 10 or more digits (a phone number written without separators), ignoring the public App Store
+// listing id such as "id1234567890".
+function hasLongNumber(text: string): boolean {
+  return /\d{10,}/.test(text.replace(/id\d{10}/g, ""));
+}
+
+// The synthetic files are the fictional test fixtures; anything else is the owner's real data (D-029).
+const PINNED_FIXTURE_DATASET = "retrieval-eval-v3";
+
 export function validateEvalData(corpusInput: unknown, evalInput: unknown): string[] {
   const errors: string[] = [];
   const report: Report = (message) => {
@@ -42,7 +54,8 @@ export function validateEvalData(corpusInput: unknown, evalInput: unknown): stri
   if (isObj(corpusInput)) validateCorpus(corpusInput, recordsById, report);
   else report("corpus: must be a JSON object");
 
-  if (isObj(evalInput)) validateEval(evalInput, recordsById, report);
+  const synthetic = isObj(corpusInput) && corpusInput.isSynthetic === true;
+  if (isObj(evalInput)) validateEval(evalInput, recordsById, report, synthetic);
   else report("evalSet: must be a JSON object");
 
   return errors;
@@ -50,7 +63,8 @@ export function validateEvalData(corpusInput: unknown, evalInput: unknown): stri
 
 function validateCorpus(corpus: Obj, recordsById: Map<string, Obj>, report: Report): void {
   if (!isText(corpus.datasetId)) report("corpus.datasetId: required string");
-  if (corpus.isSynthetic !== true) report("corpus.isSynthetic: must be true");
+  if (typeof corpus.isSynthetic !== "boolean") report("corpus.isSynthetic: must be true or false");
+  const syntheticCorpus = corpus.isSynthetic === true;
   if (!Array.isArray(corpus.records) || corpus.records.length === 0) {
     report("corpus.records: required non-empty array");
     return;
@@ -72,7 +86,15 @@ function validateCorpus(corpus: Obj, recordsById: Map<string, Obj>, report: Repo
     for (const field of ["type", "title", "content", "verificationStatus", "visibility", "createdAt", "updatedAt"]) {
       if (!isText(record[field])) report(`${label}: ${field} is required`);
     }
-    if (record.isSynthetic !== true) report(`${label}: isSynthetic must be true`);
+    // A synthetic corpus is all fiction. A real corpus may hold real records, each naming where it came from,
+    // plus clearly fake private test fixtures.
+    if (record.isSynthetic !== true) {
+      const kind = isObj(record.source) ? record.source.kind : undefined;
+      if (syntheticCorpus) report(`${label}: isSynthetic must be true in a synthetic corpus`);
+      else if (!(REAL_SOURCE_KINDS as readonly unknown[]).includes(kind)) {
+        report(`${label}: a real record needs source.kind to be one of ${REAL_SOURCE_KINDS.join(", ")}`);
+      }
+    }
     if (!(RECORD_TYPES as readonly unknown[]).includes(record.type)) {
       report(`${label}: type must be one of ${RECORD_TYPES.join(", ")}`);
     }
@@ -95,6 +117,9 @@ function validateCorpus(corpus: Obj, recordsById: Map<string, Obj>, report: Repo
     if (record.visibility !== "private" && leaksSecret(`${record.title} ${record.content}`)) {
       report(`${label}: non-private record contains a phone-number or salary-like value`);
     }
+    if (record.visibility !== "private" && hasLongNumber(`${record.title} ${record.content}`)) {
+      report(`${label}: non-private record contains a run of 10 or more digits`);
+    }
   });
 
   for (const record of records) {
@@ -110,11 +135,12 @@ function validateCorpus(corpus: Obj, recordsById: Map<string, Obj>, report: Repo
   }
 }
 
-function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Report): void {
+function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Report, syntheticCorpus: boolean): void {
   if (!isText(evalSet.datasetId)) report("evalSet.datasetId: required string");
   if (typeof evalSet.version !== "number") report("evalSet.version: required number");
-  if (evalSet.isSynthetic !== true) report("evalSet.isSynthetic: must be true");
-  if (evalSet.corpus !== RECORDS_FILE) report(`evalSet.corpus: must be "${RECORDS_FILE}"`);
+  if (evalSet.isSynthetic !== syntheticCorpus) report(`evalSet.isSynthetic: must be ${syntheticCorpus} to match the corpus`);
+  const corpusFile = syntheticCorpus ? SYNTHETIC_RECORDS_FILE : PORTFOLIO_RECORDS_FILE;
+  if (evalSet.corpus !== corpusFile) report(`evalSet.corpus: must be "${corpusFile}"`);
 
   const declared = evalSet.expectedBehaviorEnum;
   if (
@@ -145,7 +171,7 @@ function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Repor
     if (!isText(entry.category)) report(`${label}: category is required`);
     if (!isText(entry.question)) report(`${label}: question is required`);
     if (entry.split !== "development") report(`${label}: split must be "development"`);
-    if (entry.isSynthetic !== true) report(`${label}: isSynthetic must be true`);
+    if (entry.isSynthetic !== syntheticCorpus) report(`${label}: isSynthetic must be ${syntheticCorpus}`);
     if (!(BEHAVIORS as readonly unknown[]).includes(entry.expectedBehavior)) {
       report(`${label}: expectedBehavior must be one of ${BEHAVIORS.join(", ")}`);
     }
@@ -183,7 +209,7 @@ function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Repor
     }
   });
 
-  validatePinnedFixes(casesById, report);
+  if (evalSet.datasetId === PINNED_FIXTURE_DATASET) validatePinnedFixes(casesById, report);
 }
 
 // E024 and E032 were corrected after review; keep those corrections from regressing.

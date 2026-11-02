@@ -3,6 +3,7 @@ export type { Bm25Index, Doc, Hit } from "./bm25.ts";
 export {
   POINT_ID_NAMESPACE,
   assertIngestable,
+  REAL_SOURCE_KINDS,
   contentHash,
   planIngest,
   pointId,

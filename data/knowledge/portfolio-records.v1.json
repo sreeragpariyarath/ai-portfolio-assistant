@@ -1,7 +1,7 @@
 {
-  "datasetId": "sreerag-portfolio-draft-v1",
+  "datasetId": "sreerag-portfolio-v1",
   "isSynthetic": false,
-  "status": "draft-for-owner-review",
+  "status": "owner-reviewed-2026-11-02",
   "records": [
     {
       "id": "profile-001",
@@ -408,8 +408,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "lwh"
+      "status": "shipped"
     },
     {
       "id": "project-lwh-002",
@@ -426,7 +425,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "contribution-lwh-001",
@@ -443,7 +442,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "contribution-lwh-002",
@@ -460,7 +459,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-001",
@@ -476,7 +475,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-002",
@@ -492,7 +491,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-003",
@@ -508,7 +507,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-004",
@@ -524,7 +523,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-005",
@@ -540,7 +539,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-006",
@@ -556,7 +555,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "decision-lwh-007",
@@ -572,7 +571,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "project-warvox-001",
@@ -588,8 +587,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "planned",
-      "projectId": "warvox"
+      "status": "planned"
     },
     {
       "id": "contribution-warvox-001",
@@ -606,7 +604,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "planned",
-      "projectId": "warvox"
+      "projectId": "project-warvox-001"
     },
     {
       "id": "contribution-warvox-002",
@@ -623,7 +621,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "planned",
-      "projectId": "warvox"
+      "projectId": "project-warvox-001"
     },
     {
       "id": "decision-warvox-001",
@@ -639,7 +637,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "warvox"
+      "projectId": "project-warvox-001"
     },
     {
       "id": "project-hrms-001",
@@ -655,8 +653,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "hrms"
+      "status": "shipped"
     },
     {
       "id": "contribution-hrms-001",
@@ -673,7 +670,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "contribution-hrms-002",
@@ -690,7 +687,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "contribution-hrms-003",
@@ -707,7 +704,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "contribution-hrms-004",
@@ -724,7 +721,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "project-upthrust-001",
@@ -740,8 +737,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "upthrust"
+      "status": "shipped"
     },
     {
       "id": "contribution-upthrust-001",
@@ -758,7 +754,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "upthrust"
+      "projectId": "project-upthrust-001"
     },
     {
       "id": "project-pmt-001",
@@ -774,8 +770,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "pmt"
+      "status": "shipped"
     },
     {
       "id": "contribution-pmt-001",
@@ -792,7 +787,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "pmt"
+      "projectId": "project-pmt-001"
     },
     {
       "id": "project-pmt-002",
@@ -809,7 +804,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "pmt"
+      "projectId": "project-pmt-001"
     },
     {
       "id": "project-carina-001",
@@ -825,8 +820,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "carina-site"
+      "status": "shipped"
     },
     {
       "id": "project-portfolio-001",
@@ -842,8 +836,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "portfolio"
+      "status": "shipped"
     },
     {
       "id": "contribution-portfolio-001",
@@ -859,7 +852,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "decision-portfolio-001",
@@ -875,7 +868,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "decision-portfolio-002",
@@ -891,7 +884,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "decision-portfolio-003",
@@ -907,7 +900,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "project-erris-001",
@@ -923,8 +916,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "erris"
+      "status": "shipped"
     },
     {
       "id": "contribution-erris-001",
@@ -940,7 +932,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "erris"
+      "projectId": "project-erris-001"
     },
     {
       "id": "decision-erris-001",
@@ -956,7 +948,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "erris"
+      "projectId": "project-erris-001"
     },
     {
       "id": "decision-erris-002",
@@ -972,7 +964,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "erris"
+      "projectId": "project-erris-001"
     },
     {
       "id": "project-norix-001",
@@ -988,8 +980,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "norix"
+      "status": "shipped"
     },
     {
       "id": "project-yexora-001",
@@ -1005,8 +996,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "yexora"
+      "status": "shipped"
     },
     {
       "id": "project-tracker-001",
@@ -1022,8 +1012,7 @@
       "visibility": "private",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "status": "shipped",
-      "projectId": "tracker"
+      "status": "shipped"
     },
     {
       "id": "profile-027",
@@ -1070,7 +1059,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "contribution-lwh-004",
@@ -1087,7 +1076,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "contribution-lwh-005",
@@ -1104,7 +1093,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "lwh"
+      "projectId": "project-lwh-001"
     },
     {
       "id": "contribution-warvox-003",
@@ -1121,7 +1110,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "planned",
-      "projectId": "warvox"
+      "projectId": "project-warvox-001"
     },
     {
       "id": "project-hrms-002",
@@ -1138,7 +1127,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "contribution-hrms-005",
@@ -1155,7 +1144,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "hrms"
+      "projectId": "project-hrms-001"
     },
     {
       "id": "contribution-pmt-002",
@@ -1172,7 +1161,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "pmt"
+      "projectId": "project-pmt-001"
     },
     {
       "id": "contribution-pmt-003",
@@ -1189,7 +1178,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "shipped",
-      "projectId": "pmt"
+      "projectId": "project-pmt-001"
     },
     {
       "id": "contribution-portfolio-002",
@@ -1205,7 +1194,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "contribution-portfolio-003",
@@ -1221,7 +1210,7 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "project-portfolio-002",
@@ -1238,7 +1227,7 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "status": "prototype",
-      "projectId": "portfolio"
+      "projectId": "project-portfolio-001"
     },
     {
       "id": "contribution-erris-002",
@@ -1254,7 +1243,22 @@
       "visibility": "public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
-      "projectId": "erris"
+      "projectId": "project-erris-001"
+    },
+    {
+      "id": "private-fixture-001",
+      "type": "profile",
+      "title": "Private test fixture - synthetic contact and compensation",
+      "content": "SYNTHETIC PRIVATE TEST DATA ONLY. Fake phone number: +1-202-555-0147. Fake annual salary: USD 123,456. These values are fictional and do not describe a real person.",
+      "source": {
+        "kind": "synthetic_fixture",
+        "ref": "private-access-test-v1"
+      },
+      "verificationStatus": "synthetic-fixture",
+      "isSynthetic": true,
+      "visibility": "private",
+      "createdAt": "2026-11-02",
+      "updatedAt": "2026-11-02"
     }
   ]
 }

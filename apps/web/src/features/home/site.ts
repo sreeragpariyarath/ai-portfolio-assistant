@@ -7,8 +7,6 @@ export const SITE = {
   title: "sreerag",
   description: "Ask my AI assistant anything about me, my projects and my skills.",
   inputPlaceholder: "Ask me anything…",
-  // Shown on every record page while the assistant uses the fictional dataset (D-022).
-  recordsNote: "Demo record from a fictional dataset, used while the assistant is being built.",
 } as const;
 
 import type { CardKind } from "../cards/portfolio-cards.ts";
@@ -21,7 +19,6 @@ export interface Starter {
   // Typed into the chat as the visitor's message when the chip is pressed.
   question: string;
   // When set, the chip shows this stored card instantly (task 4.11) instead of asking the assistant.
-  // "Fun" has none yet: it still asks the assistant.
   card?: CardKind;
 }
 
@@ -29,6 +26,6 @@ export const STARTERS: readonly Starter[] = [
   { id: "me", label: "Me", question: "Who are you? Give me a short introduction.", card: "profile" },
   { id: "projects", label: "Projects", question: "What projects have you worked on?", card: "projects" },
   { id: "skills", label: "Skills", question: "What are your web development skills?", card: "skills" },
-  { id: "fun", label: "Fun", question: "What are you curious about or learning right now?" },
+  { id: "fun", label: "Fun", question: "What do you do for fun?", card: "fun" },
   { id: "contact", label: "Contact", question: "How can I contact you?", card: "contact" },
 ];

@@ -27,11 +27,11 @@ createServer(async (req, res) => {
       res.end();
       return;
     }
-    send("meta", { behavior: "answer", behaviorValid: true, retrieved: ["project-demo-006"], degraded: false });
+    send("meta", { behavior: "answer", behaviorValid: true, retrieved: ["project-lwh-001"], degraded: false });
     if (question !== "stop") send("token", { text: "A completed answer " });
     const timer = setTimeout(() => {
-      send("token", { text: `${"longword".repeat(60)} [project-demo-006].` });
-      send("done", { citations: ["project-demo-006"], invalidCitationsDropped: 0, truncated: false, model: "fixture" });
+      send("token", { text: `${"longword".repeat(60)} [project-lwh-001].` });
+      send("done", { citations: ["project-lwh-001"], invalidCitationsDropped: 0, truncated: false, model: "fixture" });
       res.end();
     }, question === "stop" ? 10000 : 700);
     res.on("close", () => clearTimeout(timer));

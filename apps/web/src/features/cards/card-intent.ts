@@ -39,6 +39,7 @@ const FILLER = new Set([
 const TOPICS: { kind: CardKind; needs: readonly string[]; also: readonly string[] }[] = [
   { kind: "projects", needs: ["projects", "work", "built", "portfolio"], also: ["latest", "recent", "best", "top"] },
   { kind: "skills", needs: ["skills", "stack", "tech", "tools", "strengths"], also: [] },
+  { kind: "fun", needs: ["fun", "hobbies", "hobby", "interests", "anime"], also: [] },
   { kind: "contact", needs: ["contact", "email", "reach", "hire", "touch"], also: ["details", "info", "address"] },
 ];
 

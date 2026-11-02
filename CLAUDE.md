@@ -19,6 +19,7 @@ The owner works from two machines, and a Claude session on one has no memory of 
 - `docs/DAILY_LOG.md` — what was done, newest day first. Read the latest entries at the start of a session. **After every commit, add a few plain-language lines in the same commit** saying what we did, what we tested (command and result), and manual steps such as creating a Gemini API key or Qdrant cluster. Don't copy commit titles or hashes, and never write secret values.
 - `docs/RAG_PROJECT_PLAN.md` — the phased roadmap.
 - `docs/PENDING.md` — what is left and who does it (owner's real data and funny lines, the real-data switch, Phase 5 deploy, open checks). Read it at the start of a session and keep it current.
+- `docs/REAL_DATA_HANDOFF.md` — the end-to-end plan for switching to the owner's real portfolio data (drafts in `data/portfolio/`), with the decisions taken and which steps need the owner's go-ahead (D-029). Read it before touching data, prompts or the cards.
 
 Run `git pull` before starting. `.env` is per device and never synced; create it from `.env.example` (see `docs/SETUP.md`).
 

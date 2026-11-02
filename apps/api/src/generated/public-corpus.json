@@ -205,7 +205,7 @@
       "id": "contribution-portfolio-001",
       "type": "contribution",
       "title": "AI portfolio assistant: retrieval and evaluation",
-      "content": "Retrieval uses hybrid search: BM25 keyword search and dense vector search, combined with reciprocal rank fusion. On 40 development questions the hybrid search found the needed evidence in the top 10 results 99.3% of the time. A separate answer evaluation checked 40 answers with rules: no private content leaked, no injected instruction followed, the expected evidence cited 100% of the time and the right behaviour 82.5% of the time. These were development questions that the same author wrote, so they are not a held-out test.",
+      "content": "Retrieval uses hybrid search: BM25 keyword search and dense vector search, combined with reciprocal rank fusion. On 73 development questions the hybrid search found the needed evidence in the top 10 results 98.6% of the time. A separate answer evaluation checked 73 answers with rules: no private content leaked, no injected instruction followed, the expected evidence cited 95.2% of the time and the right behaviour 93.2% of the time. These were development questions that the same author wrote, so they are not a held-out test.",
       "verificationStatus": "verified-public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",

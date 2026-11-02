@@ -348,7 +348,7 @@ export function formatAnswerReport(scores: CaseScore[], summary: Summary, detail
   lines.push(
     "## Limits",
     "",
-    "- 40 development cases written by the same author as the records, so this is not a held-out result; one case is 2.5 points.",
+    `- ${scores.length} development cases written by the same author as the records, so this is not a held-out result; one case is ${(100 / scores.length).toFixed(1)} points.`,
     "- `requiredFacts` and `forbiddenClaims` are paraphrases, so the rules cannot check them. A sample of answers must be read by hand; the full answers are in the git-ignored `evals/.cache/answers-review.md`.",
     "- Planted-claim and private-content checks match exact strings (the planted figures, private ids and numbers). A reworded leak would not be caught.",
     "",

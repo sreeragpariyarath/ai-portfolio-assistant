@@ -35,10 +35,10 @@ test("keyboard focus, quiet streaming, completed answer and sources", async ({ p
   await expect(page.getByText("A completed answer", { exact: false })).toBeVisible();
   await expect(page.locator('main [aria-live="polite"]')).toHaveText("");
   await expect(page.locator('main [aria-live="polite"]')).toContainText("A completed answer");
-  await expect(page.locator('main [aria-live="polite"]')).not.toContainText("[project-demo-006]");
+  await expect(page.locator('main [aria-live="polite"]')).not.toContainText("[project-lwh-001]");
   await accessible(page);
   const popupPromise = context.waitForEvent("page");
-  await page.getByRole("link", { name: "1. project-demo-006 (opens in a new tab)", exact: true }).click();
+  await page.getByRole("link", { name: "1. project-lwh-001 (opens in a new tab)", exact: true }).click();
   const popup = await popupPromise;
   await popup.waitForLoadState();
   await expect(popup.getByRole("heading", { level: 1 })).toBeVisible();
@@ -98,10 +98,10 @@ for (const viewport of [{ width: 360, height: 640 }, { width: 320, height: 300 }
     await accessible(page);
     await page.screenshot({ path: testInfo.outputPath("chat.png"), fullPage: true });
     expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(viewport.height);
-    await page.goto("/records/project-demo-006");
+    await page.goto("/records/project-lwh-001");
     await noOverflow(page);
     await accessible(page);
-    const response = await page.goto("/records/private-demo-001");
+    const response = await page.goto("/records/project-tracker-001");
     expect(response?.status()).toBe(404);
     await expect(page.getByRole("heading", { name: "This page doesn't exist" })).toBeVisible();
     await accessible(page);
@@ -151,14 +151,19 @@ test("chips show stored cards with no assistant call", async ({ page }) => {
 
   await page.getByRole("button", { name: "Skills", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Skills", level: 2 })).toBeVisible();
-  await expect(page.getByText("Cloudflare Workers")).toBeVisible();
+  await expect(page.getByText("NestJS")).toBeVisible();
   await accessible(page);
 
   await page.getByRole("button", { name: "Contact", exact: true }).click();
-  const email = page.getByRole("link", { name: "hello@example.com" });
-  await expect(email).toHaveAttribute("href", "mailto:hello@example.com");
+  const email = page.getByRole("link", { name: "psreerag69@gmail.com" });
+  await expect(email).toHaveAttribute("href", "mailto:psreerag69@gmail.com");
   await expect(page.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute("href", /^https:\/\//);
   await expect(page.locator("main")).not.toContainText(/\+?\d{1,3}[-. ]\d{3}[-. ]\d{3}[-. ]\d{4}/);
+  await accessible(page);
+
+  await page.getByRole("button", { name: "Fun", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Beyond the code", level: 2 })).toBeVisible();
+  await expect(page.getByText("Attack on Titan")).toBeVisible();
   await accessible(page);
 
   expect(chatRequests).toEqual([]);
@@ -174,7 +179,7 @@ test("a project card opens a dialog that traps focus, closes with Escape and ret
 
   const dialog = page.getByRole("dialog", { name: "AI Portfolio Assistant" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("link", { name: /Source record/ })).toHaveAttribute("href", "/records/project-demo-001");
+  await expect(dialog.getByRole("link", { name: /Source record/ })).toHaveAttribute("href", "/records/project-portfolio-001");
   await accessible(page);
 
   // Tab never reaches the page behind: focus stays in the dialog or leaves for the browser's own controls.

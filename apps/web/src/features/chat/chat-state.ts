@@ -149,7 +149,7 @@ export function behaviorNote(behavior: Behavior | undefined): string | null {
   }
 }
 
-const CARD_NAMES: Record<CardKind, string> = { profile: "Profile card", projects: "Project cards", skills: "Skill groups", contact: "Contact card" };
+const CARD_NAMES: Record<CardKind, string> = { profile: "Profile card", projects: "Project cards", skills: "Skill groups", contact: "Contact card", fun: "Fun card" };
 
 // What a screen reader hears: only finished answers (or why one failed), never each streamed word.
 export function announcementFor(messages: ChatMessage[]): string {

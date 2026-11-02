@@ -39,7 +39,7 @@ export async function runIngest(records: KnowledgeRecord[], deps: IngestDeps): P
   const publicRecords = records.filter((record) => record.visibility === "public");
   if (publicRecords.length === 0) throw new Error("No public records found. Refusing to continue.");
   for (const record of publicRecords) assertIngestable(record);
-  log(`Public synthetic records: ${publicRecords.length}; private excluded: ${records.length - publicRecords.length}`);
+  log(`Public records: ${publicRecords.length}; private excluded: ${records.length - publicRecords.length}`);
 
   let collectionCreated = false;
   if (dryRun) {

@@ -8,7 +8,7 @@ import type { PublicRecord } from "./records.ts";
 // the root type-check treats apps/web files as CommonJS).
 const read = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 const webBundle = read("apps/web/src/generated/public-corpus.json") as { records: PublicRecord[] };
-const source = read("data/knowledge/synthetic-records.v3.json") as { records: { id: string; visibility: string; content: string }[] };
+const source = read("data/knowledge/portfolio-records.v1.json") as { records: { id: string; visibility: string; content: string }[] };
 
 describe("the web app's public record bundle", () => {
   it("holds every public record and no private one", () => {
@@ -38,7 +38,7 @@ describe("record helpers", () => {
   });
 
   it("finds a record by id", () => {
-    assert.equal(findRecord(webBundle.records, "project-demo-001")?.title, "Support knowledge assistant");
+    assert.equal(findRecord(webBundle.records, "profile-001")?.title, "Who Sreerag is");
     assert.equal(findRecord(webBundle.records, "nope"), undefined);
   });
 
@@ -46,6 +46,8 @@ describe("record helpers", () => {
     assert.equal(recordTypeLabel("project"), "Project");
     assert.equal(recordTypeLabel("talk"), "Talk");
     assert.equal(verificationLabel("unverified"), "Unverified");
+    assert.equal(verificationLabel("owner-stated"), "Stated by the owner");
+    assert.equal(verificationLabel("verified-public"), "Verified on a public page");
     assert.equal(verificationLabel("custom"), "custom");
   });
 

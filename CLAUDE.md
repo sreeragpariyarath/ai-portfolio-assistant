@@ -49,16 +49,16 @@ pnpm cf-typegen:check        # fails if worker-configuration.d.ts is out of date
 Evaluation scripts live in `scripts/` and run directly on Node's built-in TypeScript support (no build step, no extra dependencies; keep to erasable syntax and `.ts` import extensions):
 
 ```bash
-pnpm eval:validate     # validate data/knowledge/synthetic-records.v3.json and evals/retrieval-eval.v3.json
-pnpm eval:baseline     # validate, then run the BM25 retrieval baseline on the 40 development cases
+pnpm eval:validate     # validate data/knowledge/portfolio-records.v1.json and evals/portfolio-eval.v1.json (the owner's real data, D-029)
+pnpm eval:baseline     # validate, then run the BM25 retrieval baseline on the 68 development cases
 pnpm eval:retrieval    # BM25 vs dense (Qdrant) vs hybrid; needs .env; caches question embeddings in evals/.cache/
-pnpm eval:answers     # score saved answers to the 40 cases (rule-based); makes no network calls unless --live (needs the owner's go-ahead)
+pnpm eval:answers     # score saved answers to the 68 cases (rule-based); makes no network calls unless --live (needs the owner's go-ahead)
 pnpm corpus:build      # write apps/api/src/generated/public-corpus.json (public records only) for the Worker
 pnpm corpus:check      # fail if that committed file is stale (also covered by a test in test:scripts)
 pnpm test:scripts      # node:test suite: scripts, packages/rag and apps/web/src/**/*.test.ts
 ```
 
-The dataset is fictional (persona "Alex Morgan"). Private records are excluded before indexing; do not add real personal data, and never put a phone number or salary in any file.
+The tools use the owner's **real portfolio data** (D-029): `data/knowledge/portfolio-records.v1.json` and `evals/portfolio-eval.v1.json`. The fictional "Alex Morgan" files (`synthetic-records.v3.json`, `retrieval-eval.v3.json`) stay as test fixtures only: the unit tests and the API tests (which alias the bundle to `apps/api/test/fixtures/public-corpus.json`) use them. Private records are excluded before indexing; a real record must name a source kind (`owner_statement`, `public_page` or `document`), the one private fake fixture holds obviously fake numbers on purpose, and never put a real phone number, salary, address or birth date in any file.
 
 Run `pnpm cf-typegen` after changing bindings in `apps/api/wrangler.jsonc`. There is no root-level test or lint script; run them per package.
 

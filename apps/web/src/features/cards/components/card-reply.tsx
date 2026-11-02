@@ -1,5 +1,6 @@
 import type { CardKind } from "@/features/cards/portfolio-cards";
 import { ContactCardView } from "./contact-card";
+import { FunCardView } from "./fun-card";
 import { ProfileCardView } from "./profile-card";
 import { ProjectCarousel } from "./project-cards";
 import { SkillsCardView } from "./skills-card";
@@ -19,6 +20,7 @@ export function CardReply({ text, card, animate = false }: { text: string; card:
       {card === "projects" ? <ProjectCarousel /> : null}
       {card === "skills" ? <SkillsCardView /> : null}
       {card === "contact" ? <ContactCardView /> : null}
+      {card === "fun" ? <FunCardView /> : null}
     </div>
   );
 }

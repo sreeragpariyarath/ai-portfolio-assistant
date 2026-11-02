@@ -22,6 +22,9 @@ The generator checks passed: unique ids, every expected evidence id exists and i
 9. **Location line**: "Indore, India · open to relocating". Carina Softlabs may be named.
 10. Company-repository git history could not be shared, so company-project roles are the owner's account (`owner-stated`).
 
+## Progress (2 Nov 2026, PC)
+Owner review: done (the owner read all records and found them fine). Step B items 1 to 5 are done on branch `feat/real-data-switch` (data promoted, guards updated, fake private fixture added, bundles rebuilt, cards and the Fun card filled, record-page note removed). **Still to do:** B6 (the voice and tone rewrite, labels and sources), then C (index, needs go-ahead) and D (one evaluation, needs go-ahead), E, F, G.
+
 ## 3. Step plan (who does what, and which steps need the owner's go-ahead)
 
 **A. Owner review (owner).** Read `data/portfolio/portfolio-source.md` and `open-questions.md`; correct anything wrong; answer what you can.

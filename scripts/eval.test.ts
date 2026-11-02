@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runBaseline } from "./lib/baseline.ts";
-import { EVAL_FILE, RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
+import { SYNTHETIC_EVAL_FILE, SYNTHETIC_RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalSet } from "./lib/eval-data.ts";
 import { validateEvalData } from "./validate-eval.ts";
 
@@ -9,8 +9,8 @@ type Data = { corpus: Corpus; evalSet: EvalSet };
 
 function load(): Data {
   return {
-    corpus: structuredClone(loadJson(RECORDS_FILE)) as Corpus,
-    evalSet: structuredClone(loadJson(EVAL_FILE)) as EvalSet,
+    corpus: structuredClone(loadJson(SYNTHETIC_RECORDS_FILE)) as Corpus,
+    evalSet: structuredClone(loadJson(SYNTHETIC_EVAL_FILE)) as EvalSet,
   };
 }
 

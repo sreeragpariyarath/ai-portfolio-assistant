@@ -8,7 +8,7 @@ import {
   normalizeNewlines,
   serializePublicCorpus,
 } from "./lib/corpus-build.ts";
-import { RECORDS_FILE, REPO_ROOT, loadJson } from "./lib/eval-data.ts";
+import { RECORDS_FILE, REPO_ROOT, SYNTHETIC_RECORDS_FILE, loadJson } from "./lib/eval-data.ts";
 import type { Corpus } from "./lib/eval-data.ts";
 
 const ALLOWED_FIELDS = new Set([
@@ -25,7 +25,7 @@ const ALLOWED_FIELDS = new Set([
 ]);
 
 function load(): Corpus {
-  return structuredClone(loadJson(RECORDS_FILE)) as Corpus;
+  return structuredClone(loadJson(SYNTHETIC_RECORDS_FILE)) as Corpus;
 }
 
 describe("buildPublicCorpus", () => {
@@ -76,6 +76,16 @@ describe("buildPublicCorpus", () => {
     const file = resolve(REPO_ROOT, PUBLIC_CORPUS_FILE);
     assert.ok(existsSync(file), `${PUBLIC_CORPUS_FILE} does not exist; run "pnpm corpus:build"`);
     const committed = normalizeNewlines(readFileSync(file, "utf8"));
-    assert.equal(committed, serializePublicCorpus(buildPublicCorpus(load())));
+    const real = structuredClone(loadJson(RECORDS_FILE)) as Corpus;
+    assert.equal(committed, serializePublicCorpus(buildPublicCorpus(real)));
+  });
+
+  it("builds the real portfolio data: public records only, none from the fake private fixture", () => {
+    const real = structuredClone(loadJson(RECORDS_FILE)) as Corpus;
+    const built = buildPublicCorpus(real);
+    const ids = built.records.map((r) => r.id);
+    assert.ok(built.records.length > 50);
+    assert.ok(!ids.includes("private-fixture-001") && !ids.includes("project-tracker-001"));
+    for (const record of real.records.filter((r) => r.visibility === "private")) assert.ok(!ids.includes(record.id));
   });
 });

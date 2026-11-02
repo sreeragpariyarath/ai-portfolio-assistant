@@ -40,8 +40,8 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
           <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 font-medium text-neutral-700">{recordTypeLabel(record.type)}</span>
           <span>Source record {record.id}</span>
         </p>
-        <h1 className="mt-3 text-3xl font-bold text-neutral-950">{record.title}</h1>
-        <p className="mt-4 text-[1.05rem] leading-relaxed whitespace-pre-wrap text-neutral-800">{record.content}</p>
+        <h1 className="mt-3 text-3xl font-bold text-neutral-950 [overflow-wrap:anywhere]">{record.title}</h1>
+        <p className="mt-4 text-[1.05rem] leading-relaxed whitespace-pre-wrap text-neutral-800 [overflow-wrap:anywhere]">{record.content}</p>
 
         <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-t border-neutral-200 pt-6 text-sm">
           <dt className="text-neutral-500">Status</dt>
@@ -71,8 +71,6 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
             </>
           ) : null}
         </dl>
-
-        <p className="mt-10 text-xs text-neutral-500">{SITE.recordsNote}</p>
       </article>
     </main>
   );

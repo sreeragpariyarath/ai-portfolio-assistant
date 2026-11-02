@@ -9,8 +9,14 @@ export { RECORD_TYPES, VISIBILITIES };
 export type { KnowledgeRecord };
 
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
-export const RECORDS_FILE = "data/knowledge/synthetic-records.v3.json";
-export const EVAL_FILE = "evals/retrieval-eval.v3.json";
+// The owner's real portfolio data (D-029) is what the tools use. The fictional "Alex Morgan" files stay in the
+// repository as test fixtures: the unit tests that need a fixed, well-known corpus read them by name.
+export const PORTFOLIO_RECORDS_FILE = "data/knowledge/portfolio-records.v1.json";
+export const PORTFOLIO_EVAL_FILE = "evals/portfolio-eval.v1.json";
+export const SYNTHETIC_RECORDS_FILE = "data/knowledge/synthetic-records.v3.json";
+export const SYNTHETIC_EVAL_FILE = "evals/retrieval-eval.v3.json";
+export const RECORDS_FILE = PORTFOLIO_RECORDS_FILE;
+export const EVAL_FILE = PORTFOLIO_EVAL_FILE;
 
 export const BEHAVIORS = ["answer", "qualify", "abstain", "refuse"] as const;
 // "ranked" cases are scored with Recall@k; "list" cases ask for every matching record

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { describe, it } from "node:test";
 import {
   POINT_ID_NAMESPACE,
+  REAL_SOURCE_KINDS,
   assertIngestable,
   contentHash,
   planIngest,
@@ -89,8 +90,23 @@ describe("assertIngestable", () => {
     );
   });
 
-  it("rejects a record that is not synthetic", () => {
+  it("rejects a real record that does not name a known source", () => {
     assert.throws(() => assertIngestable(record({ isSynthetic: false })));
+    assert.throws(() => assertIngestable(record({ isSynthetic: false, source: { kind: "synthetic_fixture", ref: "x" } })));
+    assert.throws(() => assertIngestable(record({ isSynthetic: false, source: { kind: "", ref: "x" } })));
+  });
+
+  it("accepts a public real record from each known source", () => {
+    for (const kind of REAL_SOURCE_KINDS) {
+      assert.doesNotThrow(() => assertIngestable(record({ isSynthetic: false, source: { kind, ref: "owner" } })), kind);
+    }
+  });
+
+  it("still rejects a private record, whatever its source", () => {
+    for (const kind of REAL_SOURCE_KINDS) {
+      assert.throws(() => assertIngestable(record({ isSynthetic: false, visibility: "private", source: { kind, ref: "owner" } })), kind);
+    }
+    assert.throws(() => assertIngestable(record({ visibility: "private" })));
   });
 });
 

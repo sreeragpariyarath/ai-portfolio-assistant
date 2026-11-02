@@ -7,9 +7,9 @@ This folder holds Sreerag's **real portfolio content**, ready for review. It rep
 ## Files
 | File | What it is |
 | --- | --- |
-| (moved) `data/knowledge/portfolio-records.v1.json` | **79 knowledge records** (77 public, 2 private: the personal tracker and a fake test fixture). This is the source the assistant answers from. Edit that file. |
-| (moved) `evals/portfolio-eval.v1.json` | **68 development questions** with expected behaviour and evidence ids, same shape as `evals/retrieval-eval.v3.json`. 53 answer, 4 qualify, 4 abstain, 7 refuse. |
-| `portfolio-source.md` | A readable copy of the records, grouped by topic (generated; do not edit). |
+| (moved) `data/knowledge/portfolio-records.v1.json` | **84 knowledge records** (82 public, 2 private: the personal tracker and a fake test fixture). This is the source the assistant answers from. Edit that file. |
+| (moved) `evals/portfolio-eval.v1.json` | **73 development questions** with expected behaviour and evidence ids, same shape as `evals/retrieval-eval.v3.json`. 58 answer, 4 qualify, 4 abstain, 7 refuse. |
+| `portfolio-source.md` | A readable copy of the **first draft** of the records, grouped by topic. It is **out of date** (the records were corrected on 2 Nov 2026 after checking the company repositories); read `data/knowledge/portfolio-records.v1.json` instead. |
 | `cards-content.draft.md` | The content for the stored cards (profile, projects, skills, contact, a new Fun card), ready to paste into `portfolio-cards.ts`. |
 | `open-questions.md` | What is still unverified or undecided, and the resume fixes. |
 

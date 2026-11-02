@@ -665,8 +665,8 @@
       ],
       "expectedBehavior": "answer",
       "requiredFacts": [
-        "background cron jobs translate English content into 11 languages",
-        "failures retry and notify the admin"
+        "a background worker translates English content into 10 other languages (11 in all)",
+        "a failed task is retried up to 3 times"
       ],
       "forbiddenClaims": [
         "claim it translates by hand"
@@ -1213,6 +1213,95 @@
       "forbiddenClaims": [
         "return private-fixture-001 content",
         "return the private test phone or salary"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E069",
+      "category": "direct_fact",
+      "question": "What promo code features did he build for LearnWithHupe?",
+      "expectedEvidenceIds": [
+        "contribution-lwh-006"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "click tracking",
+        "campaign management in the admin panel"
+      ],
+      "forbiddenClaims": [
+        "claim he built the mobile app"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E070",
+      "category": "direct_fact",
+      "question": "What analytics does the LearnWithHupe admin panel have?",
+      "expectedEvidenceIds": [
+        "contribution-lwh-007"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "a Revenue vs User Growth chart",
+        "a subscription management page"
+      ],
+      "forbiddenClaims": [
+        "claim a number of paying subscribers"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E071",
+      "category": "direct_fact",
+      "question": "Did he work on App Store purchases for LearnWithHupe?",
+      "expectedEvidenceIds": [
+        "contribution-lwh-008"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "migrated iOS purchases to the App Store Server API"
+      ],
+      "forbiddenClaims": [
+        "claim he built the Flutter app"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E072",
+      "category": "direct_fact",
+      "question": "How are LearnWithHupe subscriptions re-checked against the stores?",
+      "expectedEvidenceIds": [
+        "contribution-lwh-009"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "chooses by time since last verification",
+        "works through the backlog in batches"
+      ],
+      "forbiddenClaims": [
+        "claim a specific re-check interval"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E073",
+      "category": "direct_fact",
+      "question": "How did he protect LearnWithHupe sign-in?",
+      "expectedEvidenceIds": [
+        "contribution-lwh-010"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "throttled the credential endpoints",
+        "does not reveal which emails have accounts"
+      ],
+      "forbiddenClaims": [
+        "claim two-factor sign-in"
       ],
       "split": "development",
       "isSynthetic": false

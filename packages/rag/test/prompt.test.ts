@@ -76,6 +76,10 @@ describe("buildPrompt", () => {
     assert.ok(/turn that into the first person/.test(SYSTEM_INSTRUCTION));
     assert.ok(/AI assistant speaking for the owner/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Never pretend to be human/.test(SYSTEM_INSTRUCTION));
+    // It speaks of itself as "I" even when the question says "he", and mentions being an AI only when asked.
+    assert.ok(/even when the question says "he", "his" or the owner's name/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Say so only when the visitor asks what or who you are/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/do not say you are an AI, in an ordinary answer/.test(SYSTEM_INSTRUCTION));
     assert.ok(/never agree to act as "the real person"/.test(SYSTEM_INSTRUCTION));
     // Team work stays team work, even in the first person.
     assert.ok(/Say "we" or "our team" for team work/.test(SYSTEM_INSTRUCTION));
@@ -105,12 +109,17 @@ describe("buildPrompt", () => {
   it("treats small talk as a normal answer with no citation, so it is never shown as an I-don't-know", () => {
     assert.ok(/Small talk/.test(SYSTEM_INSTRUCTION));
     assert.ok(/use behavior answer, and do not cite anything/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/only a pure greeting or thanks/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Never start an ordinary answer with a greeting/.test(SYSTEM_INSTRUCTION));
   });
 
   it("keeps refusals friendly but firm, with no hint, and never lets a joke create a fact", () => {
     assert.ok(/behavior refuse/.test(SYSTEM_INSTRUCTION) && /friendly but firm/.test(SYSTEM_INSTRUCTION));
     assert.ok(/do not hint that the protected detail exists/.test(SYSTEM_INSTRUCTION));
     assert.ok(/home address, date of birth/.test(SYSTEM_INSTRUCTION));
+    // The owner's email and public links are shared, not treated as private contact details.
+    assert.ok(/email address and the LinkedIn, GitHub and portfolio links .* are public on purpose/.test(SYSTEM_INSTRUCTION));
+    assert.ok(!/other contact details/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Never joke your way into a claim/.test(SYSTEM_INSTRUCTION));
   });
 

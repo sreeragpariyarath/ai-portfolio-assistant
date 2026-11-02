@@ -70,13 +70,13 @@ function percent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
-export function formatComparison(comparison: Comparison, details: { model: string; dims: number }): string {
+export function formatComparison(comparison: Comparison, details: { model: string; dims: number; evalFile?: string }): string {
   const { reports, config } = comparison;
   const first = reports.bm25;
   const lines: string[] = [
     "# Retrieval comparison: BM25, dense and hybrid",
     "",
-    `Development set of ${first.totalCases} cases (\`evals/retrieval-eval.v3.json\`); **not a held-out benchmark**, and any tuning of the hybrid settings uses these same cases.`,
+    `Development set of ${first.totalCases} cases (\`${details.evalFile ?? "evals/portfolio-eval.v1.json"}\`); **not a held-out benchmark**, and any tuning of the hybrid settings uses these same cases.`,
     `${first.indexedRecords} public records searched; ${first.excludedPrivateRecords} private record(s) excluded before indexing.`,
     `Dense: \`${details.model}\`, ${details.dims} dimensions, cosine, Qdrant with a public-only filter. Hybrid: reciprocal rank fusion, k=${config.k}, top ${config.depth} candidates from each method.`,
     "",

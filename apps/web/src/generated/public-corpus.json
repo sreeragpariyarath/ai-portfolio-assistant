@@ -305,8 +305,8 @@
       "id": "decision-lwh-002",
       "type": "decision",
       "title": "LearnWithHupe billing: the store is the source of truth",
-      "content": "For subscriptions, Sreerag treats Google Play and the App Store as the source of truth, not the app and not a webhook. A store notification only triggers a re-check against the store's server API. A scheduled check uses 6-hour and 24-hour staleness windows to refresh data that has gone old. This keeps the backend correct when renewals, cancellations or refunds happen outside the app.",
-      "verificationStatus": "owner-stated",
+      "content": "For subscriptions, Sreerag treats Google Play and the App Store as the source of truth, not the app and not a webhook. A store notification only triggers a re-check against the store's server API. A scheduled check also re-verifies subscriptions that have gone stale: ones in a grace period or in billing retry are re-checked when they have gone 6 hours without verification, because a stale row there is lost revenue, and active or trial ones after 24 hours, because they change rarely. A dropped notification can therefore leave an active subscription wrongly entitled for up to about 25 hours, which was a deliberate business trade-off. This keeps the backend correct when renewals, cancellations or refunds happen outside the app.",
+      "verificationStatus": "verified-document",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "projectId": "project-lwh-001"
@@ -441,7 +441,7 @@
       "id": "profile-005",
       "type": "profile",
       "title": "Career timeline at a glance",
-      "content": "Dec 2023: started freelance full stack work. Jul to Dec 2024: full stack intern at Medlare, Indore. Jul 2025: joined Carina Softlabs in Indore. At Carina: HRMS (Jul to Sep 2025), Upthrust (Sep to Dec 2025), Warvox (mid Nov 2025 to Feb 2026), LearnWithHupe (Feb to Sep 2026, including about a month of Phaser games), the PM tool and the Sales tool (Aug to early Oct 2026), and the Carina company website and admin panel migration to Angular 22 (Oct 2026). Outside work: the open source project Erris (from Aug 2026), the Norix CLI, the Yexora client website (Sep to Oct 2026) and this AI portfolio assistant.",
+      "content": "Dec 2023: started freelance full stack work. Jul to Dec 2024: full stack intern at Medlare, Indore. Jul 2025: joined Carina Softlabs in Indore as an intern. Sep 2025: became a full-time Full Stack Developer. At Carina: HRMS (Jul to Sep 2025), Upthrust (Sep to Dec 2025), Warvox (mid Nov 2025 to Feb 2026), LearnWithHupe (Feb to Sep 2026, including about a month of Phaser games), the PM tool and the Sales tool (Aug to early Oct 2026), and the Carina company website and admin panel migration to Angular 22 (Oct 2026). Outside work: the open source project Erris (from Aug 2026), the Norix CLI, the Yexora client website (Sep to Oct 2026) and this AI portfolio assistant.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"
@@ -450,7 +450,7 @@
       "id": "profile-006",
       "type": "profile",
       "title": "Current role at Carina Softlabs",
-      "content": "Sreerag has worked at Carina Softlabs in Indore since Jul 2025. He joined as an intern, and he is now a Full Stack Developer. He owns backend and admin or CMS work across several production and internal platforms: LearnWithHupe, Warvox, HRMS, Upthrust, the PM tool with the Sales tool, and the company website. He also runs deployments on AWS (EC2, Nginx, PM2) and manages the Google Play Console and Apple App Store Connect for LearnWithHupe.",
+      "content": "Sreerag has worked at Carina Softlabs in Indore since Jul 2025. He joined as an intern in Jul 2025 and became a full-time Full Stack Developer in Sep 2025. He owns backend and admin or CMS work across several production and internal platforms: LearnWithHupe, Warvox, HRMS, Upthrust, the PM tool with the Sales tool, and the company website. He also runs deployments on AWS (EC2, Nginx, PM2) and manages the Google Play Console and Apple App Store Connect for LearnWithHupe.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"
@@ -459,8 +459,8 @@
       "id": "profile-007",
       "type": "profile",
       "title": "Mentoring at Carina Softlabs",
-      "content": "At Carina Softlabs, Sreerag mentored three junior interns. He assigned tasks, reviewed their code and reported their progress to the technical lead.",
-      "verificationStatus": "unverified",
+      "content": "At Carina Softlabs, Sreerag mentored three junior interns: two worked with him on Warvox, and one worked with him on the PM tool afterwards. He assigned tasks, reviewed their code and reported their progress to the technical lead.",
+      "verificationStatus": "owner-stated",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"
     },
@@ -667,7 +667,7 @@
       "id": "project-erris-001",
       "type": "project",
       "title": "Erris: what it is",
-      "content": "Erris is a solo open source project by Sreerag: transport-neutral, type-safe error contracts for JavaScript and TypeScript, started in Aug 2026. It gives an application one typed vocabulary for failure. Four packages are published on npm: @erris/core, @erris/http, @erris/adapter-zod and @erris/adapter-prisma, all at version 1.0.2. A fifth package, @erris/express, is in progress and is not published yet. The code is on GitHub at github.com/sreeragpariyarath/erris and is MIT licensed. Download numbers so far are small.",
+      "content": "Erris is a solo open source project by Sreerag: transport-neutral, type-safe error contracts for JavaScript and TypeScript, started in Aug 2026. It gives an application one typed vocabulary for failure. Four packages are published on npm: @erris/core, @erris/http, @erris/adapter-zod and @erris/adapter-prisma, all at version 1.0.2. A fifth package, @erris/express, is in progress and is not published yet. The code is on GitHub at github.com/sreeragpariyarath/erris and is MIT licensed. Releases are published from GitHub Actions with Changesets, using npm trusted publishing with provenance and no stored npm token. Download numbers so far are small.",
       "verificationStatus": "verified-public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"
@@ -742,7 +742,7 @@
       "id": "project-portfolio-001",
       "type": "project",
       "title": "AI portfolio assistant (this site): what it is",
-      "content": "This website is a portfolio you can talk to. Visitors ask questions and get streamed, cited answers grounded in Sreerag's portfolio. Visitors can also pick stored cards for his profile, projects, skills and contact. It was built to show a real, measured RAG system. Stack: retrieval-augmented generation with Gemini, a Qdrant vector database, a Cloudflare Worker backend with server-sent events, and a Next.js 16 front end with a water effect and liquid glass design. It was built with AI-assisted development (Claude Code).",
+      "content": "This website is a portfolio you can talk to. Visitors ask questions and get streamed, cited answers grounded in Sreerag's portfolio. Visitors can also pick stored cards for his profile, projects, skills and contact. It was built to show a real, measured RAG system. Stack: retrieval-augmented generation with Gemini, a Qdrant vector database, a Cloudflare Worker backend with server-sent events, and a Next.js 16 front end with a water effect and liquid glass design. It was built with AI-assisted development (Claude Code). The source code is public on GitHub at github.com/sreeragpariyarath/ai-portfolio-assistant.",
       "verificationStatus": "verified-public",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"

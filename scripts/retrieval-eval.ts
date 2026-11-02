@@ -50,7 +50,7 @@ async function main(): Promise<void> {
   console.error(`Query embeddings: ${cache.hits} cached, ${cache.misses} new Gemini calls.`);
 
   const comparison = compareMethods(corpus, evalSet, bm25Rankings(corpus, evalSet), dense, config);
-  const markdown = formatComparison(comparison, { model: MODEL, dims: DIMS });
+  const markdown = formatComparison(comparison, { model: MODEL, dims: DIMS, evalFile: EVAL_FILE });
   console.log(markdown);
   if (write) {
     mkdirSync(resolve(RESULTS_FILE, ".."), { recursive: true });

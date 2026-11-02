@@ -87,9 +87,26 @@ describe("resolveConfig", () => {
     assert.notEqual(config, DEFAULT_CONFIG);
   });
 
-  it("uses a smaller dye texture on phones, as the original does", () => {
-    assert.equal(resolveConfig({}, { mobile: true, linearFiltering: true }).DYE_RESOLUTION, 512);
+  it("gives phones a lighter simulation than the original's phone settings, and the autopilot", () => {
+    const phone = resolveConfig({}, { mobile: true, linearFiltering: true });
+    assert.equal(phone.SIM_RESOLUTION, 64);
+    assert.equal(phone.DYE_RESOLUTION, 384);
+    assert.equal(phone.PRESSURE_ITERATIONS, 12);
+    assert.equal(phone.MAX_PIXEL_RATIO, 1);
+    assert.equal(phone.AUTOPILOT, true);
+    // Asking for less is respected; asking for more is not.
     assert.equal(resolveConfig({ DYE_RESOLUTION: 256 }, { mobile: true, linearFiltering: true }).DYE_RESOLUTION, 256);
+    assert.equal(resolveConfig({ SIM_RESOLUTION: 256 }, { mobile: true, linearFiltering: true }).SIM_RESOLUTION, 64);
+    // A phone can be told to leave the autopilot off.
+    assert.equal(resolveConfig({ AUTOPILOT: false }, { mobile: true, linearFiltering: true }).AUTOPILOT, false);
+  });
+
+  it("keeps the full simulation, and no autopilot, on a desktop", () => {
+    const config = resolveConfig({}, desktop);
+    assert.equal(config.SIM_RESOLUTION, 128);
+    assert.equal(config.PRESSURE_ITERATIONS, 20);
+    assert.equal(config.MAX_PIXEL_RATIO, 1.5);
+    assert.equal(config.AUTOPILOT, false);
   });
 
   it("turns off shading, bloom and sunrays without linear filtering", () => {

@@ -31,6 +31,9 @@ export interface FluidConfig {
   INITIAL_SPLATS: number;
   // Upper limit for the canvas pixel ratio (see effectivePixelRatio).
   MAX_PIXEL_RATIO: number;
+  // When nobody touches the screen for a moment, a slow swirl wanders over it (see autopilot.ts). On for
+  // phones, where there is no hovering mouse to make the page move; off on a desktop.
+  AUTOPILOT: boolean;
 }
 
 // The reference page's actual settings, read from its published JavaScript (2026-10-30). Its control
@@ -64,6 +67,7 @@ export const DEFAULT_CONFIG: FluidConfig = {
   HOVER: true,
   INITIAL_SPLATS: 0,
   MAX_PIXEL_RATIO: 1.5,
+  AUTOPILOT: false,
 };
 
 export interface DeviceCapabilities {
@@ -72,11 +76,20 @@ export interface DeviceCapabilities {
   linearFiltering: boolean;
 }
 
-// The same device rules as the demo: phones and GPUs without linear filtering get a smaller dye
-// texture, and without linear filtering the effects that need it are switched off.
+// Device rules. Like the demo, a GPU without linear filtering gets a smaller dye texture and loses the effects
+// that need it. Phones get a lighter simulation than the demo's (a quarter of the grid cells, a smaller dye
+// texture, fewer pressure passes, one canvas pixel per CSS pixel), because the owner measured about 30 frames a
+// second on an iPhone with the demo's phone settings; they also get the autopilot. If it is still too slow,
+// quality.ts steps it down further while it runs.
 export function resolveConfig(overrides: Partial<FluidConfig>, caps: DeviceCapabilities): FluidConfig {
   const config: FluidConfig = { ...DEFAULT_CONFIG, ...overrides };
-  if (caps.mobile) config.DYE_RESOLUTION = Math.min(config.DYE_RESOLUTION, 512);
+  if (caps.mobile) {
+    config.SIM_RESOLUTION = Math.min(config.SIM_RESOLUTION, 64);
+    config.DYE_RESOLUTION = Math.min(config.DYE_RESOLUTION, 384);
+    config.PRESSURE_ITERATIONS = Math.min(config.PRESSURE_ITERATIONS, 12);
+    config.MAX_PIXEL_RATIO = Math.min(config.MAX_PIXEL_RATIO, 1);
+    if (overrides.AUTOPILOT === undefined) config.AUTOPILOT = true;
+  }
   if (!caps.linearFiltering) {
     config.DYE_RESOLUTION = Math.min(config.DYE_RESOLUTION, 512);
     config.SHADING = false;

@@ -13,6 +13,9 @@ The records were corrected from the Warvox, LearnWithHupe and PM and Sales repos
 ## Update 2 Nov 2026 (PC, evaluation): done
 The final full evaluation passed every threshold (private leaks 0, injections followed 0, behaviour 93.2%, evidence cited 95.2%) and the results are committed (`evals/results/answer-eval.md`, `evals/results/retrieval-comparison.md`). Qdrant holds the current records. **Left, in order:** (1) merge the open pull requests; (2) the UI work from the handoff: the water autopilot and a lower simulation size on phones, and the profile card and project dialog in the new glass style; (3) the owner's project pictures, answers to `data/portfolio/open-questions.md`, and the site address; (4) Phase 5: deploy; (5) Phase 6: README and demo GIF. Optional: the keyword half of the search misses the LearnWithHupe overview for "What is LearnWithHupe?".
 
+## Update 2 Nov 2026 (PC, UI): phone water and glass cards done, needs a phone test
+The water autopilot, the lighter phone simulation and adaptive quality (D-031), and the glass Me card and project dialog, are built. **Left from the owner:** open the site on the iPhone with `?perf` and report the frame rate; the project pictures (being made tonight; save them as `apps/web/public/projects/<id>.webp`, portrait about 3:4, and set `image` on each project in `portfolio-cards.ts`); the open questions; the site address.
+
 ## Earlier: next is the evaluation
 Qdrant holds the 82 public real records and the voice rewrite is in (first person, plain English, no labels, readable sources; D-030). **Next:** run one live evaluation of data and voice together (`pnpm eval:retrieval` about 73 query embeddings, then `pnpm eval:answers --live` about 73 Gemini calls), with the owner's go-ahead, and read a sample of answers by hand (refusals, small talk, the unanswered-detail questions, anything about the first-person voice and the identity question). Then the remaining UI work and Phase 5.
 

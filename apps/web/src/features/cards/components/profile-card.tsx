@@ -1,24 +1,24 @@
 import Image from "next/image";
 import { PROFILE } from "../portfolio-cards";
-import { Pill } from "./card-shell";
+import { CARD_SURFACE, Pill } from "./card-shell";
 
 // The profile header: a large photo on the left and the name, place, a short hello and tags on the right
 // (stacked on a phone). The photo is the placeholder until the owner supplies a real one.
 export function ProfileCardView() {
   const { photo } = PROFILE;
   return (
-    <section aria-labelledby="profile-card-title" className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
-      <div className="aspect-square w-full max-w-[14rem] shrink-0 overflow-hidden rounded-3xl bg-gradient-to-b from-sky-100 via-sky-50 to-white sm:max-w-[16rem]">
+    <section aria-labelledby="profile-card-title" className={`${CARD_SURFACE} flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:gap-8 sm:p-6`}>
+      <div className="glass-inset aspect-square w-full max-w-[14rem] shrink-0 overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-sky-100 via-sky-50 to-white p-1.5 sm:max-w-[16rem]">
         <Image
           src={photo.src}
           alt={photo.alt}
           width={640}
           height={640}
           unoptimized
-          className={`h-full w-full ${photo.placeholder ? "object-contain object-bottom" : "object-cover"}`}
+          className={`h-full w-full rounded-[1.1rem] ${photo.placeholder ? "object-contain object-bottom" : "object-cover"}`}
         />
       </div>
-      <div className="min-w-0 sm:pt-2">
+      <div className="min-w-0">
         <h2 id="profile-card-title" className="text-3xl font-bold text-neutral-950">
           {PROFILE.name}
         </h2>

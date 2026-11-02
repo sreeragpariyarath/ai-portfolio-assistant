@@ -44,10 +44,13 @@ import { FluidSetupError, createEngine, getWebGLContext } from "./engine.ts";
 import type { FluidCanvas, FluidFailure } from "./engine.ts";
 import { browserEnv, prefersReducedMotion } from "./env.ts";
 import type { FluidEnv } from "./env.ts";
+import { AUTOPILOT_COLOR_SECONDS, AUTOPILOT_GAIN, autopilotActive, autopilotPosition } from "./autopilot.ts";
+import type { Point } from "./autopilot.ts";
 import { attachInput } from "./input.ts";
 import type { InputSink } from "./input.ts";
-import { deltaTime, effectivePixelRatio, generateColor, isMobileUserAgent, scaleByPixelRatio, wrap } from "./math.ts";
+import { correctDeltaX, correctDeltaY, deltaTime, effectivePixelRatio, generateColor, isMobileUserAgent, scaleByPixelRatio, wrap } from "./math.ts";
 import { createPointer, pointerDown, pointerMove } from "./pointers.ts";
+import { createQualityMonitor, qualityStepSettings } from "./quality.ts";
 import type { PointerData } from "./pointers.ts";
 
 export { DEFAULT_CONFIG, FluidSetupError, prefersReducedMotion, resolveConfig };
@@ -124,6 +127,13 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
   let lastTime = env.now();
   let colorUpdateTimer = 0;
   let detachInput: (() => void) | null = null;
+  // The autopilot: when the page was last touched, how far along its path it is, and where it was last frame.
+  let lastInputAt = env.now();
+  let autopilotSeconds = 0;
+  let autopilotColorTimer = 0;
+  let autopilotColor = newColor();
+  let autopilotPrevious: Point | null = null;
+  const quality = createQualityMonitor();
 
   const hidden = () => env.document.visibilityState === "hidden";
 
@@ -142,11 +152,13 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
 
   const sink: InputSink = {
     down(id, _kind, x, y) {
+      lastInputAt = env.now();
       const pointer = pointers.get(id) ?? createPointer(id);
       pointerDown(pointer, x, y, canvas.width, canvas.height, newColor());
       pointers.set(id, pointer);
     },
     move(id, kind, x, y) {
+      lastInputAt = env.now();
       const pointer = pointers.get(id);
       if (pointer === undefined) {
         // A mouse that has not pressed anything stirs the water by moving; the first movement
@@ -187,6 +199,38 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
     }
   }
 
+  // While nobody touches the screen, a slow swirl wanders over it. Any touch or mouse movement ends it at once.
+  function applyAutopilot(dt: number, now: number): void {
+    if (!config.AUTOPILOT) return;
+    if (!autopilotActive(now, lastInputAt)) {
+      autopilotPrevious = null;
+      return;
+    }
+    autopilotSeconds += dt;
+    autopilotColorTimer += dt;
+    if (autopilotColorTimer >= AUTOPILOT_COLOR_SECONDS) {
+      autopilotColorTimer = 0;
+      autopilotColor = newColor();
+    }
+    const position = autopilotPosition(autopilotSeconds);
+    const previous = autopilotPrevious;
+    autopilotPrevious = position;
+    // The first frame only plants the swirl, so it does not splat from wherever it stopped last time.
+    if (previous === null) return;
+    const deltaX = correctDeltaX(position.x - previous.x, canvas.width, canvas.height);
+    const deltaY = correctDeltaY(position.y - previous.y, canvas.width, canvas.height);
+    const push = config.SPLAT_FORCE * AUTOPILOT_GAIN;
+    engine.splat(position.x, position.y, deltaX * push, deltaY * push, autopilotColor);
+  }
+
+  // Too many slow frames in a row: step down to a smaller simulation, once the hardware has shown it needs it.
+  function adaptQuality(intervalMs: number): void {
+    const step = quality.record(intervalMs);
+    if (step === null) return;
+    Object.assign(config, qualityStepSettings(config, step));
+    engine.initFramebuffers();
+  }
+
   function schedule(): void {
     if (rafId === null) rafId = env.window.requestAnimationFrame(frame);
   }
@@ -204,6 +248,7 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
 
     const now = env.now();
     const dt = deltaTime(now, lastTime);
+    const interval = now - lastTime;
     lastTime = now;
 
     // A canvas with no size (display: none, a collapsed layout) has nothing to draw; wait for one.
@@ -222,6 +267,8 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
 
     updateColors(dt);
     applyInputs();
+    applyAutopilot(dt, now);
+    adaptQuality(interval);
     engine.step(dt);
     engine.render();
     schedule();
@@ -234,6 +281,7 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
       cancelScheduled();
     } else {
       lastTime = env.now();
+      autopilotPrevious = null;
       schedule();
     }
   }
@@ -253,6 +301,8 @@ export function createFluid(canvas: FluidSurface, options: FluidOptions = {}): F
       detachInput = attachInput(env, canvas, sink);
       env.document.addEventListener("visibilitychange", onVisibilityChange);
       lastTime = env.now();
+      lastInputAt = lastTime;
+      autopilotPrevious = null;
       if (!hidden()) schedule();
     },
     stop() {

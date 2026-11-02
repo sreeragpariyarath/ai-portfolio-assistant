@@ -316,3 +316,89 @@ describe("createFluid: tearing down", () => {
     assert.deepEqual(reasons, []);
   });
 });
+
+describe("createFluid: autopilot", () => {
+  // Draw calls of one frame; a splat adds 2 (one push into the velocity, one dye splat).
+  const phone = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1";
+
+  function idleCost(context: ReturnType<typeof started>): number {
+    frameCost(context); // the first frame builds the framebuffers
+    return frameCost(context);
+  }
+
+  it("is off on a desktop: an untouched page stays still", () => {
+    const context = started();
+    const quiet = idleCost(context);
+    for (let i = 0; i < 400; i++) assert.equal(frameCost(context), quiet);
+  });
+
+  it("starts by itself on a phone after a quiet moment, and not before", () => {
+    const context = started({}, { userAgent: phone });
+    const quiet = idleCost(context);
+    // Under 2.5 seconds nothing moves on its own (30 frames of 16 ms is half a second).
+    for (let i = 0; i < 30; i++) assert.equal(frameCost(context), quiet);
+    // Run on to well past the idle time: it plants itself, then splats every frame.
+    for (let i = 0; i < 200; i++) context.kit.runFrame();
+    assert.equal(frameCost(context), quiet + 2, "one push and one dye splat per frame");
+  });
+
+  it("a finger takes over at once, and the swirl waits for another quiet moment", () => {
+    const context = started({}, { userAgent: phone });
+    idleCost(context);
+    for (let i = 0; i < 250; i++) context.kit.runFrame();
+    const swirling = frameCost(context);
+    context.kit.fireWindow("pointerdown", pointerEvent({ pointerType: "touch", clientX: 100, clientY: 100 }));
+    // The finger is down but not moving: the autopilot has stopped, so this frame only has the simulation.
+    assert.equal(frameCost(context), swirling - 2);
+    context.kit.fireWindow("pointerup", pointerEvent({ pointerType: "touch", clientX: 100, clientY: 100 }));
+    for (let i = 0; i < 100; i++) assert.equal(frameCost(context), swirling - 2, "still waiting, only 1.6 seconds");
+    for (let i = 0; i < 100; i++) context.kit.runFrame();
+    assert.equal(frameCost(context), swirling, "swirling again after being left alone");
+  });
+
+  it("does not run in a hidden tab, and does not jump when the tab comes back", () => {
+    const context = started({}, { userAgent: phone });
+    idleCost(context);
+    for (let i = 0; i < 250; i++) context.kit.runFrame();
+    const before = context.stub.calls("drawElements");
+    context.kit.document.visibilityState = "hidden";
+    context.kit.fireDocument("visibilitychange");
+    assert.equal(context.kit.runFrame(), false, "no frame is pending while hidden");
+    assert.equal(context.stub.calls("drawElements"), before);
+    context.kit.document.visibilityState = "visible";
+    context.kit.fireDocument("visibilitychange");
+    // The first frame after returning only plants the swirl again; the next one splats.
+    const planted = frameCost(context);
+    const next = frameCost(context);
+    assert.equal(next, planted + 2);
+  });
+
+  it("can be switched on for a desktop, or off for a phone, from the options", () => {
+    const desktop = started({}, {}, { config: { AUTOPILOT: true } });
+    const quiet = idleCost(desktop);
+    for (let i = 0; i < 200; i++) desktop.kit.runFrame();
+    assert.equal(frameCost(desktop), quiet + 2);
+
+    const off = started({}, { userAgent: phone }, { config: { AUTOPILOT: false } });
+    const stillness = idleCost(off);
+    for (let i = 0; i < 300; i++) off.kit.runFrame();
+    assert.equal(frameCost(off), stillness);
+  });
+});
+
+describe("createFluid: adaptive quality", () => {
+  it("steps down to a smaller simulation when frames keep running slow, and not when they are fast", () => {
+    const fast = started();
+    fast.kit.runFrame();
+    const builds = () => fast.stub.calls("createFramebuffer");
+    const initial = builds();
+    for (let i = 0; i < 400; i++) fast.kit.runFrame(16);
+    assert.equal(builds(), initial, "fast frames never rebuild the simulation");
+
+    const slow = started();
+    slow.kit.runFrame();
+    const slowInitial = slow.stub.calls("createFramebuffer");
+    for (let i = 0; i < 200; i++) slow.kit.runFrame(45);
+    assert.ok(slow.stub.calls("createFramebuffer") > slowInitial, "slow frames rebuild a smaller simulation");
+  });
+});

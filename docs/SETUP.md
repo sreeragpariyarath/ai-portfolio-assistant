@@ -89,7 +89,7 @@ pnpm dev:api                                         # open http://localhost:878
 - A static export cannot use `cacheComponents` or `partialPrefetching`, so both are off in `apps/web/next.config.ts`.
 
 ## 7. Measuring performance on a real device (Phase 4, task 4.9)
-Open the site with `?perf` on the end of the address. A small readout in the bottom-left corner shows the page's frame rate, the worst frame in the last second, and the window size and pixel ratio. Move the mouse (or drag a finger) around to stir the water and watch the numbers: 60 is smooth, under 30 is a problem. Nothing is measured without `?perf`.
+Open the site with `?perf` on the end of the address. A small readout in the bottom-left corner shows the page's frame rate, the worst frame in the last second, and the window size and pixel ratio. Move the mouse (or drag a finger) around to stir the water and watch the numbers: 60 is smooth, under 30 is a problem. Nothing is measured without `?perf`. On a phone the water also drifts by itself after a couple of seconds without a touch (the autopilot, D-031), and it lowers its own quality if the frames stay slow, so a readout that starts around 30 and settles near 60 is expected.
 
 ```bash
 pnpm --filter web build      # build the site

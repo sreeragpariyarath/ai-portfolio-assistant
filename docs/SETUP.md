@@ -100,3 +100,41 @@ pnpm dev:api                 # serves it at http://localhost:8787  (open http://
 - **A phone on the same Wi-Fi:** run `pnpm dev:api --ip 0.0.0.0` (**without** an extra `--` before the flag: with it, wrangler ignores the flag and stays on localhost), find the computer's address on the network (for example 192.168.1.20 from `ipconfig`) and open `http://192.168.1.20:8787/?perf` on the phone. This makes the dev server reachable by everyone on that network, so use a network you trust and stop it (Ctrl+C) when you are done. Windows may ask to allow Node through the firewall; allow it for private networks only. Forwarding of `--ip` and `--port` was checked on localhost only; the `0.0.0.0` form itself has not been run.
 - Asking questions is not needed to measure the water, so no Gemini quota is used.
 - Download sizes: `pnpm web:size` (after the build) prints what a visitor downloads.
+
+## 8. Deploying to Cloudflare (Phase 5)
+One Worker serves the site and `/api/*` (D-020), so there is one deploy. Everything below runs from the repository root.
+Each step that touches your Cloudflare account is marked **(account)**; do them yourself, or ask Claude to run one with your go-ahead.
+
+**Before the first deploy**
+1. `git pull`, `pnpm install`.
+2. Check the data is current: `pnpm eval:validate`, `pnpm corpus:check`, and `pnpm ingest:dry` (it must say 0 to add, 0 to delete).
+3. Build the site **without** `NEXT_PUBLIC_API_BASE_URL` set (the page then calls `/api/chat` on its own address):
+   `pnpm --filter web build`
+4. Try the exact bundle without uploading it: `cd apps/api && pnpm exec wrangler deploy --dry-run --outdir ../../.tmp-dry`
+   (it lists the bindings and reads `apps/web/out`; delete the folder afterwards).
+
+**First deploy**
+5. **(account)** `cd apps/api && pnpm exec wrangler login` (opens a browser; a free account is enough).
+6. **(account)** Set the three secrets, one at a time (each prompts for the value, which is not echoed):
+   `pnpm exec wrangler secret put GEMINI_API_KEY`, then `QDRANT_URL`, then `QDRANT_API_KEY`. Use the same values as in `.env`.
+   On a Worker that does not exist yet, wrangler asks to create it: say yes. Never paste a secret into a file or a chat.
+7. **(account)** `pnpm exec wrangler deploy`. The first time, Cloudflare asks you to choose your account's `workers.dev` name; the site is then at
+   `https://sreerag.<that-name>.workers.dev` (the Worker's name is `sreerag` in `wrangler.jsonc`; change it **before** this step if you want another).
+8. Put the printed address into: `ALLOWED_ORIGIN` in `apps/api/wrangler.jsonc` (an https origin, no trailing slash; CORS does not apply to the deployed site because the page
+   and the API share one address, but keep it correct), and the Portfolio link in `CONTACT` in `apps/web/src/features/cards/portfolio-cards.ts`. Then
+   `pnpm --filter web build` and `pnpm exec wrangler deploy` again (from `apps/api`).
+
+**Check it**
+9. `curl https://sreerag.<name>.workers.dev/api/health` answers `{"status":"ok"...}`. Open the site, ask a typed question, open a project card and a record page.
+10. The free-plan rate limit: send 12 quick requests (for example `for i in $(seq 12); do curl -s -o /dev/null -w "%{http_code} " -X POST -H "Content-Type: application/json" -d "{}" https://sreerag.<name>.workers.dev/api/chat; done`).
+    The first ten answer 400 (empty body) and then 429 should appear. If they never do, the binding is not enforced on the Free plan and the in-memory fallback is the only guard: record it in `docs/DECISIONS.md`.
+11. **(account)** `pnpm exec wrangler tail` while you use the site shows the structured log lines (never keys or question text).
+12. The keep-alive: after the first 04:23 UTC run, `wrangler tail` (or the Worker's logs in the dashboard) shows `{"event":"keep-alive","status":"ok","points":82}`.
+    Qdrant says a free cluster is suspended after a week without activity and deleted after four, but not which requests count as activity: look at the cluster in the Qdrant Cloud page after a week.
+13. Open the site with `?perf` on a phone and note the frame rate (see section 7).
+
+**Later changes**
+- A change to the web app: `pnpm --filter web build`, then `cd apps/api && pnpm exec wrangler deploy`.
+- A change to the records: `pnpm corpus:build`, `pnpm ingest` (needs `.env`), commit, build and deploy as above.
+- Changing a secret: `pnpm exec wrangler secret put <NAME>` again.
+- The empty D1 database `portfolio-knowledge` from the prototype still exists in the Cloudflare account (0 tables; nothing uses it): delete it from the dashboard whenever you like.

@@ -17,13 +17,21 @@ The owner sent screenshots in `C:\Users\acer\Downloads\images`. They were checke
 
 **About the PM tool and HRMS pictures:** they show a client company name, a client project name, a colleague's name, and (in the HRMS ones) a phone number, a date of birth and addresses. I first held them back for that reason. The owner then said they **made these images with ChatGPT and changed all the data**, so every name and value in them is invented, and they are used. The first HRMS picture is still cropped to the calendar and leave panels, which keeps phone-number-like text out anyway. The red avatar in the PM tool picture is the owner's choice; if it is someone else's artwork, replace it.
 
-## Still waiting for the owner (tonight)
-- **Addresses:** Warvox staging and live (shown as "upcoming"), the Carina company website (live), Upthrust, and the site address for the Portfolio link on the contact card. (The pictures arrived; the addresses did not yet.)
-- **Carina website:** images, and any measurable result (page-speed scores before and after are much stronger than "faster").
-- **Norix:** refresh the download numbers in `project-norix-001` before the deploy.
+## Addresses received (3 Nov 2026) and applied
+- **Warvox:** the live address `https://playwarvox.com` (it shows an "upcoming" page for now) and the staging site `https://playwarvox-staging.vercel.app`, which has the current real content. Both are on the card ("Live site (upcoming)" and "Staging site") and in the record. The staging address was kept out of the records until now; the owner chose to show it.
+- **Upthrust:** `https://theupthrust.com` (card and record).
+- **Carina Softlabs website:** `https://carinasoftlabs.com`, with a new ninth project card for the migration (its picture is the headline of the site's hero) and the address in the record.
+- All of them were opened once from the command line and answer over https (the live Warvox address redirects from http to https).
+
+## Still waiting for the owner
+- **The address of this site**, for the Portfolio link on the contact card (it still says `sreerag.pages.dev`, which our Worker deploy will not serve). Decide after the first deploy: `workers.dev` first, or a bought domain.
+- **Norix:** refresh the download numbers in `project-norix-001` before the deploy. **No card for Norix** (owner's decision, 3 Nov 2026); the assistant can still answer about it from its records.
 - **Erris:** update the records when `@erris/express` is published.
 
 ## Decisions already made (do not ask again)
+- **No Norix card** (3 Nov 2026). Its records stay, so the assistant can still answer about it.
+- **The home page keeps the current cartoon avatar** (`avatar-placeholder.svg`) as it is (3 Nov 2026); the real photo is used on the Me card only.
+- The team lead has been told about the Firebase key file in the company's Project and Sales repository (3 Nov 2026).
 - First-person voice for answers (cards and funny lines already use "I"); a small "AI answering from my portfolio" label stays on the page.
 - Location: "Indore, India" and "open to relocating" (no city named).
 - Company-internal decisions (billing, translation pipeline, progress sync) are included at a high level so recruiters can ask about them.

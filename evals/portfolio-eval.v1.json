@@ -1393,6 +1393,58 @@
       ],
       "split": "development",
       "isSynthetic": false
+    },
+    {
+      "id": "E079",
+      "category": "direct_fact",
+      "question": "Where can I see the Warvox website?",
+      "expectedEvidenceIds": [
+        "project-warvox-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "the live address is playwarvox.com and shows an upcoming page",
+        "the staging site has the current real content"
+      ],
+      "forbiddenClaims": [
+        "claim the game has launched"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E080",
+      "category": "direct_fact",
+      "question": "Where can I see the Upthrust website?",
+      "expectedEvidenceIds": [
+        "project-upthrust-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "theupthrust.com"
+      ],
+      "forbiddenClaims": [
+        "invent another address"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E081",
+      "category": "direct_fact",
+      "question": "What is the address of the Carina Softlabs website?",
+      "expectedEvidenceIds": [
+        "project-carina-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "carinasoftlabs.com"
+      ],
+      "forbiddenClaims": [
+        "invent another address"
+      ],
+      "split": "development",
+      "isSynthetic": false
     }
   ]
 }

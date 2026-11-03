@@ -32,6 +32,28 @@ function ProjectArt({ project, className, showLetter = true }: { project: Projec
   );
 }
 
+// The project's outside links and its source record. Shown under the picture on a wide screen and under the text on a phone.
+function ProjectLinks({ project, className }: { project: ProjectCard; className: string }) {
+  return (
+    <div className={className}>
+      {project.links.map((link) => (
+        <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={LINK_PILL}>
+          {link.label}
+          <ExternalIcon />
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      ))}
+      {project.recordId !== undefined ? (
+        <a href={recordPath(project.recordId)} target="_blank" rel="noopener noreferrer" className={LINK_PILL}>
+          Source record
+          <ExternalIcon />
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      ) : null}
+    </div>
+  );
+}
+
 // A native dialog gives a focus trap, Esc to close, an inert page behind it and focus returning to the
 // card that opened it. It is shown only while a project is chosen.
 function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: () => void }) {
@@ -56,25 +78,24 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
       onClick={(event) => {
         if (event.target === event.currentTarget) event.currentTarget.close();
       }}
-      className="glass-panel m-auto max-h-[88dvh] w-[min(94vw,36rem)] overflow-y-auto overscroll-contain rounded-3xl p-0 text-neutral-800 backdrop:bg-neutral-900/25 backdrop:backdrop-blur-md"
+      className="glass-panel m-auto max-h-[92dvh] w-[min(94vw,54rem)] overflow-y-auto overscroll-contain rounded-3xl p-0 text-neutral-800 backdrop:bg-neutral-900/25 backdrop:backdrop-blur-md"
     >
-      <div>
-        <div className="relative">
-          <div className="p-2 pb-0">
-            <ProjectArt project={project} className="h-48 w-full overflow-hidden rounded-[1.25rem] sm:h-60" />
-          </div>
-          <button
-            type="button"
-            onClick={() => dialog.current?.close()}
-            aria-label="Close project details"
-            className="glass-card absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full text-neutral-800 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
-              <path d="M6 6l12 12M18 6 6 18" />
-            </svg>
-          </button>
+      <div className="relative grid sm:grid-cols-[16rem_1fr]">
+        <div className="p-2 sm:p-3">
+          <ProjectArt project={project} className="h-40 w-full overflow-hidden rounded-[1.25rem] sm:aspect-[3/4] sm:h-auto" />
+          <ProjectLinks project={project} className="mt-3 hidden flex-col items-start gap-2 sm:flex" />
         </div>
-        <div className="p-5 sm:p-6">
+        <button
+          type="button"
+          onClick={() => dialog.current?.close()}
+          aria-label="Close project details"
+          className="glass-card absolute top-5 right-5 z-10 flex h-9 w-9 items-center justify-center rounded-full text-neutral-800 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+        <div className="p-5 sm:py-7 sm:pr-14 sm:pl-5">
           <p className="text-xs font-semibold tracking-wide text-neutral-600 uppercase">{project.period}</p>
           <h2 id={titleId} className="mt-1 text-xl font-bold text-neutral-950">
             {project.title}
@@ -93,30 +114,24 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
           </ul>
 
           <h3 className="mt-5 text-xs font-semibold tracking-wide text-neutral-600 uppercase">Built with</h3>
-          <ul className="mt-2 flex flex-wrap gap-2">
-            {project.tech.map((tech) => (
-              <li key={tech}>
-                <Pill>{tech}</Pill>
-              </li>
+          <dl className="mt-2 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+            {project.stack.map((group) => (
+              <div key={group.group}>
+                <dt className="text-xs font-medium text-neutral-500">{group.group}</dt>
+                <dd className="mt-1.5">
+                  <ul className="flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <li key={item}>
+                        <Pill>{item}</Pill>
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            {project.links.map((link) => (
-              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={LINK_PILL}>
-                {link.label}
-                <ExternalIcon />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            ))}
-            {project.recordId !== undefined ? (
-              <a href={recordPath(project.recordId)} target="_blank" rel="noopener noreferrer" className={LINK_PILL}>
-                Source record
-                <ExternalIcon />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            ) : null}
-          </div>
+          <ProjectLinks project={project} className="mt-6 flex flex-wrap gap-2 sm:hidden" />
         </div>
       </div>
     </dialog>
@@ -196,14 +211,10 @@ export function ProjectCarousel() {
                 <span className="block text-sm font-semibold">{project.period}</span>
                 <span className="mt-1 block text-2xl leading-tight font-bold">{project.title}</span>
               </span>
-              <span className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-2xl border border-white/30 bg-black/30 px-4 py-3 text-white backdrop-blur-md">
-                <span className="line-clamp-2 text-sm">{project.tagline}</span>
-                <span className="flex shrink-0 items-center gap-1 text-sm font-medium">
-                  <span className="sr-only">View details for {project.title}</span>
-                  <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
-                    <Arrow direction="next" />
-                  </span>
-                </span>
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <span className="absolute inset-x-0 bottom-0 block px-5 pb-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]">
+                <span className="line-clamp-2 block text-sm leading-snug font-medium">{project.tagline}</span>
+                <span className="sr-only">View details for {project.title}</span>
               </span>
             </button>
           </li>

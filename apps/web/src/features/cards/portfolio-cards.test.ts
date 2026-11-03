@@ -18,7 +18,8 @@ describe("stored card content", () => {
     assert.equal(new Set(PROJECTS.map((project) => project.id)).size, PROJECTS.length);
     for (const project of PROJECTS) {
       assert.ok(project.title && project.tagline && project.description, project.id);
-      assert.ok(project.highlights.length > 0 && project.tech.length > 0, project.id);
+      assert.ok(project.highlights.length > 0 && project.stack.length > 0, project.id);
+      for (const { group, items } of project.stack) assert.ok(group.trim() !== "" && items.length > 0 && items.every((item) => item.trim() !== ""), `${project.id}: ${group}`);
       assert.match(project.colors[0], /^#[0-9a-f]{6}$/i);
       assert.match(project.colors[1], /^#[0-9a-f]{6}$/i);
     }

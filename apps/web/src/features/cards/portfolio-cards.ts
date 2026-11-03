@@ -307,7 +307,6 @@ export const CONTACT: ContactCard = {
   links: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/sreerag-p" },
     { label: "GitHub", href: "https://github.com/sreeragpariyarath" },
-    { label: "Portfolio", href: "https://sreerag.pages.dev" },
   ],
 };
 

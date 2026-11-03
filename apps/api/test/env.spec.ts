@@ -6,8 +6,8 @@ import { describe, expect, it } from "vitest";
 describe("Worker env", () => {
   it("exposes the non-secret settings from wrangler.jsonc", () => {
     expect(env.QDRANT_COLLECTION).toBe("portfolio_knowledge");
-    expect(env.GEMINI_MODEL).toBe("gemini-3.5-flash-lite");
-    expect(env.GEMINI_FALLBACK_MODEL).toBe("gemini-3.1-flash-lite");
+    expect(env.GEMINI_MODEL).toBe("gemini-3.1-flash-lite");
+    expect(env.GEMINI_FALLBACK_MODEL).toBe("gemini-3.5-flash-lite");
     expect(env.EMBEDDING_MODEL).toBe("gemini-embedding-2");
     expect(env.ALLOWED_ORIGIN).toBe("http://localhost:3000");
   });

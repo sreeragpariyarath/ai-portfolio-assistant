@@ -141,6 +141,21 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
   animation-duration: 260ms;
 }
 
+/* The input and quick questions gliding between the home screen and the chat dock (named only while gliding). */
+.dock-gliding .dock-input {
+  view-transition-name: dock-input;
+}
+
+.dock-gliding .dock-chips {
+  view-transition-name: dock-chips;
+}
+
+::view-transition-group(dock-input),
+::view-transition-group(dock-chips) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* The rest of the page: it must not flash. The old picture of the page stays put and the new one (with or without
    the dimmed backdrop) fades in over it, with normal blending (the default adds the two pictures together, which
    washes the page out halfway through). */

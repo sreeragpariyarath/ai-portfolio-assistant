@@ -299,6 +299,11 @@ test("a project card grows into its dialog and back, and focus and names are put
   await page.goto("/");
   await page.getByRole("button", { name: "Projects", exact: true }).click();
   const card = page.getByRole("button", { name: /View details for AI Portfolio Assistant/ });
+  // The chip click moves the input and chips with their own glide (also a view transition): wait for it, then count from zero.
+  await transitionsFinished(page);
+  await page.evaluate(() => {
+    (window as unknown as Tracked).__transitions = 0;
+  });
   await card.click();
   const dialog = page.getByRole("dialog", { name: "AI Portfolio Assistant" });
   await expect(dialog).toBeVisible();

@@ -577,7 +577,7 @@
       "id": "project-warvox-001",
       "type": "project",
       "title": "Warvox: what it is",
-      "content": "Warvox is a public game website and multilingual content system for a game platform, built at Carina Softlabs. Sreerag worked on it from mid Nov 2025 to Feb 2026. It has game pages, a community forum, an admin panel and an automatic translation pipeline (English plus 10 translated languages, 11 in all). It is not publicly launched yet: the working site is on staging, and the production address currently shows a \"coming soon\" page.",
+      "content": "Warvox is a public game website and multilingual content system for a game platform, built at Carina Softlabs. Sreerag worked on it from mid Nov 2025 to Feb 2026. It has game pages, a community forum, an admin panel and an automatic translation pipeline (English plus 10 translated languages, 11 in all). It is not publicly launched yet. The live address, playwarvox.com, shows an upcoming page for now, and the staging site, which has the current real content, is at playwarvox-staging.vercel.app.",
       "source": {
         "kind": "public_page",
         "ref": "public-pages-and-repos-checked-2026-10-30"
@@ -586,7 +586,7 @@
       "isSynthetic": false,
       "visibility": "public",
       "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
+      "updatedAt": "2026-11-03",
       "status": "planned"
     },
     {
@@ -727,7 +727,7 @@
       "id": "project-upthrust-001",
       "type": "project",
       "title": "Upthrust: what it is",
-      "content": "Upthrust is a learning and training platform for an education and software training company. Sreerag built it from about Sep to Dec 2025 at Carina Softlabs, and finished it. It has a public website, a CMS admin panel and a learning management system (LMS), and the company can hire students from it.",
+      "content": "Upthrust is a learning and training platform for an education and software training company. Sreerag built it from about Sep to Dec 2025 at Carina Softlabs, and finished it. It has a public website, a CMS admin panel and a learning management system (LMS), and the company can hire students from it. The website is live at theupthrust.com.",
       "source": {
         "kind": "owner_statement",
         "ref": "owner-interview-2026-11"
@@ -736,7 +736,7 @@
       "isSynthetic": false,
       "visibility": "public",
       "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
+      "updatedAt": "2026-11-03",
       "status": "shipped"
     },
     {
@@ -810,7 +810,7 @@
       "id": "project-carina-001",
       "type": "project",
       "title": "Carina Softlabs website and admin panel migration",
-      "content": "In Oct 2026 Sreerag migrated the Carina Softlabs company website and its admin panel, alone, from Angular 16 to the latest Angular 22. He fixed a lot of old tangled code, and published the new version with server-side rendering (SSR), so the site is newer, more stable and faster.",
+      "content": "In Oct 2026 Sreerag migrated the Carina Softlabs company website and its admin panel, alone, from Angular 16 to the latest Angular 22. He fixed a lot of old tangled code, and published the new version with server-side rendering (SSR), so the site is newer, more stable and faster. The new site is live at carinasoftlabs.com.",
       "source": {
         "kind": "owner_statement",
         "ref": "owner-interview-2026-11"
@@ -819,7 +819,7 @@
       "isSynthetic": false,
       "visibility": "public",
       "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
+      "updatedAt": "2026-11-03",
       "status": "shipped"
     },
     {

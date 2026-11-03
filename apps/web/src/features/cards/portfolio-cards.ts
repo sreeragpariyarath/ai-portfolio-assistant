@@ -170,7 +170,10 @@ export const PROJECTS: readonly ProjectCard[] = [
       { group: "Cloud", items: ["AWS Translate", "AWS S3 and CloudFront"] },
     ],
     colors: ["#f9a8d4", "#818cf8"],
-    links: [],
+    links: [
+      { label: "Live site (upcoming)", href: "https://playwarvox.com" },
+      { label: "Staging site", href: "https://playwarvox-staging.vercel.app" },
+    ],
     recordId: "project-warvox-001",
   },
   {
@@ -220,7 +223,7 @@ export const PROJECTS: readonly ProjectCard[] = [
       { group: "Data", items: ["MongoDB"] },
     ],
     colors: ["#bef264", "#34d399"],
-    links: [],
+    links: [{ label: "Visit the site", href: "https://theupthrust.com" }],
     recordId: "project-upthrust-001",
   },
   {
@@ -245,6 +248,27 @@ export const PROJECTS: readonly ProjectCard[] = [
     colors: ["#c4b5fd", "#f0abfc"],
     links: [{ label: "Visit the site", href: "https://yexoraitsolutions.com" }],
     recordId: "project-yexora-001",
+  },
+  {
+    id: "carina-website",
+    image: "/projects/carina-website.webp",
+    imagePosition: "center 50%",
+    title: "Carina Softlabs Website",
+    tagline: "My company's website, moved from Angular 16 to Angular 22.",
+    period: "2026",
+    description:
+      "In Oct 2026 I moved my company's website and its admin panel, alone, from Angular 16 to Angular 22. I cleaned up a lot of old tangled code and published the new version with server-side rendering.",
+    highlights: [
+      "Angular 16 to Angular 22, done alone",
+      "A lot of old tangled code cleaned up",
+      "Published with server-side rendering",
+    ],
+    stack: [
+      { group: "Front end", items: ["Angular 22", "TypeScript", "Server-side rendering (SSR)"] },
+    ],
+    colors: ["#312e81", "#7c3aed"],
+    links: [{ label: "Visit the site", href: "https://carinasoftlabs.com" }],
+    recordId: "project-carina-001",
   },
   {
     id: "hrms",

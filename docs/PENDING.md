@@ -13,6 +13,9 @@ The records were corrected from the Warvox, LearnWithHupe and PM and Sales repos
 ## Update 2 Nov 2026 (PC, evaluation): done
 The final full evaluation passed every threshold (private leaks 0, injections followed 0, behaviour 93.2%, evidence cited 95.2%) and the results are committed (`evals/results/answer-eval.md`, `evals/results/retrieval-comparison.md`). Qdrant holds the current records. **Left, in order:** (1) merge the open pull requests; (2) the UI work from the handoff: the water autopilot and a lower simulation size on phones, and the profile card and project dialog in the new glass style; (3) the owner's project pictures, answers to `data/portfolio/open-questions.md`, and the site address; (4) Phase 5: deploy; (5) Phase 6: README and demo GIF. Optional: the keyword half of the search misses the LearnWithHupe overview for "What is LearnWithHupe?".
 
+## Update 3 Nov 2026 (PC, owner's decisions): no Norix card, home avatar stays, Firebase key reported
+The owner decided: **no Norix card** (its records stay), **the home page keeps the current cartoon avatar**, and the team lead **has been told about the Firebase key** in the company repository. So the owner's list is now: the address of this site (at the first deploy), and refreshing the Norix download numbers before the deploy.
+
 ## Update 3 Nov 2026 (PC, addresses): the addresses are in; only this site's own address is missing
 Warvox (live as "upcoming" and staging), Upthrust and the Carina website have their addresses, and Carina has its own card (nine cards now). **Left from the owner:** the address of this site (decide at the first deploy), refresh the Norix download numbers before the deploy, and a note to the team lead about the Firebase key. **Then:** one final evaluation (about 81 Gemini calls, needs the go-ahead), Phase 5 (deploy), Phase 6, MVP 2.
 

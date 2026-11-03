@@ -25,11 +25,13 @@ The owner sent screenshots in `C:\Users\acer\Downloads\images`. They were checke
 
 ## Still waiting for the owner
 - **The address of this site**, for the Portfolio link on the contact card (it still says `sreerag.pages.dev`, which our Worker deploy will not serve). Decide after the first deploy: `workers.dev` first, or a bought domain.
-- **Norix:** refresh the download numbers in `project-norix-001` before the deploy; say if Norix should get a card (it needs a picture; a terminal screenshot would work).
+- **Norix:** refresh the download numbers in `project-norix-001` before the deploy. **No card for Norix** (owner's decision, 3 Nov 2026); the assistant can still answer about it from its records.
 - **Erris:** update the records when `@erris/express` is published.
-- A note to the team lead about the Firebase key file committed in the company's Project and Sales repository.
 
 ## Decisions already made (do not ask again)
+- **No Norix card** (3 Nov 2026). Its records stay, so the assistant can still answer about it.
+- **The home page keeps the current cartoon avatar** (`avatar-placeholder.svg`) as it is (3 Nov 2026); the real photo is used on the Me card only.
+- The team lead has been told about the Firebase key file in the company's Project and Sales repository (3 Nov 2026).
 - First-person voice for answers (cards and funny lines already use "I"); a small "AI answering from my portfolio" label stays on the page.
 - Location: "Indore, India" and "open to relocating" (no city named).
 - Company-internal decisions (billing, translation pipeline, progress sync) are included at a high level so recruiters can ask about them.

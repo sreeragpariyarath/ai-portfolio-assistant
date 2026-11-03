@@ -79,19 +79,19 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
           <h1 className="text-[clamp(2rem,min(9vw,7dvh),4rem)] leading-[1.05] font-bold text-neutral-950">{SITE.headline}</h1>
         </div>
 
-        <div className="aspect-square h-[clamp(6rem,24dvh,15rem)]">
+        <div className="aspect-[900/620] h-[clamp(6rem,24dvh,15rem)]">
           <Image
-            src="/avatar-placeholder.svg"
-            alt={`Portrait of ${SITE.name} (placeholder)`}
-            width={600}
-            height={600}
+            src="/avatar.webp"
+            alt={`Portrait of ${SITE.name}`}
+            width={900}
+            height={620}
             unoptimized
             className="h-full w-full object-contain object-bottom"
             priority
           />
         </div>
 
-        <form onSubmit={submit} className="relative mt-[clamp(0.5rem,1.8dvh,0.9rem)] w-full max-w-[29rem]">
+        <form onSubmit={submit} className="dock-input relative mt-[clamp(0.5rem,1.8dvh,0.9rem)] w-full max-w-[29rem]">
           <label htmlFor={inputId} className="sr-only">
             {SITE.inputPlaceholder}
           </label>
@@ -121,7 +121,7 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
           </LiquidGlass>
         </form>
 
-        <ul className="mt-[clamp(0.5rem,1.6dvh,0.75rem)] grid w-full max-w-[38rem] grid-cols-[repeat(auto-fit,minmax(3.5rem,1fr))] gap-2 sm:gap-3">
+        <ul className="dock-chips mt-[clamp(0.5rem,1.6dvh,0.75rem)] grid w-full max-w-[38rem] grid-cols-[repeat(auto-fit,minmax(3.5rem,1fr))] gap-2 sm:gap-3">
           {STARTERS.map((starter) => (
             <li key={starter.id}>
               <LiquidGlass radius={16} bezel={10} strength={12} className="h-[clamp(3.4rem,7.5dvh,4.5rem)] transition-transform active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100">

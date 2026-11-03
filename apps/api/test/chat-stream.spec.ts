@@ -36,7 +36,7 @@ describe("POST /api/chat answer stream", () => {
       citations: ["contribution-demo-001"],
       invalidCitationsDropped: 0,
       truncated: false,
-      model: "gemini-3.5-flash-lite",
+      model: "gemini-3.1-flash-lite",
     });
   });
 
@@ -79,7 +79,7 @@ describe("POST /api/chat answer stream", () => {
     expect(prompt).toContain('id=\\"contribution-demo-001\\"');
     expect(prompt).toContain("Today's date: 2026-10-29");
     expect(prompt).not.toContain("private-demo-001");
-    expect(generation.url).toContain("/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse");
+    expect(generation.url).toContain("/models/gemini-3.1-flash-lite:streamGenerateContent?alt=sse");
     expect(calls.find((call) => call.url.includes("/points/query"))!.body.filter).toEqual({
       must: [{ key: "visibility", match: { value: "public" } }],
     });
@@ -99,14 +99,14 @@ describe("POST /api/chat answer stream", () => {
 
   it("uses the fallback model when the primary is out of quota, and reports it in done", async () => {
     const { worker, calls } = workerWith({
-      generation: (model) => (model === "gemini-3.5-flash-lite" ? new Response("", { status: 429 }) : sseResponse(["BEHAVIOR: answer\nFrom fallback."])),
+      generation: (model) => (model === "gemini-3.1-flash-lite" ? new Response("", { status: 429 }) : sseResponse(["BEHAVIOR: answer\nFrom fallback."])),
     });
     const events = await readEvents(await worker.fetch(chatRequest({ question: QUESTION }), testEnv));
 
-    expect(events.at(-1)!.data.model).toBe("gemini-3.1-flash-lite");
+    expect(events.at(-1)!.data.model).toBe("gemini-3.5-flash-lite");
     expect(calls.filter((call) => call.url.includes(":streamGenerateContent")).map((call) => /models\/([^:]+):/.exec(call.url)![1])).toEqual([
-      "gemini-3.5-flash-lite",
       "gemini-3.1-flash-lite",
+      "gemini-3.5-flash-lite",
     ]);
   });
 
@@ -176,7 +176,7 @@ describe("POST /api/chat answer stream", () => {
     expect(log).toHaveBeenCalledTimes(1);
     const line = String(log.mock.calls[0]?.[0]);
     const entry = JSON.parse(line);
-    expect(entry).toMatchObject({ event: "chat", status: 200, behavior: "answer", citations: 1, invalidCitationsDropped: 0, model: "gemini-3.5-flash-lite" });
+    expect(entry).toMatchObject({ event: "chat", status: 200, behavior: "answer", citations: 1, invalidCitationsDropped: 0, model: "gemini-3.1-flash-lite" });
     expect(entry.retrieved).toMatchObject({ dense: 1, droppedDense: 0 });
     expect(typeof entry.latencyMs).toBe("number");
     for (const secret of ["support assistant", "Alex wrote", "test-gemini-key", "test-qdrant-key", "qdrant.test"]) {

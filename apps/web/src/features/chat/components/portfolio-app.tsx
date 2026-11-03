@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { withDockGlide } from "./dock-glide";
 import { ChatClientError, askQuestion, isAbortError } from "@/features/chat/chat-client";
 import { chatReducer, initialChatState } from "@/features/chat/chat-state";
 import { matchCardIntent } from "@/features/cards/card-intent";
@@ -47,8 +48,10 @@ export function PortfolioApp() {
     if (card !== null) {
       controller.current = null;
       currentId.current = null;
-      dispatch({ type: "show", id, question, card, intro: CARD_INTROS[card] });
-      setView("chat");
+      withDockGlide(() => {
+        dispatch({ type: "show", id, question, card, intro: CARD_INTROS[card] });
+        setView("chat");
+      });
       return;
     }
 
@@ -56,8 +59,10 @@ export function PortfolioApp() {
     controller.current = abort;
     currentId.current = id;
 
-    dispatch({ type: "ask", id, question });
-    setView("chat");
+    withDockGlide(() => {
+      dispatch({ type: "ask", id, question });
+      setView("chat");
+    });
 
     try {
       for await (const event of askQuestion(question, { signal: abort.signal })) {

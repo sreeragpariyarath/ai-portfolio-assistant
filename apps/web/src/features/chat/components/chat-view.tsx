@@ -13,6 +13,7 @@ import { SITE, STARTERS } from "@/features/home/site";
 import { CardReply } from "@/features/cards/components/card-reply";
 import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
 import { StarterIcon } from "@/features/home/components/starter-icon";
+import { withDockGlide } from "./dock-glide";
 
 function TypingDots() {
   return (
@@ -175,7 +176,7 @@ export function ChatView({
           aria-label="Back to the home page"
           className="rounded-full transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
         >
-          <Image src="/avatar-placeholder.svg" alt="" width={48} height={48} unoptimized className="h-12 w-12" />
+          <Image src="/avatar.webp" alt="" width={48} height={48} unoptimized className="h-12 w-12 rounded-full bg-neutral-100 object-cover object-[50%_15%]" />
         </button>
       </header>
 
@@ -209,7 +210,7 @@ export function ChatView({
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
           <button
             type="button"
-            onClick={() => setShowStarters((value) => !value)}
+            onClick={() => withDockGlide(() => setShowStarters((value) => !value))}
             aria-expanded={showStarters}
             className="flex min-h-6 items-center gap-1 rounded text-xs text-neutral-500 hover:text-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
           >
@@ -220,7 +221,7 @@ export function ChatView({
           </button>
 
           {showStarters ? (
-            <ul className="flex flex-wrap justify-center gap-2">
+            <ul className="dock-chips flex flex-wrap justify-center gap-2">
               {STARTERS.map((starter) => (
                 <li key={starter.id}>
                   <button
@@ -237,7 +238,7 @@ export function ChatView({
           ) : null}
 
           <form
-            className="w-full max-w-2xl"
+            className="dock-input w-full max-w-2xl"
             onSubmit={(event) => {
               event.preventDefault();
               send(question);

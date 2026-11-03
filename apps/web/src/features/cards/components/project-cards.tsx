@@ -11,7 +11,17 @@ import { CARD_SURFACE, ExternalIcon, LINK_PILL, Pill } from "./card-shell";
 // project's initial, so the cards look finished before the real pictures arrive.
 function ProjectArt({ project, className, showLetter = true }: { project: ProjectCard; className: string; showLetter?: boolean }) {
   if (project.image !== undefined) {
-    return <Image src={project.image} alt="" width={640} height={360} unoptimized className={`${className} object-cover`} />;
+    return (
+      <Image
+        src={project.image}
+        alt=""
+        width={750}
+        height={1000}
+        unoptimized
+        className={`${className} object-cover`}
+        style={project.imagePosition === undefined ? undefined : { objectPosition: project.imagePosition }}
+      />
+    );
   }
   return (
     <div className={`${className} relative overflow-hidden`} style={{ backgroundImage: `linear-gradient(135deg, ${project.colors[0]}, ${project.colors[1]})` }} aria-hidden="true">
@@ -51,7 +61,7 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
       <div>
         <div className="relative">
           <div className="p-2 pb-0">
-            <ProjectArt project={project} className="h-44 w-full overflow-hidden rounded-[1.25rem] sm:h-52" />
+            <ProjectArt project={project} className="h-48 w-full overflow-hidden rounded-[1.25rem] sm:h-60" />
           </div>
           <button
             type="button"

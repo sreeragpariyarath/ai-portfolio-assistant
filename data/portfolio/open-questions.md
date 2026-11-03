@@ -12,9 +12,13 @@
 9. **Personal tracker app:** stays **private** for now. It is the owner's own tool, with an MCP server, cron jobs and Firebase push notifications that remind him when to follow up on an application; a phase 2 will let other people use it. The private record was updated; it is never indexed or shown.
 10. **Source repository of this assistant:** the repository is public (`github.com/sreeragpariyarath/ai-portfolio-assistant`). Added to the project card and to the record `project-portfolio-001`.
 
+## Project pictures (3 Nov 2026)
+The owner sent screenshots in `C:\Users\acer\Downloads\images`. They were checked one by one, cropped to portrait 750 by 1000 and saved as `apps/web/public/projects/<id>.webp` (about 22 to 104 KB each): `learnwithhupe` (the app's subject cards), `warvox` (the logo from the site's hero), `yexora` (the light beams and logo), `upthrust` (the headline from the home page), `erris` (the npm page of `@erris/core`), `hrms`, `pm-tool` and `portfolio-assistant` (a screenshot of this site's home page, made from the build).
+
+**About the PM tool and HRMS pictures:** they show a client company name, a client project name, a colleague's name, and (in the HRMS ones) a phone number, a date of birth and addresses. I first held them back for that reason. The owner then said they **made these images with ChatGPT and changed all the data**, so every name and value in them is invented, and they are used. The first HRMS picture is still cropped to the calendar and leave panels, which keeps phone-number-like text out anyway. The red avatar in the PM tool picture is the owner's choice; if it is someone else's artwork, replace it.
+
 ## Still waiting for the owner (tonight)
-- **Project pictures** for the cards: portrait, about 3:4, saved as `apps/web/public/projects/<id>.webp` (ids: `learnwithhupe`, `portfolio-assistant`, `pm-tool`, `warvox`, `erris`, `upthrust`, `yexora`, `hrms`; add `carina-website` and `norix` if they get cards). Then set `image` on each project in `portfolio-cards.ts`.
-- **Addresses:** Warvox staging and live (shown as "upcoming"), the Carina company website (live), Upthrust, and the site address for the Portfolio link on the contact card.
+- **Addresses:** Warvox staging and live (shown as "upcoming"), the Carina company website (live), Upthrust, and the site address for the Portfolio link on the contact card. (The pictures arrived; the addresses did not yet.)
 - **Carina website:** images, and any measurable result (page-speed scores before and after are much stronger than "faster").
 - **Norix:** refresh the download numbers in `project-norix-001` before the deploy.
 - **Erris:** update the records when `@erris/express` is published.

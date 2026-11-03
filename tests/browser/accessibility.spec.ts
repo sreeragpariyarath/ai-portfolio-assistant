@@ -270,3 +270,88 @@ test("a new card slides in, but not for visitors who ask for reduced motion", as
   await expect(reply).toHaveCSS("animation-name", "none");
   await expect(page.locator(".anim-pop")).toHaveCSS("animation-name", "none");
 });
+
+// The project card grows into its dialog and back with a view transition, and only when motion is welcome.
+type Tracked = { __transitions: number; __running: number };
+async function countViewTransitions(page: Page) {
+  await page.addInitScript(() => {
+    const tracked = window as unknown as Tracked;
+    tracked.__transitions = 0;
+    tracked.__running = 0;
+    const original = document.startViewTransition?.bind(document);
+    if (original === undefined) return;
+    document.startViewTransition = (callback) => {
+      tracked.__transitions++;
+      tracked.__running++;
+      const transition = original(callback);
+      void transition.finished.finally(() => tracked.__running--);
+      return transition;
+    };
+  });
+  return () => page.evaluate(() => (window as unknown as Tracked).__transitions);
+}
+// The page ignores the pointer while a transition runs, so wait until none is running.
+const transitionsFinished = (page: Page) => page.waitForFunction(() => (window as unknown as Tracked).__running === 0);
+
+test("a project card grows into its dialog and back, and focus and names are put right afterwards", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const transitions = await countViewTransitions(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Projects", exact: true }).click();
+  const card = page.getByRole("button", { name: /View details for AI Portfolio Assistant/ });
+  await card.click();
+  const dialog = page.getByRole("dialog", { name: "AI Portfolio Assistant" });
+  await expect(dialog).toBeVisible();
+  // Chromium has view transitions; where a browser does not, the dialog still opens (the fallback grows it from the card).
+  const supported = await page.evaluate(() => typeof document.startViewTransition === "function");
+  if (supported) expect(await transitions()).toBe(1);
+  // Escape closes with the closing transition, returns focus to the card and leaves no transition name on it.
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(card).toBeFocused();
+  await expect(card).toHaveCSS("view-transition-name", "none");
+  if (supported) expect(await transitions()).toBe(2);
+  // The close button and the backdrop go through the same path.
+  await card.click();
+  await expect(dialog).toBeVisible();
+  await page.getByRole("button", { name: "Close project details" }).click();
+  await expect(dialog).toBeHidden();
+  await expect(card).toBeFocused();
+  await card.click();
+  await expect(dialog).toBeVisible();
+  await transitionsFinished(page);
+  await page.mouse.click(5, 5);
+  await expect(dialog).toBeHidden();
+  await expect(card).toHaveCSS("view-transition-name", "none");
+});
+
+test("with reduced motion the project dialog just appears, with no transition", async ({ page }) => {
+  const transitions = await countViewTransitions(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Projects", exact: true }).click();
+  const card = page.getByRole("button", { name: /View details for Erris/ });
+  await card.click();
+  await expect(page.getByRole("dialog", { name: "Erris" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Erris" })).toBeHidden();
+  await expect(card).toBeFocused();
+  expect(await transitions()).toBe(0);
+});
+
+test("in a browser without view transitions the project dialog still opens and closes, growing from its card", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => {
+    Object.defineProperty(document, "startViewTransition", { value: undefined, configurable: true });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Projects", exact: true }).click();
+  const card = page.getByRole("button", { name: /View details for Upthrust/ });
+  await card.click();
+  const dialog = page.getByRole("dialog", { name: "Upthrust" });
+  await expect(dialog).toBeVisible();
+  // The fallback animates the dialog from the card's box (Web Animations).
+  expect(await dialog.evaluate(element => element.getAnimations().length)).toBeGreaterThan(0);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(card).toBeFocused();
+});

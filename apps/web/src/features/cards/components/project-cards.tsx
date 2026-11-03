@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { PROJECT_PANEL_TRANSITION, canMorph, growFrom } from "@/features/cards/card-morph";
 import type { ProjectCard } from "@/features/cards/portfolio-cards";
 import { PROJECTS } from "@/features/cards/portfolio-cards";
 import { recordPath } from "@/features/records/records";
@@ -54,16 +56,34 @@ function ProjectLinks({ project, className }: { project: ProjectCard; className:
   );
 }
 
-// A native dialog gives a focus trap, Esc to close, an inert page behind it and focus returning to the
-// card that opened it. It is shown only while a project is chosen.
-function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: () => void }) {
+// A native dialog gives a focus trap, an inert page behind it and focus returning to the card that opened it.
+// It is shown only while a project is chosen. It carries the same view-transition name as the card, so where the
+// browser supports it the card grows into this dialog (and back); `from` is the card's box, used by the fallback
+// for browsers that do not. Every way of closing (Escape, the button, the backdrop) goes through `onRequestClose`,
+// so the closing animation runs too.
+function ProjectDialog({
+  project,
+  from,
+  onRequestClose,
+  onClosed,
+}: {
+  project: ProjectCard;
+  from: DOMRect | null;
+  onRequestClose: () => void;
+  onClosed: () => void;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const grownFrom = useRef(from);
   const titleId = `project-title-${project.id}`;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = dialog.current;
     if (element === null) return;
     if (!element.open) element.showModal();
+    const origin = grownFrom.current;
+    if (origin !== null && typeof element.animate === "function") {
+      element.animate(growFrom(origin, element.getBoundingClientRect()), { duration: 420, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    }
     return () => {
       if (element.open) element.close();
     };
@@ -73,11 +93,17 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
     <dialog
       ref={dialog}
       aria-labelledby={titleId}
-      onClose={onClose}
+      onClose={onClosed}
+      // Escape would close the dialog at once; ask for a closing animation instead.
+      onCancel={(event) => {
+        event.preventDefault();
+        onRequestClose();
+      }}
       // The content fills the whole dialog, so a click on the dialog itself is a click on the dimmed backdrop.
       onClick={(event) => {
-        if (event.target === event.currentTarget) event.currentTarget.close();
+        if (event.target === event.currentTarget) onRequestClose();
       }}
+      style={{ viewTransitionName: PROJECT_PANEL_TRANSITION }}
       className="glass-panel m-auto max-h-[92dvh] w-[min(94vw,54rem)] overflow-y-auto overscroll-contain rounded-3xl p-0 text-neutral-800 backdrop:bg-neutral-900/25 backdrop:backdrop-blur-md"
     >
       <div className="relative grid sm:grid-cols-[16rem_1fr]">
@@ -87,7 +113,7 @@ function ProjectDialog({ project, onClose }: { project: ProjectCard; onClose: ()
         </div>
         <button
           type="button"
-          onClick={() => dialog.current?.close()}
+          onClick={onRequestClose}
           aria-label="Close project details"
           className="glass-card absolute top-5 right-5 z-10 flex h-9 w-9 items-center justify-center rounded-full text-neutral-800 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
         >
@@ -151,7 +177,8 @@ const ARROW_BUTTON =
 
 // A row of project cards that scrolls and snaps sideways; pressing a card opens its details.
 export function ProjectCarousel() {
-  const [open, setOpen] = useState<ProjectCard | null>(null);
+  const [open, setOpen] = useState<{ project: ProjectCard; from: DOMRect | null } | null>(null);
+  const cards = useRef(new Map<string, HTMLButtonElement>());
   const [edges, setEdges] = useState({ start: true, end: false });
   const track = useRef<HTMLUListElement>(null);
 
@@ -167,6 +194,40 @@ export function ProjectCarousel() {
     window.addEventListener("resize", updateEdges);
     return () => window.removeEventListener("resize", updateEdges);
   }, []);
+
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // The card grows into the dialog. With view transitions the card and the dialog share one name: the card gets
+  // it before the browser takes its "before" picture and gives it up when the dialog (which always has it) is
+  // on screen. Without them the dialog grows from the card's box; with reduced motion it just appears.
+  function openProject(project: ProjectCard) {
+    const card = cards.current.get(project.id) ?? null;
+    const reduce = reducedMotion();
+    if (card !== null && canMorph({ startViewTransition: document.startViewTransition, reducedMotion: reduce })) {
+      card.style.setProperty("view-transition-name", PROJECT_PANEL_TRANSITION);
+      document.startViewTransition(() => {
+        card.style.removeProperty("view-transition-name");
+        flushSync(() => setOpen({ project, from: null }));
+      });
+      return;
+    }
+    setOpen({ project, from: reduce || card === null ? null : card.getBoundingClientRect() });
+  }
+
+  // And back: the dialog shrinks into the card it came from.
+  function closeProject() {
+    if (open === null) return;
+    const card = cards.current.get(open.project.id) ?? null;
+    if (card !== null && canMorph({ startViewTransition: document.startViewTransition, reducedMotion: reducedMotion() })) {
+      const transition = document.startViewTransition(() => {
+        flushSync(() => setOpen(null));
+        card.style.setProperty("view-transition-name", PROJECT_PANEL_TRANSITION);
+      });
+      void transition.finished.finally(() => card.style.removeProperty("view-transition-name"));
+      return;
+    }
+    setOpen(null);
+  }
 
   function scrollBy(direction: -1 | 1) {
     const element = track.current;
@@ -200,7 +261,11 @@ export function ProjectCarousel() {
           <li key={project.id} className="stagger-item w-[min(15.75rem,72vw)] shrink-0 snap-start" style={{ "--i": index } as React.CSSProperties}>
             <button
               type="button"
-              onClick={() => setOpen(project)}
+              ref={(element) => {
+                if (element !== null) cards.current.set(project.id, element);
+                else cards.current.delete(project.id);
+              }}
+              onClick={() => openProject(project)}
               className={`${CARD_SURFACE} group relative block h-[22rem] w-full overflow-hidden text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:transition-none motion-reduce:hover:translate-y-0`}
             >
               <span className="absolute inset-0 block">
@@ -221,7 +286,7 @@ export function ProjectCarousel() {
         ))}
       </ul>
 
-      {open !== null ? <ProjectDialog project={open} onClose={() => setOpen(null)} /> : null}
+      {open !== null ? <ProjectDialog project={open.project} from={open.from} onRequestClose={closeProject} onClosed={() => setOpen(null)} /> : null}
     </section>
   );
 }

@@ -121,6 +121,19 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
     0 8px 18px -8px rgba(15, 23, 42, 0.65);
 }
 
+/* A project card growing into its dialog and back (View Transitions; see card-morph.ts). The group is the
+   shared card/dialog box; the two pictures inside it are stretched to fill it while they cross-fade. */
+::view-transition-group(project-panel) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(project-panel),
+::view-transition-new(project-panel) {
+  height: 100%;
+  object-fit: cover;
+}
+
 .anim-pop {
   animation: pop-in 550ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }

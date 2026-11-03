@@ -121,6 +121,48 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
     0 8px 18px -8px rgba(15, 23, 42, 0.65);
 }
 
+/* A project card growing into its dialog and back (View Transitions; see card-morph.ts). The group is the shared
+   card/dialog box and it clips what is inside it. Both pictures keep their own size and stay in the top-left
+   corner (they are never stretched, which is what made the card's title balloon): the card fades out as the box
+   grows, and the dialog is uncovered by the growing box and fades in. */
+::view-transition-group(project-panel) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: clip;
+  border-radius: 1.5rem;
+}
+
+::view-transition-old(project-panel),
+::view-transition-new(project-panel) {
+  width: auto;
+  height: auto;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  animation-duration: 260ms;
+}
+
+/* The rest of the page: it must not flash. The old picture of the page stays put and the new one (with or without
+   the dimmed backdrop) fades in over it, with normal blending (the default adds the two pictures together, which
+   washes the page out halfway through). */
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: view-fade-in 320ms ease both;
+  mix-blend-mode: normal;
+}
+
+@keyframes view-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .anim-pop {
   animation: pop-in 550ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }

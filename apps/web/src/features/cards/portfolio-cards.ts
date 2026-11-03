@@ -23,7 +23,8 @@ export interface ProjectCard {
   period: string;
   description: string;
   highlights: readonly string[];
-  tech: readonly string[];
+  // The full stack, in groups, shown in the project dialog (every group is shown, nothing is cut).
+  stack: readonly { group: string; items: readonly string[] }[];
   // A path under /public once the owner supplies a picture; until then the gradient below is the image.
   image?: string;
   // Where the picture is anchored when it is cropped wide (the project dialog shows a strip of it), as a CSS
@@ -88,7 +89,12 @@ export const PROJECTS: readonly ProjectCard[] = [
       "The Phaser.js games children play",
       "Runs on AWS, with real-time features and an admin panel",
     ],
-    tech: ["Node.js", "MongoDB", "React", "Phaser.js", "Express", "AWS"],
+    stack: [
+      { group: "Apps and games", items: ["Flutter app (built by a teammate)", "Phaser.js games"] },
+      { group: "Admin front end", items: ["React 19", "TypeScript", "Vite"] },
+      { group: "Back end", items: ["Node.js", "Express", "Socket.io", "Google Play and App Store billing APIs"] },
+      { group: "Data and cloud", items: ["MongoDB", "Redis", "AWS (EC2, S3, CloudFront)", "Nginx", "PM2", "Cloudinary"] },
+    ],
     colors: ["#86efac", "#38bdf8"],
     links: [
       { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.hupe.hupe_academy_app" },
@@ -110,7 +116,12 @@ export const PROJECTS: readonly ProjectCard[] = [
       "Answers stream live, with source links",
       "Private records never reach the model",
     ],
-    tech: ["TypeScript", "Gemini", "Qdrant", "Cloudflare Workers", "Next.js"],
+    stack: [
+      { group: "Front end", items: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "WebGL"] },
+      { group: "Back end", items: ["Cloudflare Workers", "Server-sent events"] },
+      { group: "AI and search", items: ["Gemini", "Qdrant", "Hybrid search (BM25 and vectors)"] },
+      { group: "Quality", items: ["Playwright", "axe", "GitHub Actions"] },
+    ],
     colors: ["#7dd3fc", "#a78bfa"],
     links: [{ label: "Source code", href: "https://github.com/sreeragpariyarath/ai-portfolio-assistant" }],
     recordId: "project-portfolio-001",
@@ -129,7 +140,12 @@ export const PROJECTS: readonly ProjectCard[] = [
       "Employee dashboard with today's tasks and capacity",
       "One sign-in and roles shared with Sales and HR",
     ],
-    tech: ["Next.js", "NestJS", "MongoDB", "Socket.io"],
+    stack: [
+      { group: "Front end", items: ["Next.js", "React", "TypeScript"] },
+      { group: "Back end", items: ["NestJS", "Node.js"] },
+      { group: "Data and real time", items: ["MongoDB", "Socket.io", "Redis"] },
+      { group: "Notifications", items: ["Firebase push notifications"] },
+    ],
     colors: ["#fcd34d", "#fb7185"],
     links: [],
     recordId: "project-pmt-001",
@@ -148,7 +164,11 @@ export const PROJECTS: readonly ProjectCard[] = [
       "3D viewer for swords, weapons and armour",
       "Content translated automatically into 11 languages",
     ],
-    tech: ["Next.js", "Node.js", "Three.js", "AWS Translate"],
+    stack: [
+      { group: "Front end", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Three.js (react-three-fiber)", "i18next"] },
+      { group: "Back end", items: ["Node.js", "Express", "MongoDB", "Stripe"] },
+      { group: "Cloud", items: ["AWS Translate", "AWS S3 and CloudFront"] },
+    ],
     colors: ["#f9a8d4", "#818cf8"],
     links: [],
     recordId: "project-warvox-001",
@@ -167,7 +187,12 @@ export const PROJECTS: readonly ProjectCard[] = [
       "A core with zero dependencies",
       "Built and tested with TypeScript and Vitest",
     ],
-    tech: ["TypeScript", "Node.js", "npm"],
+    stack: [
+      { group: "Language and build", items: ["TypeScript", "Node.js", "pnpm", "tsup"] },
+      { group: "Testing", items: ["Vitest (with type-level tests)"] },
+      { group: "Release and safety", items: ["GitHub Actions", "Changesets", "CodeQL", "npm trusted publishing"] },
+      { group: "Adapters", items: ["Zod", "Prisma", "RFC 9457 Problem Details"] },
+    ],
     colors: ["#a5b4fc", "#67e8f9"],
     links: [
       { label: "GitHub", href: "https://github.com/sreeragpariyarath/erris" },
@@ -189,7 +214,11 @@ export const PROJECTS: readonly ProjectCard[] = [
       "Includes a learning management system",
       "The company can hire students from it",
     ],
-    tech: ["React", "Node.js", "MongoDB"],
+    stack: [
+      { group: "Front end", items: ["React"] },
+      { group: "Back end", items: ["Node.js", "REST APIs"] },
+      { group: "Data", items: ["MongoDB"] },
+    ],
     colors: ["#bef264", "#34d399"],
     links: [],
     recordId: "project-upthrust-001",
@@ -208,7 +237,11 @@ export const PROJECTS: readonly ProjectCard[] = [
       "A works reel with videos from Cloudflare",
       "A static site with no backend",
     ],
-    tech: ["Next.js", "Three.js", "Tailwind CSS"],
+    stack: [
+      { group: "Front end", items: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Lenis"] },
+      { group: "3D", items: ["Three.js", "react-three-fiber", "drei", "postprocessing"] },
+      { group: "Hosting and forms", items: ["Cloudflare (static export)", "Cloudflare R2", "Web3Forms"] },
+    ],
     colors: ["#c4b5fd", "#f0abfc"],
     links: [{ label: "Visit the site", href: "https://yexoraitsolutions.com" }],
     recordId: "project-yexora-001",
@@ -227,7 +260,10 @@ export const PROJECTS: readonly ProjectCard[] = [
       "Leave, calendar, policies and complaints screens",
       "Front end connected to the backend APIs",
     ],
-    tech: ["React", "Node.js", "WebSockets"],
+    stack: [
+      { group: "Front end", items: ["React"] },
+      { group: "Back end", items: ["Node.js", "WebSockets"] },
+    ],
     colors: ["#fdba74", "#fca5a5"],
     links: [],
     recordId: "project-hrms-001",

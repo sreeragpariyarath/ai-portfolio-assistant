@@ -117,6 +117,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "pm-tool",
+    image: "/projects/pm-tool.webp",
+    imagePosition: "center 30%",
     title: "PM Tool and Sales Tool",
     tagline: "Project management and sales, connected. Built with my team.",
     period: "2026",

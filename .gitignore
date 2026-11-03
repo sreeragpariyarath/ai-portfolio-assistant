@@ -152,3 +152,5 @@ vite.config.ts.timestamp-*
 
 # Local query-embedding cache for pnpm eval:retrieval
 evals/.cache/
+# scratch output of a wrangler deploy --dry-run (docs/SETUP.md section 8)
+.tmp-dry/

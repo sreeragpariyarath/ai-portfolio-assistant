@@ -55,7 +55,7 @@ Each phase ends runnable and is committed separately.
 - Streaming chat, citation chips linking to source records, suggested questions, loading/error/"demo busy" states, responsive and accessible. API base URL comes from an env var.
 - **Done when:** a visitor can ask a question and get a streamed, cited answer, and `pnpm --filter web build` and `pnpm --filter web lint` pass.
 
-### Phase 5: Cleanup and deploy
+### Phase 5: Cleanup and deploy (preparation done 2026-11-03, see D-033 and `docs/SETUP.md` section 8; the deploy itself waits for the owner's account steps)
 - Remove the D1 binding from `apps/api/wrangler.jsonc`, migrations `0001` and `0002`, the old ingest script and `embeddings:ingest:local`; run `pnpm cf-typegen`. Do not touch the remote D1 database without the owner's confirmation.
 - `wrangler secret put` for secrets; deploy the Worker and the web app (one Cloudflare Worker serves both, D-020); add a scheduled trigger that pings Qdrant to prevent suspension; document a `pnpm ingest` re-seed command.
 - Confirm each remote action with the owner first.

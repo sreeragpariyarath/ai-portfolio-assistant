@@ -26,6 +26,9 @@ export interface ProjectCard {
   tech: readonly string[];
   // A path under /public once the owner supplies a picture; until then the gradient below is the image.
   image?: string;
+  // Where the picture is anchored when it is cropped wide (the project dialog shows a strip of it), as a CSS
+  // object-position, for example "center 60%" to keep the lower middle in view. Defaults to the centre.
+  imagePosition?: string;
   // Two CSS colours for the placeholder gradient.
   colors: readonly [string, string];
   links: readonly { label: string; href: string }[];
@@ -73,6 +76,8 @@ export const PROFILE_INTRO =
 export const PROJECTS: readonly ProjectCard[] = [
   {
     id: "learnwithhupe",
+    image: "/projects/learnwithhupe.webp",
+    imagePosition: "center 52%",
     title: "LearnWithHupe",
     tagline: "A learning app for kids aged 2 to 8, live on both app stores.",
     period: "2026",
@@ -93,6 +98,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "portfolio-assistant",
+    image: "/projects/portfolio-assistant.webp",
+    imagePosition: "center 42%",
     title: "AI Portfolio Assistant",
     tagline: "This site: ask me anything and get cited answers.",
     period: "2026",
@@ -127,6 +134,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "warvox",
+    image: "/projects/warvox.webp",
+    imagePosition: "center 58%",
     title: "Warvox",
     tagline: "A game website with a 3D model viewer and 11 languages. Launching soon.",
     period: "2025–26",
@@ -144,6 +153,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "erris",
+    image: "/projects/erris.webp",
+    imagePosition: "center 22%",
     title: "Erris",
     tagline: "Typed error contracts for JavaScript and TypeScript. Open source.",
     period: "2026",
@@ -164,6 +175,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "upthrust",
+    image: "/projects/upthrust.webp",
+    imagePosition: "center 30%",
     title: "Upthrust",
     tagline: "A learning platform with its own CMS and LMS. Built solo.",
     period: "2025",
@@ -181,6 +194,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "yexora",
+    image: "/projects/yexora.webp",
+    imagePosition: "center 50%",
     title: "Yexora Website",
     tagline: "A 3D, glass-style company site for a client.",
     period: "2026",
@@ -198,6 +213,8 @@ export const PROJECTS: readonly ProjectCard[] = [
   },
   {
     id: "hrms",
+    image: "/projects/hrms.webp",
+    imagePosition: "center 22%",
     title: "HRMS",
     tagline: "An internal HR platform used by about 80 people.",
     period: "2025",

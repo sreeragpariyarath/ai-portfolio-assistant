@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import { CARD_INTROS, CONTACT, FUN, PROFILE, PROJECTS, SKILL_GROUPS } from "./portfolio-cards.ts";
 
@@ -37,6 +37,17 @@ describe("stored card content", () => {
       const record = publicRecords.find((r) => r.id === project.recordId);
       assert.ok(record !== undefined, `${project.id}: ${project.recordId} is not a public record`);
       assert.equal(record.type, "project", project.id);
+    }
+  });
+
+  it("has a real picture file for every project that names one, small enough for a phone", () => {
+    for (const project of PROJECTS) {
+      if (project.image === undefined) continue;
+      assert.match(project.image, /^\/projects\/[a-z0-9-]+\.webp$/, project.id);
+      const file = `apps/web/public${project.image}`;
+      assert.ok(existsSync(file), `${project.id}: ${file} is missing`);
+      assert.ok(statSync(file).size <= 150 * 1024, `${project.id}: ${file} is over 150 KB`);
+      if (project.imagePosition !== undefined) assert.match(project.imagePosition, /^(center|left|right) \d{1,3}%$/, project.id);
     }
   });
 

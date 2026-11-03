@@ -12,9 +12,14 @@
 9. **Personal tracker app:** stays **private** for now. It is the owner's own tool, with an MCP server, cron jobs and Firebase push notifications that remind him when to follow up on an application; a phase 2 will let other people use it. The private record was updated; it is never indexed or shown.
 10. **Source repository of this assistant:** the repository is public (`github.com/sreeragpariyarath/ai-portfolio-assistant`). Added to the project card and to the record `project-portfolio-001`.
 
+## Project pictures (3 Nov 2026)
+The owner sent screenshots in `C:\Users\acer\Downloads\images`. They were checked one by one for private details, cropped to portrait 750 by 1000 and saved as `apps/web/public/projects/<id>.webp` (about 22 to 104 KB each):
+- **Used:** `learnwithhupe` (the app's subject cards), `warvox` (the logo from the site's hero), `yexora` (the light beams and logo), `upthrust` (the headline from the home page), `erris` (the npm page of `@erris/core`), `hrms` (the demo-data **top two panels only**: the calendar and the leave summary), and `portfolio-assistant` (a screenshot of this site's home page, made from the build).
+- **Not used on purpose:** the third panel of the HRMS collage and the second HRMS screenshot show a phone number, a date of birth and home addresses (demo values, but this project keeps those out of every file); the three PM tool screenshots show a client company name, a client project name and code, a colleague's name on a "created by" line, and task titles from a real client project. **`pm-tool` still shows its gradient.** A redacted candidate (the employee dashboard with the task titles and the project name blurred) is ready for the owner to approve; the red profile avatar in it looks like artwork that may not be his, so a different avatar or demo data would be safer.
+
 ## Still waiting for the owner (tonight)
-- **Project pictures** for the cards: portrait, about 3:4, saved as `apps/web/public/projects/<id>.webp` (ids: `learnwithhupe`, `portfolio-assistant`, `pm-tool`, `warvox`, `erris`, `upthrust`, `yexora`, `hrms`; add `carina-website` and `norix` if they get cards). Then set `image` on each project in `portfolio-cards.ts`.
-- **Addresses:** Warvox staging and live (shown as "upcoming"), the Carina company website (live), Upthrust, and the site address for the Portfolio link on the contact card.
+- **PM tool picture:** approve the redacted candidate, or send a screenshot made with demo data (the seeding script in the PM repository can create a demo project).
+- **Addresses:** Warvox staging and live (shown as "upcoming"), the Carina company website (live), Upthrust, and the site address for the Portfolio link on the contact card. (The pictures arrived; the addresses did not yet.)
 - **Carina website:** images, and any measurable result (page-speed scores before and after are much stronger than "faster").
 - **Norix:** refresh the download numbers in `project-norix-001` before the deploy.
 - **Erris:** update the records when `@erris/express` is published.

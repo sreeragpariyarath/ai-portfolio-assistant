@@ -23,7 +23,7 @@ export interface ChatMessage {
   error?: string;
   // Set on stored replies (task 4.11): the card shown under `text`. No assistant call was made for it.
   card?: CardKind;
-  // A stored opening line that replaces the model's own first sentence on an abstain reply.
+  // A stored opening line that replaces the model's own first sentence on an off-topic reply.
   lead?: string;
 }
 
@@ -94,7 +94,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           return update(state, id, (message) => ({
             ...message,
             behavior: event.behavior,
-            ...(event.behavior === "abstain" ? { lead: pickAbstainLine(id) } : {}),
+            ...(event.behavior === "offtopic" ? { lead: pickAbstainLine(id) } : {}),
           }));
         case "token":
           return update(state, id, (message) => ({ ...message, text: message.text + event.text }));

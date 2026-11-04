@@ -4,6 +4,9 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
+## 2026-11-04
+- Friendlier chat (PC), D-036, branch `feat/friendly-chat`. The owner and his girlfriend tried the live site and it felt cold: hellos got "I am an AI assistant", "I am hr" became a question about the HRMS project, an introduction got a joke, and three questions about his hardest work got jokes. Fixes: a new `offtopic` behaviour so only silly or unrelated messages get the stored joke; a plain, polite "I don't have that" for real questions with no record; warm, natural small talk and introductions; a more professional reply for recruiters; and "hardest problem" questions now always see up to three decision records and get the closest true example. The rate limit is now 20 a minute. Tested: `pnpm test:scripts` (514 pass), `pnpm typecheck:scripts`, `pnpm eval:validate`, `pnpm corpus:check`, the API suite (`pnpm vitest run`, 74 pass) and web lint, all green. Not tested yet: the new prompt against Gemini (needs the owner's go-ahead), and the final answer evaluation. Chat memory and sessions stay for MVP 2.
+
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).
 

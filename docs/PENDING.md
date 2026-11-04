@@ -2,6 +2,9 @@
 
 The single list of what is left. Read it at the start of a session (it is the shared memory between the owner's two machines, like `DAILY_LOG.md`). Tick items off or delete them when done, and record decisions in `DECISIONS.md`. Last updated 2026-10-30, at the end of Phase 4.
 
+## Update 4 Nov 2026 (PC, friendlier chat): branch `feat/friendly-chat`, D-036
+The prompt, the search for 'hardest problem' questions, the `offtopic` behaviour and the 20-a-minute limit are changed and unit-tested. **Left:** (1) the owner's go-ahead for a live check of about a dozen questions (hey, I am hr, my name is..., hardest problem, who is Arathi, a silly question), then the full answer evaluation on the new prompt and model; (2) the owner merges the PR and redeploys (`pnpm --filter web build`, then `wrangler deploy`); (3) MVP 2 starts after MVP 1 is finished: chat memory and sessions; (4) the owner may add his own words for 'hardest problem' and 'proud of' (a record or two).
+
 ## Update 2 Nov 2026 (laptop): real data drafted, handoff to the PC
 The owner's real details have arrived and the drafts are in `data/portfolio/` (78 records, 66 questions, card content, open questions). The end-to-end plan, the decisions already taken and the approval gates are in **`docs/REAL_DATA_HANDOFF.md`** (decision **D-029**). The section "Owner, at home" below is now mostly done: what remains for the owner is to **review the drafts and answer `data/portfolio/open-questions.md`**, send project pictures (portrait crops; never the HRMS or PM-tool screenshots as they are), and say when to push the UI work that exists only on the laptop. Then Claude follows the handoff: code changes, then index and eval, each live step with the owner's go-ahead.
 ## Update 2 Nov 2026 (PC): real data wired in

@@ -80,6 +80,7 @@ describe("sourceChips", () => {
 
   it("shows none for an I-don't-know or a refusal, and skips ids the site does not ship", () => {
     assert.deepEqual(sourceChips(["a"], records, "abstain"), []);
+    assert.deepEqual(sourceChips(["a"], records, "offtopic"), []);
     assert.deepEqual(sourceChips(["a"], records, "refuse"), []);
     assert.deepEqual(sourceChips(["missing", "a"], records, undefined), [{ id: "a", n: 2, title: "First" }]);
     assert.deepEqual(sourceChips([], records, "answer"), []);

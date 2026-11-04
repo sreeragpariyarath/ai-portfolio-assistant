@@ -4,6 +4,15 @@ A brief record of the work done each day, newest first. Why we chose things: [DE
 
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
 
+## 2026-11-04
+Next: the owner records `docs/demo.gif`; then conversation memory and warmer replies (greetings, introductions, HR visitors), a friendlier limit message, the Fun card, and one fresh evaluation on the live model.
+
+- Live site fixed and updated on 3 Nov (laptop). Chat answered every question with "took too long". The Worker log showed retrieval was fine; a timed test showed `gemini-3.5-flash-lite` needing 20 to 35 seconds for a tiny prompt while `gemini-3.1-flash-lite` needed 2 to 3. We swapped them (D-034), redeployed, and live questions then streamed cited answers.
+- UI on 3 Nov (laptop): the input and quick-question chips glide to the bottom (off with reduced motion), the Skills card has 8 groups from the real records, the Portfolio link is gone from the Contact card and the contact record, a new favicon, and the owner's portrait replaces the cartoon avatar. Not done: the Fun card redesign, and `pnpm ingest` so Qdrant drops the old contact text.
+- Phase 6 README (laptop): the two-line README is now a full project page with a flow diagram, both result tables, run steps, decisions and limitations. Manual: the demo GIF is the owner's; there is no licence file yet.
+- Docs corrected (laptop). Two decisions were both numbered D-034 after the laptop and PC pull requests merged; the live-site one is now D-035. My note that the free plan does not enforce the rate limit was wrong: I sent requests one at a time, while the PC's burst test got 429s (D-035), so the README now says the limit is approximate. The README also says the saved scores cover 73 questions while the file has 81. These log lines were meant to go in with the earlier commits, but my script silently failed on the file's line endings, so they are added here.
+- Tested: every CI check run locally while a GitHub Actions incident held the queue (507 script tests, 74 API tests, 17 browser tests, lint, build, type checks), and `pnpm test:scripts` (507) again for this change.
+
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).
 
@@ -207,7 +216,4 @@ Next: env setup, then Phase 1.
 
 ## 2026-10-27
 - Set up the pnpm monorepo, the Next.js app, and a Cloudflare Worker with a health endpoint.
-- Built the synthetic dataset (40 records, 40 eval cases), the validator and the BM25 retrieval baseline. See [evaluation-notes.md](evaluation-notes.md).- Docs corrected (laptop). Two decisions were both numbered D-034 after the laptop and PC pull requests merged; the live-site one is now D-035, and its references follow. The 3 Nov note that the free plan does not enforce the rate limit was wrong: my test sent requests one at a time, while the PC's burst test got 429s (D-035), so no rate-limit fix is needed and the README now says the limit is approximate. The README also says the saved scores cover 73 questions while the file now has 81.
-- CI: the checks for the README pull request sat queued during a GitHub Actions incident; every check was run locally and passed (507 script tests, 74 API tests, 17 browser tests, lint, build, type checks). Tested for this change: `pnpm test:scripts`.
-
-
+- Built the synthetic dataset (40 records, 40 eval cases), the validator and the BM25 retrieval baseline. See [evaluation-notes.md](evaluation-notes.md).

@@ -2,6 +2,9 @@
 
 The single list of what is left. Read it at the start of a session (it is the shared memory between the owner's two machines, like `DAILY_LOG.md`). Tick items off or delete them when done, and record decisions in `DECISIONS.md`. Last updated 2026-10-30, at the end of Phase 4.
 
+## Update 4 Nov 2026 (laptop, Phase 6): README written; GIF and held-out set left
+The README is rewritten (what it does, architecture diagram, layout, both evaluation tables, run steps, design decisions, limitations); CI already runs the secret-free checks on pull requests. **Left for the owner:** record the demo GIF and save it as `docs/demo.gif` (the README already points to it; the image shows broken until the file is added). **Not built:** a held-out question set (new questions, never used for tuning; the live run needs the owner's go-ahead, about 70 Gemini calls). **Also open, and listed in the README limitations:** conversation memory, a warmer reply to greetings and introductions, a friendlier rate-limit message, the Fun card redesign, the contact-record re-ingest, and `ALLOWED_ORIGIN`. No licence file exists yet: the owner decides which licence to use.
+
 ## Update 2 Nov 2026 (laptop): real data drafted, handoff to the PC
 The owner's real details have arrived and the drafts are in `data/portfolio/` (78 records, 66 questions, card content, open questions). The end-to-end plan, the decisions already taken and the approval gates are in **`docs/REAL_DATA_HANDOFF.md`** (decision **D-029**). The section "Owner, at home" below is now mostly done: what remains for the owner is to **review the drafts and answer `data/portfolio/open-questions.md`**, send project pictures (portrait crops; never the HRMS or PM-tool screenshots as they are), and say when to push the UI work that exists only on the laptop. Then Claude follows the handoff: code changes, then index and eval, each live step with the owner's go-ahead.
 ## Update 2 Nov 2026 (PC): real data wired in

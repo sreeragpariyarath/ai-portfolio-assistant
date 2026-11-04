@@ -249,7 +249,7 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 - **Why not keep 3.5 as primary:** its first-byte delay was far above the 25 s budget in both tests. The cause may be temporary load on Google's side; recheck later with a timed call before switching back.
 - **Open:** the answer-eval numbers in D-017 were measured with 3.5; the final evaluation should use the model that serves the site.
 
-## D-034: The site is live at sreerag.pariyarath.workers.dev; the free-plan rate limit works but is approximate
+## D-035: The site is live at sreerag.pariyarath.workers.dev; the free-plan rate limit works but is approximate
 - **Date:** 2026-11-04 · **Status:** Accepted
 - **Context:** The owner did the account steps (login, three secrets, first deploy). The live address is `https://sreerag.pariyarath.workers.dev`. The first live checks from the command line (no Gemini call except one question) were run on 2026-11-04.
 - **Result:** `/api/health` 200; the home page 200; a public record page 200; the private record's page 404 (it is not in the web bundle); an unknown path 404; a project picture 200 as webp; `GET /api/chat` 405. One typed question ("What did you build for LearnWithHupe?") streamed a first-person answer with seven cited sources, `degraded: false` (dense search worked) and model `gemini-3.1-flash-lite`.

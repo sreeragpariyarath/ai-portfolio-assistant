@@ -60,7 +60,7 @@ Each phase ends runnable and is committed separately.
 - `wrangler secret put` for secrets; deploy the Worker and the web app (one Cloudflare Worker serves both, D-020); add a scheduled trigger that pings Qdrant to prevent suspension; document a `pnpm ingest` re-seed command.
 - Confirm each remote action with the owner first.
 
-### Phase 6: Portfolio polish
+### Phase 6: Portfolio polish (README and CI done 2026-11-04; the demo GIF is the owner's, and the held-out set is not built)
 - README rewrite: architecture diagram, current-vs-planned honesty, setup, eval results table, limitations and quotas, design decisions (why Qdrant, why hybrid, why RRF, client-side fusion vs Qdrant server-side, why synthetic data).
 - GitHub Actions: validate, script tests, API tests, web lint and build on pull requests (evals that need no secrets).
 - Demo GIF. Worker observability is already enabled in the wrangler config.

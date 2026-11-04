@@ -50,7 +50,7 @@ One Cloudflare Worker serves both the static site and `/api/*`, so there is one 
 
 ## Evaluation
 
-Two evaluations run on 73 development questions written from the records (not a held-out set, see Limitations).
+The saved results cover 73 development questions written from the records (not a held-out set, see Limitations). The question file has since grown to 81, and the model has changed (D-034), so a fresh run is still to come.
 
 **Retrieval** ([full table](evals/results/retrieval-comparison.md)): how often the expected records appear in the top 5 or 10.
 
@@ -110,8 +110,8 @@ The full list, with the reasons, is in [docs/DECISIONS.md](docs/DECISIONS.md). T
 
 - **No conversation memory yet.** Each question is answered on its own, so a follow-up such as "tell me more about that" loses its context. Adding recent messages to each request is the next planned change.
 - **Strict on unknowns.** When the records hold nothing relevant, the assistant says so (with a light joke) instead of guessing. Greetings and introductions are not handled warmly enough yet.
-- **Free-tier limits.** Gemini's free tier allows a limited number of requests a day per model, and the Worker allows 10 questions a minute per visitor. When a limit is hit, the page shows a short "try again" message. Cloudflare's rate-limit binding was not enforced on the free plan in our test, so an in-memory limiter is the real guard.
-- **Development questions only.** The 73 evaluation questions were written while building the system, so the scores are optimistic. A held-out set is planned.
+- **Free-tier limits.** Gemini's free tier allows a limited number of requests a day per model, and the Worker allows 10 questions a minute per visitor. When a limit is hit, the page shows a short "try again" message. Cloudflare's rate limit is approximate on the free plan: a quick burst can get a few dozen requests through before it holds (D-035).
+- **Development questions only.** The evaluation questions were written while building the system, so the scores are optimistic. A held-out set is planned.
 - **Qdrant free cluster.** It suspends after about a week without use. A daily scheduled request keeps it active, and `pnpm ingest` rebuilds it if it is ever deleted.
 - **One portfolio, one language.** The records describe one person, in English.
 

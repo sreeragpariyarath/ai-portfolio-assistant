@@ -24,7 +24,7 @@ function numberFlag(name: string, fallback: number): number {
 }
 
 async function main(): Promise<void> {
-  const config = { k: numberFlag("k", 60), depth: numberFlag("depth", 20) };
+  const config = { k: numberFlag("k", 60), depth: numberFlag("depth", 20), bm25Weight: numberFlag("bm25-weight", 1) };
   const write = !process.argv.includes("--no-write");
 
   const envFile = resolve(REPO_ROOT, ".env");

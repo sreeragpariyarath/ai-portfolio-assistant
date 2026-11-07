@@ -50,17 +50,17 @@ One Cloudflare Worker serves both the static site and `/api/*`, so there is one 
 
 ## Evaluation
 
-The saved results cover 73 development questions written from the records (not a held-out set, see Limitations). The question file has since grown to 81, and the model has changed (D-034), so a fresh run is still to come.
+Both evaluations run on 100 development questions written from the records (not a held-out set, see Limitations). They were run on the current records, search settings and model.
 
 **Retrieval** ([full table](evals/results/retrieval-comparison.md)): how often the expected records appear in the top 5 or 10.
 
 | Method | Recall@5 | Recall@10 |
 | --- | ---: | ---: |
-| BM25 (keywords) | 85.7% | 90.7% |
-| Dense (meaning) | 97.2% | 99.6% |
-| Hybrid (BM25 + dense, RRF) | 94.6% | 98.6% |
+| BM25 (keywords) | 80.3% | 81.1% |
+| Dense (meaning) | 93.4% | 95.0% |
+| Hybrid (dense-led, keywords at weight 0.02) | 93.4% | 95.3% |
 
-Dense search alone scored slightly higher on this set. Hybrid stays the default because BM25 protects exact names and terms and the difference is a few cases out of 73 (see decision D-014).
+With equal weights, hybrid search fell behind dense search once the portfolio grew to 126 records (84% against 93% at k=5), because many short records on the same topics let keyword matches push the right record down. Giving the keyword list a very small weight fixed it: dense search leads, and keywords still break ties and rescue exact names (D-038).
 
 **Answers** ([full report](evals/results/answer-eval.md)): rule-based checks on the saved answers.
 
@@ -68,10 +68,10 @@ Dense search alone scored slightly higher on this set. Hybrid stays the default 
 | --- | ---: | ---: |
 | Private text in an answer | 0 | 0 |
 | Planted prompt injections followed | 0 | 0 |
-| Behaviour matches the expected one | 93.2% (68/73) | at least 80% |
-| Expected record cited | 95.2% (59/62) | at least 85% |
+| Behaviour matches the expected one | 90.0% (90/100) | at least 80% |
+| Expected record cited | 96.5% (83/86) | at least 85% |
 
-The checks look at behaviour, citations and privacy. They do not judge the wording.
+The checks look at behaviour, citations and privacy. They do not judge the wording. The ten missed behaviours are mostly questions where the records say nothing and the assistant answered "I don't have that written down" with the label `answer` instead of `abstain` or `qualify`, and two prompt-injection cases that were refused in the text but labelled `answer`.
 
 ## Run it yourself
 
@@ -99,8 +99,8 @@ Setup for accounts and secrets is in [docs/SETUP.md](docs/SETUP.md); the deploy 
 The full list, with the reasons, is in [docs/DECISIONS.md](docs/DECISIONS.md). The main ones:
 
 - **Qdrant for vectors (D-001).** A free managed cluster with payload filters, which the public-only filter needs.
-- **Hybrid search with fusion in our own code (D-005, D-014).** Keywords catch exact names; vectors catch meaning. Fusing the lists in code keeps it simple, testable and comparable under the same evaluation. Qdrant's built-in server-side fusion is the documented alternative.
-- **RRF with k = 60.** A tuning grid found nothing better by more than one case, so the standard value stays.
+- **Dense-led hybrid search with fusion in our own code (D-005, D-014, D-038).** Vectors catch meaning and lead; keywords, at a small weight, catch exact names. Fusing the lists in code keeps it simple, testable and comparable under the same evaluation. Qdrant's built-in server-side fusion is the documented alternative.
+- **RRF with k = 60 and a keyword weight of 0.02.** The standard k stayed; the weight was tuned on the development questions (D-038).
 - **Gemini for embeddings and answers (D-002, D-034).** The main model is `gemini-3.1-flash-lite`, with `gemini-3.5-flash-lite` as the fallback. They were swapped after a timed test showed the 3.5 model needing 20 to 35 seconds for a tiny prompt on the free tier.
 - **One Worker for site and API (D-020).** One deploy, one address, no CORS for the live site.
 - **Private data excluded early (D-008).** Records marked private never reach the index, the search filter or the Worker bundle. A real record must name its source.

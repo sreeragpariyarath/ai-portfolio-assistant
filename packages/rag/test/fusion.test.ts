@@ -76,3 +76,29 @@ describe("hybridSearch", () => {
     assert.throws(() => hybridSearch([], [], { limit: 1.5 }), /limit/);
   });
 });
+
+describe("weights", () => {
+  it("lets a list with a larger weight win a disagreement", () => {
+    const lists = [["a", "b"], ["b", "a"]];
+    assert.equal(rrf(lists, { weights: [1, 0.1] })[0]!.id, "a");
+    assert.equal(rrf(lists, { weights: [0.1, 1] })[0]!.id, "b");
+  });
+
+  it("counts every list equally when no weights are given", () => {
+    const lists = [["a", "b"], ["b", "a"]];
+    assert.deepEqual(rrf(lists), rrf(lists, { weights: [1, 1] }));
+  });
+
+  it("rejects a negative or non-finite weight", () => {
+    assert.throws(() => rrf([["a"]], { weights: [-1] }), /weights/);
+    assert.throws(() => rrf([["a"]], { weights: [Number.NaN] }), /weights/);
+  });
+
+  it("hybridSearch with a tiny keyword weight follows the dense order but still returns keyword-only hits after it", () => {
+    const bm25 = [{ id: "x", score: 9 }, { id: "a", score: 5 }];
+    const dense = [{ id: "a", score: 0.9 }, { id: "b", score: 0.8 }];
+    const result = hybridSearch(bm25, dense, { bm25Weight: 0.02, limit: 3 }).map((hit) => hit.id);
+    assert.deepEqual(result.slice(0, 2), ["a", "b"]);
+    assert.equal(result[2], "x");
+  });
+});

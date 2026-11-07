@@ -11,6 +11,8 @@ export type Method = (typeof METHODS)[number];
 export interface HybridConfig {
   k: number;
   depth: number;
+  // How much the keyword list counts compared with the dense list (default 1).
+  bm25Weight?: number;
 }
 
 export interface Comparison {
@@ -41,7 +43,7 @@ export function hybridRankings(
       const depth = evalCase.scoring === "list" ? publicCount : config.depth;
       return [
         evalCase.id,
-        hybridSearch(bm25.get(evalCase.id) ?? [], dense.get(evalCase.id) ?? [], { k: config.k, depth, limit }),
+        hybridSearch(bm25.get(evalCase.id) ?? [], dense.get(evalCase.id) ?? [], { k: config.k, depth, limit, bm25Weight: config.bm25Weight ?? 1 }),
       ];
     }),
   );

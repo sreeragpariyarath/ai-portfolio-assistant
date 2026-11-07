@@ -106,6 +106,12 @@ describe("buildPrompt", () => {
     assert.ok(/keep personal life private/.test(SYSTEM_INSTRUCTION));
   });
 
+  it("treats a missing record as unknown, never as proof that the owner lacks the experience", () => {
+    assert.ok(/not written down in the records/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Never say the owner has no experience with it/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Only state an absence when a record says so/.test(SYSTEM_INSTRUCTION));
+  });
+
   it("keeps the playful, disposable first sentence for messages that have nothing to do with the owner", () => {
     assert.ok(/behavior offtopic/.test(SYSTEM_INSTRUCTION));
     assert.ok(/replace the first sentence with its own playful line/.test(SYSTEM_INSTRUCTION));

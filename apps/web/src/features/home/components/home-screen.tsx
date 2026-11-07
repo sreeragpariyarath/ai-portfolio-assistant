@@ -7,14 +7,17 @@ import type { CardKind } from "@/features/cards/portfolio-cards";
 import { SITE, STARTERS } from "@/features/home/site";
 import { FluidBackground } from "@/features/water-effect/components/fluid-background";
 import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
+import { isSendKey } from "@/features/home/auto-grow";
 import { StarterIcon } from "./starter-icon";
+import { useAutoGrow } from "./use-auto-grow";
 
 // The one-screen home page: no scrolling, pure white, water that follows the mouse or a finger.
 // `onAsk` starts the chat (task 4.6). Until it is given, the chips fill the input and sending is off.
 export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question: string, card?: CardKind) => void; restoreFocus?: boolean }) {
   const [question, setQuestion] = useState("");
   const inputId = useId();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const multiline = useAutoGrow(inputRef, question);
   const screen = useRef<HTMLElement>(null);
   const canSend = onAsk !== undefined && question.trim() !== "";
   useEffect(() => {
@@ -95,17 +98,24 @@ export function HomeScreen({ onAsk, restoreFocus = false }: { onAsk?: (question:
           <label htmlFor={inputId} className="sr-only">
             {SITE.inputPlaceholder}
           </label>
-          <LiquidGlass radius={999} bezel={12} strength={16} className="question-pill flex items-center py-1.5 pr-1.5 pl-5">
-            <input
+          <LiquidGlass radius={multiline ? 28 : 999} bezel={12} strength={16} className="question-pill flex items-end py-1.5 pr-1.5 pl-5">
+            <textarea
               id={inputId}
               ref={inputRef}
-              type="text"
+              rows={1}
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
+              onKeyDown={(event) => {
+                if (isSendKey({ key: event.key, shiftKey: event.shiftKey, isComposing: event.nativeEvent.isComposing })) {
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }
+              }}
               maxLength={MAX_QUESTION_CHARS}
               autoComplete="off"
+              enterKeyHint="send"
               placeholder={SITE.inputPlaceholder}
-              className="question-input min-w-0 w-full border-none bg-transparent text-base text-neutral-800 placeholder:text-neutral-600"
+              className="question-input min-w-0 w-full resize-none border-none bg-transparent py-[5px] text-base leading-6 text-neutral-800 placeholder:text-neutral-600"
             />
             <button
               type="submit"

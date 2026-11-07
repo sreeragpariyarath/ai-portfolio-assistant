@@ -88,6 +88,15 @@ describe("chatReducer", () => {
 });
 
 describe("splitCitations", () => {
+  it("turns a bracket with several ids into one citation each", () => {
+    const segments = splitCitations("Yes [p-1, d-2].");
+    assert.deepEqual(segments, [
+      { type: "text", text: "Yes " },
+      { type: "cite", id: "p-1", n: 1 },
+      { type: "cite", id: "d-2", n: 2 },
+      { type: "text", text: "." },
+    ]);
+  });
   it("splits text and numbers citations by first appearance", () => {
     const segments = splitCitations("A [p-1] and B [d-2], again A [p-1].");
     assert.deepEqual(segments, [

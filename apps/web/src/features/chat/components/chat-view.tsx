@@ -7,6 +7,7 @@ import { withoutFirstSentence } from "@/features/chat/abstain-lines";
 import { announcementFor } from "@/features/chat/chat-state";
 import type { ChatMessage } from "@/features/chat/chat-state";
 import { splitCitations } from "@/features/chat/citations";
+import { linkify } from "@/features/chat/linkify";
 import type { CardKind } from "@/features/cards/portfolio-cards";
 import { recordPath, sourceChips } from "@/features/records/records";
 import { SITE, STARTERS } from "@/features/home/site";
@@ -46,7 +47,17 @@ function AssistantMessage({ message, titles }: { message: ChatMessage; titles: r
         <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">
           {segments.map((segment, index) =>
             segment.type === "text" ? (
-              <span key={index}>{segment.text}</span>
+              <span key={index}>
+                {linkify(segment.text).map((part, i) =>
+                  part.type === "text" ? (
+                    part.text
+                  ) : (
+                    <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-neutral-950">
+                      {part.text}
+                    </a>
+                  ),
+                )}
+              </span>
             ) : (
               <sup key={index} className="mx-0.5">
                 {/* A new tab, so the conversation stays where it is. */}

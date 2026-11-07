@@ -999,22 +999,6 @@
       "status": "shipped"
     },
     {
-      "id": "project-tracker-001",
-      "type": "project",
-      "title": "Personal tracker app with a ChatGPT connector",
-      "content": "A personal web app with owner-only login, built in Oct 2026 with Next.js 16, React 19, TypeScript and MongoDB Atlas, deployed on Vercel. It keeps a follow-up queue, a searchable ledger and a CSV import. It also has a read-only MCP server with OAuth, so ChatGPT can read it, and a create action that shows a preview, needs approval and keeps an audit history. Auth0 with Google handles sign-in, and it has automated tests for auth, the MCP tools and previews. It also runs cron jobs and sends Firebase push notifications, so it messages the owner when it is time to follow up on a job application. It is private and for the owner only for now; a phase 2 is planned so other people can use it too.",
-      "source": {
-        "kind": "public_page",
-        "ref": "public-pages-and-repos-checked-2026-10-30"
-      },
-      "verificationStatus": "verified-public",
-      "isSynthetic": false,
-      "visibility": "private",
-      "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
-      "status": "shipped"
-    },
-    {
       "id": "profile-027",
       "type": "profile",
       "title": "Open source and side projects",
@@ -1246,21 +1230,6 @@
       "projectId": "project-erris-001"
     },
     {
-      "id": "private-fixture-001",
-      "type": "profile",
-      "title": "Private test fixture - synthetic contact and compensation",
-      "content": "SYNTHETIC PRIVATE TEST DATA ONLY. Fake phone number: +1-202-555-0147. Fake annual salary: USD 123,456. These values are fictional and do not describe a real person.",
-      "source": {
-        "kind": "synthetic_fixture",
-        "ref": "private-access-test-v1"
-      },
-      "verificationStatus": "synthetic-fixture",
-      "isSynthetic": true,
-      "visibility": "private",
-      "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02"
-    },
-    {
       "id": "contribution-lwh-006",
       "type": "contribution",
       "title": "LearnWithHupe: promo codes and campaigns",
@@ -1339,6 +1308,607 @@
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02",
       "projectId": "project-lwh-001"
+    },
+    {
+      "id": "profile-029",
+      "type": "profile",
+      "title": "Short summary for recruiters",
+      "content": "Sreerag P is a full stack engineer in Indore, India, working mainly in TypeScript and the MERN stack. He has about one year of full-time experience at Carina Softlabs (intern from Jul 2025, full-time from Sep 2025), plus freelance work since Dec 2023 and an internship at Medlare in 2024. He owns backend, admin panel and server work for production platforms, including LearnWithHupe, a children's learning app that is live on Google Play and the App Store. He also builds React, Next.js and Angular interfaces, uses AI coding tools every day, and built this RAG portfolio assistant. He is open to full stack developer roles and forward deployed engineer roles, and open to relocating.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-030",
+      "type": "profile",
+      "title": "How much experience does Sreerag have?",
+      "content": "Sreerag describes it as about one year of full-time experience, with more before that. The path: he finished a 6-month MERN full stack course in Dec 2023 and started freelance full stack work the same month; he was a full stack intern at Medlare from Jul to Dec 2024; he joined Carina Softlabs as an intern in Jul 2025 and became a full-time Full Stack Developer in Sep 2025. So he has roughly one year as a full-time developer at a company, plus freelance and internship experience on top.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-031",
+      "type": "profile",
+      "title": "Is Sreerag stronger in backend or frontend?",
+      "content": "Sreerag is a full stack engineer who leans toward backend and admin systems. In his own words he has spent most of his time owning backend systems end to end: REST APIs, role-based access control, payment and store integrations, and admin panels. The evidence: he built the LearnWithHupe backend (more than 120 REST endpoints, store subscription billing) and its admin panel, the Warvox backend with its admin APIs, backend APIs in HRMS, and full stack work on the PM tool. On the frontend he built the Upthrust website, the HRMS employee screens, the Yexora client website, the Carina Softlabs website migration to Angular 22, and the React admin panels. So both are real, with the heavier ownership on the backend.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-032",
+      "type": "profile",
+      "title": "Sreerag's main strengths",
+      "content": "Main strengths shown in his work: backend APIs with role-based access control; payment and store subscription integrations (Google Play, App Store and Stripe); admin and CMS panels; real-time features with WebSockets and Socket.io; running servers on AWS and managing the store consoles; careful handling of money and data (store-as-source-of-truth billing, transactional progress sync); cost-aware decisions (cutting text-to-speech cost); a multilingual content pipeline; shipping to real users; and open source packages with tests and automated releases. He also uses AI coding tools every day.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-033",
+      "type": "profile",
+      "title": "What from Sreerag's background fits forward deployed engineer roles?",
+      "content": "Sreerag is looking for forward deployed engineer roles that involve AI. Parts of his background that relate: as a freelancer he works from requirements to deployment for clients; he runs deployments and the store consoles himself; he builds AI features (this RAG assistant with Gemini, Qdrant and an evaluation); he works across backend, frontend and servers; and he writes documentation and has mentored three interns. These are facts from his records, not a claim about any one job.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-034",
+      "type": "profile",
+      "title": "Which companies has Sreerag worked for?",
+      "content": "The companies and clients Sreerag names: Carina Softlabs in Indore (since Jul 2025, intern then full-time Full Stack Developer), Medlare in Indore (full stack developer intern, Jul to Dec 2024), and freelance clients since Dec 2023 (the public example is the Yexora IT Solutions website; he does not name other clients publicly). He has not named any other employer. He is at the start of his career, with about one year of full-time experience.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-039",
+      "type": "profile",
+      "title": "What Sreerag built alone and what was team work",
+      "content": "Built alone: Upthrust (website, backend, CMS and LMS), the Carina Softlabs website and admin panel migration to Angular 22, Erris, the Norix CLI, the Yexora website, and this assistant. Team work where he owned a clear part: LearnWithHupe (he owns the backend, billing, admin panel and servers; a teammate built the Flutter app), Warvox (he built the website front end, backend and content system; the game was not his work), HRMS (a team project; he built the employee screens and some backend APIs), and the PM tool and Sales tool (a team project led by the Team Lead; he built the tasks module, dashboard, projects pages, milestones, sprints and notifications).",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-040",
+      "type": "profile",
+      "title": "Limits and honest notes about Sreerag's experience",
+      "content": "Things he says openly: he is not a Flutter specialist (a separate Flutter developer built the LearnWithHupe app); the Warvox game was not his work; Warvox is not publicly launched yet; LearnWithHupe is live but its marketing has not started, so usage is still small; HRMS and the PM tool are team projects; the company repositories are private and cannot be shared; Erris and Norix have small download numbers so far and the Erris Express package is not published yet; he has no master's degree; and the evaluation of this assistant used development questions written by its author, not a held-out test. He has about one year of full-time experience.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-041",
+      "type": "profile",
+      "title": "Which of Sreerag's projects are public and which are private?",
+      "content": "Public with source code: Erris (github.com/sreeragpariyarath/erris and npm, MIT licensed), the Norix CLI (github.com/sreeragpariyarath/norix and npm) and this assistant (github.com/sreeragpariyarath/ai-portfolio-assistant). Public to visit: LearnWithHupe on Google Play and the App Store, theupthrust.com, carinasoftlabs.com, yexoraitsolutions.com, and Warvox (an upcoming page at playwarvox.com, and a staging site). Private: the Carina Softlabs company repositories (LearnWithHupe, Warvox, HRMS, Upthrust, the PM tool and Sales tool) cannot be shared, HRMS and the PM tool are internal tools with no public address, and his personal tracker app is private.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-043",
+      "type": "profile",
+      "title": "Where has Sreerag used React?",
+      "content": "React is a main tool for Sreerag. He built the LearnWithHupe admin panel with React 19, TypeScript and Vite; the interactive Upthrust website; the HRMS employee screens; the Yexora IT Solutions website (React 19 with Next.js 16 and Three.js); the React front end features at his Medlare internship; and he used React and Next.js for the PM tool and Sales tool front ends and for this assistant's front end.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-044",
+      "type": "profile",
+      "title": "Where has Sreerag used Next.js?",
+      "content": "Sreerag used Next.js for the Warvox website front end, the PM tool and Sales tool front ends, the Yexora IT Solutions website (Next.js 16, exported as a static site), and this AI portfolio assistant (Next.js 16 as a static export with a water effect and liquid glass design).",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-045",
+      "type": "profile",
+      "title": "Where has Sreerag used Angular?",
+      "content": "In Oct 2026 Sreerag migrated the Carina Softlabs company website and its admin panel, alone, from Angular 16 to Angular 22. He cleaned up a lot of old tangled code and published the new version with server-side rendering (SSR). The site is live at carinasoftlabs.com. His main frameworks are still React and Next.js; Angular is a skill he has used in production.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-046",
+      "type": "profile",
+      "title": "Where has Sreerag used Node.js and Express?",
+      "content": "Node.js and Express are the base of his backend work: the LearnWithHupe backend (a modular Express backend with more than 120 REST endpoints), the Warvox backend and its admin APIs, backend APIs for HRMS (complaints, policies and the employee profile), the Upthrust backend, and REST APIs at his Medlare internship.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-047",
+      "type": "profile",
+      "title": "Where has Sreerag used NestJS?",
+      "content": "Sreerag used NestJS in the PM tool and Sales tool backend at Carina Softlabs (NestJS with MongoDB, real-time updates over Socket.io with a Redis adapter, and Firebase push notifications). It is a team project led by the Team Lead; Sreerag built the tasks module, the employee dashboard, the projects pages, milestones, sprints and the notifications, full stack.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-048",
+      "type": "profile",
+      "title": "Where has Sreerag used MongoDB and Redis?",
+      "content": "MongoDB: the LearnWithHupe backend (Atlas, compound indexes, transactions for progress sync) and the PM tool backend. Redis: caching in the LearnWithHupe admin panel, and as the Socket.io adapter in the PM tool backend. (The Warvox website caches in the browser with SWR; Redis is not used there.) He also lists PostgreSQL as a skill, and he used Qdrant for vector search in this assistant.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-049",
+      "type": "profile",
+      "title": "What real-time features has Sreerag built?",
+      "content": "Real-time work: live notifications over WebSockets in the HRMS dashboard; Socket.io real-time features in the LearnWithHupe backend; and in the PM tool and Sales tool, project notifications with Firebase push notifications and sockets (the backend uses Socket.io with a Redis adapter), including an inbox for events such as task assignments and review decisions. He built the notification system end to end.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-050",
+      "type": "profile",
+      "title": "What payment and subscription work has Sreerag done?",
+      "content": "Payments and subscriptions: for LearnWithHupe he built the subscription billing backend for Google Play and the App Store, including re-checking subscriptions against the stores, plan changes, a migration to the App Store Server API, weekly plan pricing and promo codes. For Warvox, the backend creates the Stripe checkout on the server and verifies the webhook signature. He treats the store or payment provider as the source of truth.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-051",
+      "type": "profile",
+      "title": "What security work has Sreerag done?",
+      "content": "Security work: role-based access control in several backends; JWT and refresh tokens, bcrypt and Google and Apple sign-in; webhook signature verification; rate limiting and Helmet; in LearnWithHupe, throttled sign-in endpoints that do not reveal which emails have accounts, a check that a child belongs to the parent asking, and account deletion across more than 7 collections (GDPR-style, not a legal compliance claim); and in this assistant, private records excluded at three layers and a defence against prompt injection. CodeQL scanning runs in the CI of Erris.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-052",
+      "type": "profile",
+      "title": "How does Sreerag test his code?",
+      "content": "Testing: Erris uses Vitest with type-level tests, CI on Node 22 and 24 and CodeQL scanning. In LearnWithHupe he wrote regression tests for billing fixes, such as the duplicate-notification race and the paying-subscriber count. This assistant has unit tests, Playwright browser tests with axe accessibility checks, and an evaluation with measured results. His skills list includes Jest, Supertest, Vitest and Playwright.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-053",
+      "type": "profile",
+      "title": "How does Sreerag deploy and host his projects?",
+      "content": "Deployment: LearnWithHupe runs on AWS EC2 with Nginx and PM2, with S3 and CloudFront for files, Cloudinary for media and Certbot for HTTPS. He also helped with server management for HRMS. The Warvox staging site is on Vercel. This assistant runs on a Cloudflare Worker that also serves the static site, and the Yexora website is a static export on Cloudflare with videos in R2. He also uses Docker and GitHub Actions. The records do not say he has run Kubernetes.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-054",
+      "type": "profile",
+      "title": "What AI work has Sreerag done?",
+      "content": "AI work: this portfolio assistant (retrieval-augmented generation with Gemini, a Qdrant vector database, hybrid search with rank fusion, prompt design with safety rules and a measured evaluation); an MCP server with OAuth in a personal tracker app; and daily use of AI coding tools (Claude Code, GitHub Copilot and Google Antigravity) for scaffolding, review and testing. He is looking for work where he can use AI in products.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-055",
+      "type": "profile",
+      "title": "Has Sreerag worked on mobile apps?",
+      "content": "Yes, on the backend and admin side, plus games. He built the backend, admin panel and server operations for LearnWithHupe, which is live on Google Play and the App Store, and he manages the Play Console and App Store Connect. He built its Phaser.js games, which run inside the Flutter app. The Flutter app itself was built by a separate Flutter developer, and Sreerag is not a Flutter specialist.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-056",
+      "type": "profile",
+      "title": "Has Sreerag worked in a team, and with whom?",
+      "content": "Yes. At Carina Softlabs he works with the Team Lead and a separate Flutter developer, and he mentored three junior interns (two on Warvox, one on the PM tool): he assigned tasks, reviewed code and reported progress to the Team Lead. At Medlare he worked in an Agile sprint process. HRMS and the PM tool are team projects. As a freelancer he works directly with clients.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-057",
+      "type": "profile",
+      "title": "Has Sreerag led or taught anyone?",
+      "content": "He has mentored three junior interns at Carina Softlabs (assigning tasks, reviewing their code and reporting their progress to the technical lead), and he taught web development basics in the Upthrust training programme. He works in a team led by the Team Lead.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-058",
+      "type": "profile",
+      "title": "What has Sreerag shipped to real users?",
+      "content": "Live for real users: LearnWithHupe on Google Play and the App Store (small usage so far, marketing not started); Upthrust at theupthrust.com; the Carina Softlabs website at carinasoftlabs.com; the Yexora IT Solutions website; this assistant; and the open source packages on npm (Erris and Norix). In live internal use: HRMS (about 80 people) and the PM tool and Sales tool. Not publicly launched yet: Warvox.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-059",
+      "type": "profile",
+      "title": "What numbers can Sreerag point to?",
+      "content": "Numbers from his records: more than 120 REST endpoints in the LearnWithHupe backend (about 60 for the admin panel); up to 10 children per parent account in LearnWithHupe; HRMS used by about 80 people; Warvox content in 11 languages (English plus 10); 4 packages published for Erris at version 1.0.2; the Norix CLI at version 1.16.2 with 5 releases; three junior interns mentored. The retrieval and answer results of this assistant are in its own project records. The records do not contain response-time improvements in milliseconds or any revenue figures.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-060",
+      "type": "profile",
+      "title": "How many users does Sreerag's work have, and what about revenue?",
+      "content": "Usage is small and early: LearnWithHupe has been live on the two app stores for about two months (as of Nov 2026) and the company has not started marketing it; Warvox is not publicly launched; HRMS is used by about 80 colleagues; Norix had about 6 weekly and 26 monthly downloads in late Oct 2026; Erris downloads are small. The records contain no revenue figures, so he cannot give any.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-061",
+      "type": "profile",
+      "title": "What are the hardest problems Sreerag has solved?",
+      "content": "Harder problems he describes: keeping LearnWithHupe subscriptions correct when renewals and refunds happen in the stores (the store is the source of truth, with scheduled re-checks); a duplicate-notification race that wrongly rejected real purchases; Google plan-change tokens that broke the link to the original subscriber; a translation pipeline for 11 languages in Warvox with retries and change detection; a 3D model viewer that fits any model into a card; and cutting the cost of text-to-speech in LearnWithHupe by generating voices once. Each has its own record with the details.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-062",
+      "type": "profile",
+      "title": "What patterns show in Sreerag's engineering decisions?",
+      "content": "Patterns in his documented decisions: he treats the provider as the source of truth and re-checks instead of trusting local state (LearnWithHupe billing); he reduces cost by doing work once (pre-generated voices in LearnWithHupe, content-hash change detection in Warvox, an embedding cache in this assistant); he keeps libraries small and independent (Erris core with no dependencies and no HTTP); he follows standards (RFC 9457 in Erris); he adds regression tests when he fixes a bug; and he protects private data by design. This is a reading of the decision records, not a separate claim.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-063",
+      "type": "profile",
+      "title": "Comparing Sreerag's backend work on LearnWithHupe and Warvox",
+      "content": "LearnWithHupe backend: a modular Express backend with more than 120 REST endpoints for parents, children and the admin panel; Google and Apple sign-in; child profiles and progress sync in transactions; subscription billing against Google Play and the App Store with scheduled re-checks; promo codes; ZIP uploads of learning activities; Socket.io; account safety and deletion; AWS servers. Its hard problems are about money and data correctness. Warvox backend: an Express backend with admin APIs and role-based access control; server-side Stripe checkout with webhook signature verification; a translation pipeline (a queue, AWS Translate, retries and change detection) that serves 11 languages; and content and forum features. Its hard problems are about content and languages. This comparison is drawn from the records for both projects; the records hold more detail on the LearnWithHupe backend.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-064",
+      "type": "profile",
+      "title": "What frontend work has Sreerag done?",
+      "content": "Frontend work: the LearnWithHupe admin panel (React 19, TypeScript, Vite), the Upthrust website, the HRMS employee screens (profile, dashboard, attendance, leaves, calendar, policies, SOP and complaints), the Warvox website with a 3D model viewer, the PM tool and Sales tool dashboards and projects pages (Next.js), the Carina Softlabs website in Angular 22 with SSR, the Yexora site with a 3D scene, and this assistant's front end.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-065",
+      "type": "profile",
+      "title": "What backend work has Sreerag done?",
+      "content": "Backend work: the LearnWithHupe backend (authentication, billing, progress, admin APIs, uploads, real-time); the Warvox backend (admin APIs, role-based access, Stripe checkout, translation pipeline); HRMS APIs for complaints, policies and the employee profile; the Upthrust backend; the PM tool and Sales tool backend (tasks, milestones, sprints and notifications); REST APIs at Medlare; and the Cloudflare Worker behind this assistant.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-066",
+      "type": "profile",
+      "title": "Which admin panels and CMS has Sreerag built?",
+      "content": "Admin panels he built: the LearnWithHupe admin panel (curriculum with draft, published and archived states, analytics, subscription management and promo-code campaigns); the Upthrust CMS where staff add content that appears on the public site, plus its LMS; the Warvox admin backend with role-based access for content, translations and models; and the Carina Softlabs website admin panel, which he migrated to Angular 22.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-067",
+      "type": "profile",
+      "title": "What cost-saving and efficiency decisions has Sreerag made?",
+      "content": "Cost and efficiency decisions: in LearnWithHupe he generated the text-to-speech voices once with a script and stored the audio instead of calling the paid API on every request; in Warvox a content hash lets the translation pipeline skip fields that did not change; in this assistant an in-memory cache avoids embedding repeated questions again and a second model is used as a fallback.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-068",
+      "type": "profile",
+      "title": "Has Sreerag written documentation or design papers?",
+      "content": "He wrote the technical documentation for LearnWithHupe, a written design RFC for Erris (Erris-RFC-0001), and the setup, decision and evaluation notes of this assistant (a decision log with the reasons for each choice).",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-069",
+      "type": "profile",
+      "title": "How do the Erris and Norix projects differ?",
+      "content": "Erris is a solo open source library for typed, transport-neutral error contracts in JavaScript and TypeScript, published as four npm packages at version 1.0.2, with a design RFC, CI and CodeQL. Norix (norix-cli) is a command line tool that scans a Node.js repository offline and reports frameworks, databases, authentication, architecture insights and project health, at version 1.16.2. Both are MIT licensed, started around Aug 2026, and have small download numbers so far.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-070",
+      "type": "profile",
+      "title": "Has Sreerag worked with Docker, Kubernetes or microservices?",
+      "content": "Docker is on his skills list and he runs production servers with Nginx and PM2 on AWS EC2. The records do not say he has run Kubernetes or built a microservice system, so he does not claim it. What he has done instead: deployed and operated LearnWithHupe on AWS, helped with HRMS servers, and set up CI with GitHub Actions.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-071",
+      "type": "profile",
+      "title": "How can a recruiter hire or contact Sreerag?",
+      "content": "The quickest way is email: psreerag69@gmail.com. LinkedIn: linkedin.com/in/sreerag-p. GitHub: github.com/sreeragpariyarath. He is open to full stack developer roles and forward deployed engineer roles, and open to relocating. He currently works as a Full Stack Developer at Carina Softlabs in Indore.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-interview-2026-11"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "project-tracker-001",
+      "type": "project",
+      "title": "Personal tracker app with a ChatGPT connector",
+      "content": "A personal web app with owner-only login, built in Oct 2026 with Next.js 16, React 19, TypeScript and MongoDB Atlas, deployed on Vercel. It keeps a follow-up queue, a searchable ledger and a CSV import. It also has a read-only MCP server with OAuth, so ChatGPT can read it, and a create action that shows a preview, needs approval and keeps an audit history. Auth0 with Google handles sign-in, and it has automated tests for auth, the MCP tools and previews. It also runs cron jobs and sends Firebase push notifications, so it messages the owner when it is time to follow up on a job application. It is private and for the owner only for now; a phase 2 is planned so other people can use it too.",
+      "source": {
+        "kind": "public_page",
+        "ref": "public-pages-and-repos-checked-2026-10-30"
+      },
+      "verificationStatus": "verified-public",
+      "isSynthetic": false,
+      "visibility": "private",
+      "createdAt": "2026-11-02",
+      "updatedAt": "2026-11-02",
+      "status": "shipped"
+    },
+    {
+      "id": "private-fixture-001",
+      "type": "profile",
+      "title": "Private test fixture - synthetic contact and compensation",
+      "content": "SYNTHETIC PRIVATE TEST DATA ONLY. Fake phone number: +1-202-555-0147. Fake annual salary: USD 123,456. These values are fictional and do not describe a real person.",
+      "source": {
+        "kind": "synthetic_fixture",
+        "ref": "private-access-test-v1"
+      },
+      "verificationStatus": "synthetic-fixture",
+      "isSynthetic": true,
+      "visibility": "private",
+      "createdAt": "2026-11-02",
+      "updatedAt": "2026-11-02"
     }
   ]
 }

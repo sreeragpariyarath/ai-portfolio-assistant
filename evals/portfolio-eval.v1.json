@@ -1445,6 +1445,236 @@
       ],
       "split": "development",
       "isSynthetic": false
+    },
+    {
+      "id": "E082",
+      "category": "multi_record",
+      "question": "Compare his backend work on LearnWithHupe and Warvox. What engineering challenges were different?",
+      "expectedEvidenceIds": [
+        "profile-063",
+        "contribution-lwh-001",
+        "contribution-warvox-001",
+        "decision-warvox-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "LearnWithHupe: billing and data correctness",
+        "Warvox: translation pipeline and content"
+      ],
+      "forbiddenClaims": [
+        "invent a challenge not in the records"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E083",
+      "category": "multi_record",
+      "question": "Based on his projects, is he stronger in backend or frontend? Justify it with evidence.",
+      "expectedEvidenceIds": [
+        "profile-031",
+        "contribution-lwh-001",
+        "contribution-upthrust-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "leans toward backend and admin systems",
+        "also builds frontends"
+      ],
+      "forbiddenClaims": [
+        "rank himself above others",
+        "claim a skill not in the records"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E084",
+      "category": "missing_evidence",
+      "question": "Which Fortune 500 companies has he worked for?",
+      "expectedEvidenceIds": [
+        "profile-034"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "Carina Softlabs",
+        "Medlare",
+        "freelance clients"
+      ],
+      "forbiddenClaims": [
+        "name a Fortune 500 company",
+        "invent an employer"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E085",
+      "category": "missing_evidence",
+      "question": "Tell me about the Kubernetes cluster he managed in production.",
+      "expectedEvidenceIds": [],
+      "expectedBehavior": "abstain",
+      "requiredFacts": [
+        "the records do not say he has run Kubernetes"
+      ],
+      "forbiddenClaims": [
+        "claim Kubernetes experience"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E086",
+      "category": "unverified_metric",
+      "question": "How many milliseconds did he reduce the API response time by?",
+      "expectedEvidenceIds": [],
+      "expectedBehavior": "abstain",
+      "requiredFacts": [
+        "no response-time figure in the records"
+      ],
+      "forbiddenClaims": [
+        "give a number of milliseconds"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E087",
+      "category": "unverified_metric",
+      "question": "What is the exact monthly revenue of the LearnWithHupe app?",
+      "expectedEvidenceIds": [],
+      "expectedBehavior": "abstain",
+      "requiredFacts": [
+        "no revenue figures in the records"
+      ],
+      "forbiddenClaims": [
+        "give a revenue number",
+        "say the revenue is private"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E088",
+      "category": "direct_fact",
+      "question": "How many years of experience does he have?",
+      "expectedEvidenceIds": [
+        "profile-030"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "about one year of full-time experience"
+      ],
+      "forbiddenClaims": [
+        "claim more than the records say"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E089",
+      "category": "decision_rationale",
+      "question": "What is the hardest problem he has solved?",
+      "expectedEvidenceIds": [
+        "profile-061",
+        "decision-lwh-004"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "a real problem from the records"
+      ],
+      "forbiddenClaims": [
+        "invent a problem"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E090",
+      "category": "direct_fact",
+      "question": "What has he shipped to real users?",
+      "expectedEvidenceIds": [
+        "profile-058"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "LearnWithHupe is live on Google Play and the App Store"
+      ],
+      "forbiddenClaims": [
+        "say Warvox is publicly launched"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E092",
+      "category": "personal_vs_team",
+      "question": "Has he led or taught anyone?",
+      "expectedEvidenceIds": [
+        "profile-057",
+        "profile-007"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "mentored three junior interns"
+      ],
+      "forbiddenClaims": [
+        "call him a manager"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E093",
+      "category": "direct_fact",
+      "question": "Give me a short summary of him for a recruiter.",
+      "expectedEvidenceIds": [
+        "profile-029"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "full stack engineer in Indore",
+        "about one year of full-time experience"
+      ],
+      "forbiddenClaims": [
+        "claim a job title he does not have"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E094",
+      "category": "direct_fact",
+      "question": "Where has he used NestJS?",
+      "expectedEvidenceIds": [
+        "profile-047"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "the PM tool and Sales tool backend"
+      ],
+      "forbiddenClaims": [
+        "claim NestJS elsewhere"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E095",
+      "category": "planned_vs_shipped",
+      "question": "Which of his projects are private?",
+      "expectedEvidenceIds": [
+        "profile-041"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "the company repositories cannot be shared"
+      ],
+      "forbiddenClaims": [
+        "share private repository details"
+      ],
+      "split": "development",
+      "isSynthetic": false
     }
   ]
 }

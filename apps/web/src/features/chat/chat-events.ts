@@ -3,7 +3,7 @@ import type { SseFrame } from "./sse.ts";
 // The four events POST /api/chat streams (apps/api/src/chat.ts). Pure logic with no imports besides
 // the frame type, so the root test suite can run it.
 
-export type Behavior = "answer" | "qualify" | "abstain" | "refuse";
+export type Behavior = "answer" | "qualify" | "abstain" | "refuse" | "offtopic";
 
 export type ChatEvent =
   | { type: "meta"; behavior: Behavior; behaviorValid: boolean; retrieved: string[]; degraded: boolean }
@@ -23,7 +23,7 @@ export class MalformedEventError extends Error {
   }
 }
 
-const BEHAVIORS: readonly string[] = ["answer", "qualify", "abstain", "refuse"];
+const BEHAVIORS: readonly string[] = ["answer", "qualify", "abstain", "refuse", "offtopic"];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -56,7 +56,7 @@ export function decodeChatEvent(frame: SseFrame): ChatEvent | null {
   if (name === "meta") {
     const { behavior, behaviorValid, retrieved, degraded } = payload;
     if (typeof behavior !== "string" || !BEHAVIORS.includes(behavior)) {
-      throw new MalformedEventError(name, "behavior must be answer, qualify, abstain or refuse");
+      throw new MalformedEventError(name, "behavior must be answer, qualify, abstain, refuse or offtopic");
     }
     if (typeof behaviorValid !== "boolean" || typeof degraded !== "boolean") {
       throw new MalformedEventError(name, "behaviorValid and degraded must be booleans");

@@ -1045,11 +1045,11 @@
       ],
       "expectedBehavior": "answer",
       "requiredFacts": [
-        "not deployed yet",
-        "deployment is the next phase"
+        "deployed",
+        "this site is the live version"
       ],
       "forbiddenClaims": [
-        "claim it is live online"
+        "claim it is not deployed yet"
       ],
       "split": "development",
       "isSynthetic": false

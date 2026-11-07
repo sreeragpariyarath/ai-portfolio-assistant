@@ -122,7 +122,7 @@ describe("splitCitations", () => {
 });
 
 describe("announcementFor", () => {
-  const done = (state: ChatState, id: string, behavior?: "answer" | "abstain") => {
+  const done = (state: ChatState, id: string, behavior?: "answer" | "abstain" | "offtopic") => {
     let next = state;
     if (behavior) next = chatReducer(next, { type: "event", id, event: { type: "meta", behavior, behaviorValid: true, retrieved: [], degraded: false } });
     return chatReducer(next, { type: "event", id, event: { type: "done", citations: ["p-1"], invalidCitationsDropped: 0, truncated: false, model: "m" } });
@@ -138,8 +138,8 @@ describe("announcementFor", () => {
   });
 
   it("adds the note for an answer that is not a plain answer", () => {
-    // An abstain reply opens with a stored line (see "abstain replies" below) instead of the model's first sentence.
-    const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "abstain");
+    // An off-topic reply opens with a stored line (see "off-topic replies" below) instead of the model's first sentence.
+    const state = done(token(ask(initialChatState, "a1"), "a1", "I don't have that."), "a1", "offtopic");
     const lead = state.messages[1]?.lead;
     assert.ok(lead !== undefined);
     assert.equal(announcementFor(state.messages), lead);
@@ -194,8 +194,8 @@ describe("stored cards", () => {
   });
 });
 
-describe("abstain replies", () => {
-  const events = (behavior: "abstain" | "refuse") => {
+describe("off-topic replies", () => {
+  const events = (behavior: "abstain" | "refuse" | "offtopic") => {
     let state = chatReducer(initialChatState, { type: "ask", id: "a1", question: "What is your favourite colour?" });
     state = chatReducer(state, { type: "event", id: "a1", event: { type: "meta", behavior, behaviorValid: true, retrieved: [], degraded: false } });
     state = chatReducer(state, { type: "event", id: "a1", event: { type: "token", text: "I do not have that. I can talk about projects." } });
@@ -203,10 +203,16 @@ describe("abstain replies", () => {
   };
 
   it("gets a stored opening line, and the announcement swaps the model's first sentence for it", () => {
-    const state = events("abstain");
+    const state = events("offtopic");
     const lead = state.messages[1]?.lead;
     assert.ok(lead !== undefined && lead.length > 20);
     assert.equal(announcementFor(state.messages), `${lead} I can talk about projects.`);
+  });
+
+  it("never gets one on a plain \"I do not have that\" reply, which keeps the model's own polite words", () => {
+    const state = events("abstain");
+    assert.equal(state.messages[1]?.lead, undefined);
+    assert.match(announcementFor(state.messages), /^I do not have that\. I can talk about projects\./);
   });
 
   it("never gets one on a refusal", () => {

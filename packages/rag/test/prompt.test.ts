@@ -85,11 +85,11 @@ describe("buildPrompt", () => {
     assert.ok(/Say "we" or "our team" for team work/.test(SYSTEM_INSTRUCTION));
   });
 
-  it("asks for plain, short, friendly English without filler or more than one emoji", () => {
+  it("asks for plain, short, friendly English without filler or more than two emojis", () => {
     assert.ok(/Voice:/.test(SYSTEM_INSTRUCTION) && /Tone:/.test(SYSTEM_INSTRUCTION));
     assert.ok(/plain English and short sentences/i.test(SYSTEM_INSTRUCTION));
     assert.ok(/Great question/.test(SYSTEM_INSTRUCTION) && /I would be happy to/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/At most one emoji in the whole reply/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/At most two emojis in the whole reply/.test(SYSTEM_INSTRUCTION));
     assert.ok(/No sarcasm and no puns/.test(SYSTEM_INSTRUCTION));
   });
 
@@ -99,18 +99,30 @@ describe("buildPrompt", () => {
     assert.ok(/in your own words/.test(SYSTEM_INSTRUCTION));
   });
 
-  it("keeps the first sentence of an abstain reply disposable, then offers topics from the records", () => {
+  it("answers a real question that has no record plainly and politely, with no joke", () => {
     assert.ok(/behavior abstain/.test(SYSTEM_INSTRUCTION) && /hold nothing relevant/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/replace that first sentence with its own line/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/No jokes here and no citations/.test(SYSTEM_INSTRUCTION));
     assert.ok(/naming only topics that appear in the records/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/needs no citation/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/keep personal life private/.test(SYSTEM_INSTRUCTION));
   });
 
-  it("treats small talk as a normal answer with no citation, so it is never shown as an I-don't-know", () => {
-    assert.ok(/Small talk/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/use behavior answer, and do not cite anything/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/only a pure greeting or thanks/.test(SYSTEM_INSTRUCTION));
+  it("keeps the playful, disposable first sentence for messages that have nothing to do with the owner", () => {
+    assert.ok(/behavior offtopic/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/replace the first sentence with its own playful line/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Do not use offtopic for a real question about the owner's work or life/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("treats greetings, thanks and introductions as a normal answer with no citation, never an I-don't-know", () => {
+    assert.ok(/Small talk and introductions/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Use behavior answer and do not cite anything/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/I am HR/.test(SYSTEM_INSTRUCTION) && /my name is Ren/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Do not confirm who someone says they are/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Never start an ordinary answer with a greeting/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("writes to a recruiter in a more professional way, and treats \"hardest problem\" as a real question", () => {
+    assert.ok(/recruiter, HR or a hiring manager/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/the hardest problem/.test(SYSTEM_INSTRUCTION) && /closest true example/.test(SYSTEM_INSTRUCTION));
   });
 
   it("keeps refusals friendly but firm, with no hint, and never lets a joke create a fact", () => {

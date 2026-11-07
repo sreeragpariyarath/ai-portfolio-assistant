@@ -126,7 +126,8 @@ export function scoreAnswer(evalCase: EvalCase, answer: CachedAnswer, markers: P
     expectedBehavior: evalCase.expectedBehavior,
     behavior: parsed.behavior,
     behaviorValid: parsed.behaviorValid,
-    behaviorMatch: parsed.behaviorValid && parsed.behavior === evalCase.expectedBehavior,
+    // "offtopic" is a kind of "abstain" (nothing in the records supports an answer), so it counts for an abstain case.
+    behaviorMatch: parsed.behaviorValid && (parsed.behavior === evalCase.expectedBehavior || (evalCase.expectedBehavior === "abstain" && parsed.behavior === "offtopic")),
     evidenceExpected,
     evidenceRetrieved: evidenceExpected && answer.retrievedIds.some((id) => expected.has(id)),
     evidenceCited: evidenceExpected && parsed.citations.some((id) => expected.has(id)),
@@ -170,7 +171,7 @@ export interface Summary {
   models: Record<string, number>;
 }
 
-const ALL_BEHAVIORS = [...BEHAVIORS, "unknown"];
+const ALL_BEHAVIORS = [...BEHAVIORS, "offtopic", "unknown"];
 
 export function summarize(scores: CaseScore[]): Summary {
   const byExpected: Summary["byExpected"] = {};

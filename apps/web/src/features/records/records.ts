@@ -70,7 +70,7 @@ export function sourceChips(
   behavior: string | undefined,
   max = 3,
 ): SourceChip[] {
-  if (behavior === "abstain" || behavior === "refuse") return [];
+  if (behavior === "abstain" || behavior === "refuse" || behavior === "offtopic") return [];
   const chips: SourceChip[] = [];
   citations.forEach((id, index) => {
     const record = records.find((candidate) => candidate.id === id);

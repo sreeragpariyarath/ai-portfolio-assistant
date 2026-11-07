@@ -13,6 +13,8 @@ import { SITE, STARTERS } from "@/features/home/site";
 import { CardReply } from "@/features/cards/components/card-reply";
 import { LiquidGlass } from "@/features/water-effect/components/liquid-glass";
 import { StarterIcon } from "@/features/home/components/starter-icon";
+import { isSendKey } from "@/features/home/auto-grow";
+import { useAutoGrow } from "@/features/home/components/use-auto-grow";
 import { withDockGlide } from "./dock-glide";
 
 function TypingDots() {
@@ -127,7 +129,8 @@ export function ChatView({
     };
   }, [hasCitations, titles.length]);
   const inputId = useId();
-  const input = useRef<HTMLInputElement>(null);
+  const input = useRef<HTMLTextAreaElement>(null);
+  const multiline = useAutoGrow(input, question);
 
   // The chat replaces the home screen, so whatever had focus is gone: put it in the chat input.
   useEffect(() => {
@@ -194,8 +197,8 @@ export function ChatView({
         <ol className="mx-auto flex max-w-3xl flex-col gap-6 py-4" aria-label={`Conversation with ${SITE.name}'s assistant`}>
           {messages.map((message, index) =>
             message.role === "user" ? (
-              <li key={message.id} className="flex justify-center">
-                <p className={`max-w-[85%] glass-bubble rounded-3xl px-4 py-2 text-[0.95rem] text-neutral-900 [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
+              <li key={message.id} className="flex justify-end">
+                <p className={`max-w-[85%] glass-bubble rounded-3xl px-4 py-2 text-[0.95rem] whitespace-pre-wrap text-neutral-900 [overflow-wrap:anywhere] ${index >= messages.length - 2 ? "anim-pop" : ""}`}>{message.text}</p>
               </li>
             ) : (
               <li key={message.id}>
@@ -247,17 +250,24 @@ export function ChatView({
             <label htmlFor={inputId} className="sr-only">
               {SITE.inputPlaceholder}
             </label>
-            <LiquidGlass radius={999} bezel={12} strength={16} className="question-pill flex items-center bg-neutral-100/60 py-1.5 pr-1.5 pl-5">
-              <input
+            <LiquidGlass radius={multiline ? 28 : 999} bezel={12} strength={16} className="question-pill flex items-end bg-neutral-100/60 py-1.5 pr-1.5 pl-5">
+              <textarea
                 id={inputId}
                 ref={input}
-                type="text"
+                rows={1}
                 value={question}
                 onChange={(event) => setQuestion(event.target.value)}
+                onKeyDown={(event) => {
+                  if (isSendKey({ key: event.key, shiftKey: event.shiftKey, isComposing: event.nativeEvent.isComposing })) {
+                    event.preventDefault();
+                    event.currentTarget.form?.requestSubmit();
+                  }
+                }}
                 maxLength={MAX_QUESTION_CHARS}
                 autoComplete="off"
+                enterKeyHint="send"
                 placeholder="Ask me anything"
-                className="question-input min-w-0 w-full border-none bg-transparent text-base text-neutral-800 placeholder:text-neutral-600"
+                className="question-input min-w-0 w-full resize-none border-none bg-transparent py-[5px] text-base leading-6 text-neutral-800 placeholder:text-neutral-600"
               />
               {busy ? (
                 <button

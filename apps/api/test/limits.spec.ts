@@ -132,14 +132,14 @@ describe("POST /api/chat rate limit", () => {
     expect(checks).toBe(0);
   });
 
-  it("is wired to the real binding in the default Worker: the 11th request in a minute is refused", async () => {
+  it("is wired to the real binding in the default Worker: the 21st request in a minute is refused", async () => {
     // Invalid bodies, so no upstream is reached. Only this file sends POSTs through SELF.
-    // The limit counts per 60-second window, so if a window boundary falls in the middle of the twelve requests
-    // the counter restarts and the 11th is not refused. That is the window, not a bug: try again with a new
+    // The limit counts per 60-second window, so if a window boundary falls in the middle of the twenty-two requests
+    // the counter restarts and the 21st is not refused. That is the window, not a bug: try again with a new
     // client address (a fresh counter) before concluding anything.
     const run = async (ip: string) => {
       const statuses: number[] = [];
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 22; i++) {
         const response = await SELF.fetch("https://example.com/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json", "CF-Connecting-IP": ip },
@@ -151,7 +151,7 @@ describe("POST /api/chat rate limit", () => {
       return statuses;
     };
 
-    const expected = [...Array(10).fill(400), 429, 429];
+    const expected = [...Array(20).fill(400), 429, 429];
     let statuses = await run("192.0.2.55");
     for (const ip of ["192.0.2.56", "192.0.2.57"]) {
       if (JSON.stringify(statuses) === JSON.stringify(expected)) break;

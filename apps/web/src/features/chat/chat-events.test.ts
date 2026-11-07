@@ -11,7 +11,7 @@ describe("decodeChatEvent", () => {
   });
 
   it("decodes every behavior the API can send", () => {
-    for (const behavior of ["answer", "qualify", "abstain", "refuse"]) {
+    for (const behavior of ["answer", "qualify", "abstain", "refuse", "offtopic"]) {
       const event = decodeChatEvent(frame("meta", { behavior, behaviorValid: true, retrieved: [], degraded: false }));
       assert.equal(event?.type === "meta" && event.behavior, behavior);
     }

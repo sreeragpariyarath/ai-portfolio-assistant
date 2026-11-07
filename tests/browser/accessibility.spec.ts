@@ -230,7 +230,7 @@ for (const viewport of [{ width: 360, height: 640 }, { width: 1280, height: 800 
   });
 }
 
-test("an I-don't-know reply opens with a stored line; a refusal does not", async ({ page }) => {
+test("an off-topic reply opens with a stored line; a plain I-don't-have-that and a refusal do not", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("textbox").fill("nothing");
   await page.getByRole("textbox").press("Enter");
@@ -253,6 +253,12 @@ test("an I-don't-know reply opens with a stored line; a refusal does not", async
   await expect(page.locator("ol").getByText("That one stays private")).toHaveCount(0);
   await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
   await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
+  await expect(page.locator("li p.font-medium")).toHaveCount(1);
+
+  // A real question the records do not cover is a plain abstain: no stored line is added.
+  await page.getByRole("textbox").fill("unknown");
+  await page.getByRole("textbox").press("Enter");
+  await expect(page.locator("ol").getByText("I do not have that information").last()).toBeVisible();
   await expect(page.locator("li p.font-medium")).toHaveCount(1);
 });
 

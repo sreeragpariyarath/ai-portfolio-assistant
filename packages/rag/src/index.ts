@@ -22,7 +22,7 @@ export type { CachedEmbedOptions, EmbeddingCacheStats } from "./embedding-cache.
 export { PUBLIC_ONLY_FILTER, denseSearch, denseSearchByVector } from "./dense.ts";
 export type { DenseDeps } from "./dense.ts";
 export { hybridSearch, rrf } from "./fusion.ts";
-export { CANDIDATE_DEPTH, CHALLENGE_DECISIONS, CONTEXT_LIMIT, createCorpus, isChallengeQuestion, retrieve, searchText, toContextRecord } from "./retrieve.ts";
+export { BM25_WEIGHT, CANDIDATE_DEPTH, CHALLENGE_DECISIONS, CONTEXT_LIMIT, createCorpus, isChallengeQuestion, retrieve, searchText, toContextRecord } from "./retrieve.ts";
 export type { ContextRecord, Corpus, DenseSearcher, PublicRecord, RetrievalResult } from "./retrieve.ts";
 export type { HybridOptions, RrfOptions } from "./fusion.ts";
 export { GeminiError, createGeminiClient } from "./gemini.ts";

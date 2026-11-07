@@ -7,6 +7,10 @@ import type { PromptRecord } from "./prompt.ts";
 
 export const CONTEXT_LIMIT = 8;
 export const CANDIDATE_DEPTH = 20;
+// The keyword list counts only a little against the dense list (D-038). With equal weights, the many short records
+// about the same topics let keyword matches push the right record out of the top few; with a tiny weight the
+// keyword list still breaks ties and rescues an exact name or term, and the dense list leads.
+export const BM25_WEIGHT = 0.02;
 
 export interface PublicRecord {
   id: string;
@@ -90,7 +94,7 @@ export async function retrieve(
 
   // Drop any dense hit that is not in the public corpus (a private or stale Qdrant point).
   const knownDense = denseHits.filter((hit) => corpus.records.has(hit.id));
-  const fused = hybridSearch(bm25Hits, knownDense, { depth: CANDIDATE_DEPTH, limit });
+  const fused = hybridSearch(bm25Hits, knownDense, { depth: CANDIDATE_DEPTH, limit, bm25Weight: BM25_WEIGHT });
 
   const records = fused.flatMap((hit) => {
     const record = corpus.records.get(hit.id);

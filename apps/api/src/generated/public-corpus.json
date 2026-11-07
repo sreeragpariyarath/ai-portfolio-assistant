@@ -205,10 +205,10 @@
       "id": "contribution-portfolio-001",
       "type": "contribution",
       "title": "AI portfolio assistant: retrieval and evaluation",
-      "content": "Retrieval uses hybrid search: BM25 keyword search and dense vector search, combined with reciprocal rank fusion. On 73 development questions the hybrid search found the needed evidence in the top 10 results 98.6% of the time. A separate answer evaluation checked 73 answers with rules: no private content leaked, no injected instruction followed, the expected evidence cited 95.2% of the time and the right behaviour 93.2% of the time. These were development questions that the same author wrote, so they are not a held-out test.",
+      "content": "Retrieval uses hybrid search led by dense (meaning) search: BM25 keyword search adds a small weight, and the two lists are combined with reciprocal rank fusion. On 100 development questions (86 of them with expected evidence) the search found the needed evidence in the top 10 results 95.3% of the time. A separate answer evaluation checked 100 answers with rules: no private content leaked, no injected instruction followed, the expected evidence cited 96.5% of the time and the right behaviour 90.0% of the time. These were development questions that the same author wrote, so they are not a held-out test.",
       "verificationStatus": "verified-public",
       "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
+      "updatedAt": "2026-11-07",
       "projectId": "project-portfolio-001"
     },
     {
@@ -829,7 +829,7 @@
       "id": "profile-053",
       "type": "profile",
       "title": "How does Sreerag deploy and host his projects?",
-      "content": "Deployment: LearnWithHupe runs on AWS EC2 with Nginx and PM2, with S3 and CloudFront for files, Cloudinary for media and Certbot for HTTPS. He also helped with server management for HRMS. The Warvox staging site is on Vercel. This assistant runs on a Cloudflare Worker that also serves the static site, and the Yexora website is a static export on Cloudflare with videos in R2. He also uses Docker and GitHub Actions. The records do not say he has run Kubernetes.",
+      "content": "Deployment: LearnWithHupe runs on AWS EC2 with Nginx and PM2, with S3 and CloudFront for files, Cloudinary for media and Certbot for HTTPS. He also helped with server management for HRMS. The Warvox staging site is on Vercel. This assistant runs on a Cloudflare Worker that also serves the static site, and the Yexora website is a static export on Cloudflare with videos in R2. He also uses Docker and GitHub Actions. Kubernetes is not mentioned in his records.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-07",
       "updatedAt": "2026-11-07"
@@ -883,7 +883,7 @@
       "id": "profile-059",
       "type": "profile",
       "title": "What numbers can Sreerag point to?",
-      "content": "Numbers from his records: more than 120 REST endpoints in the LearnWithHupe backend (about 60 for the admin panel); up to 10 children per parent account in LearnWithHupe; HRMS used by about 80 people; Warvox content in 11 languages (English plus 10); 4 packages published for Erris at version 1.0.2; the Norix CLI at version 1.16.2 with 5 releases; three junior interns mentored. The retrieval and answer results of this assistant are in its own project records. The records do not contain response-time improvements in milliseconds or any revenue figures.",
+      "content": "Numbers from his records: more than 120 REST endpoints in the LearnWithHupe backend (about 60 for the admin panel); up to 10 children per parent account in LearnWithHupe; HRMS used by about 80 people; Warvox content in 11 languages (English plus 10); 4 packages published for Erris at version 1.0.2; the Norix CLI at version 1.16.2 with 5 releases; three junior interns mentored. The retrieval and answer results of this assistant are in its own project records. The records do not contain response-time improvements in milliseconds or any revenue figures. He prefers to share verified figures and does not invent performance improvements, uptime percentages or user counts. His backend work includes automated tests with Jest and Supertest, store subscription integrations, Stripe payments, WebSockets and a multilingual content system.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-07",
       "updatedAt": "2026-11-07"
@@ -981,8 +981,8 @@
     {
       "id": "profile-070",
       "type": "profile",
-      "title": "Has Sreerag worked with Docker, Kubernetes or microservices?",
-      "content": "Docker is on his skills list and he runs production servers with Nginx and PM2 on AWS EC2. The records do not say he has run Kubernetes or built a microservice system, so he does not claim it. What he has done instead: deployed and operated LearnWithHupe on AWS, helped with HRMS servers, and set up CI with GitHub Actions.",
+      "title": "Docker, Kubernetes and microservices in Sreerag's records",
+      "content": "Docker is on Sreerag's skills list, and he runs production servers with Nginx and PM2 on AWS EC2. Kubernetes and microservice systems are not mentioned in his records, so there is nothing written down about them. What the records do show: he deployed and operates LearnWithHupe on AWS, helped with HRMS servers, and set up CI with GitHub Actions.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-07",
       "updatedAt": "2026-11-07"
@@ -992,6 +992,60 @@
       "type": "profile",
       "title": "How can a recruiter hire or contact Sreerag?",
       "content": "The quickest way is email: psreerag69@gmail.com. LinkedIn: linkedin.com/in/sreerag-p. GitHub: github.com/sreeragpariyarath. He is open to full stack developer roles and forward deployed engineer roles, and open to relocating. He currently works as a Full Stack Developer at Carina Softlabs in Indore.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-072",
+      "type": "profile",
+      "title": "Which problem did Sreerag enjoy solving the most?",
+      "content": "The problem Sreerag enjoyed solving most was the subscription and purchase reconciliation flow in LearnWithHupe. The hard part was keeping subscription states correct across Google Play and the Apple App Store, because purchase notifications, renewals, cancellations and plan changes can arrive at different times, or be processed more than once. He worked with the Flutter developer in a loop: Sreerag fixed the backend, the Flutter developer tested it in the app, and when it failed Sreerag fixed it again until it held. He made the backend reconcile subscription states with the stores, handle duplicate notifications, keep purchase-token links across plan changes, and treat temporary store failures as retryable. He enjoyed it because it needed more than writing endpoints: he had to understand the whole business flow, find the edge cases and keep the system consistent in real situations.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-073",
+      "type": "profile",
+      "title": "What should a recruiter remember about Sreerag?",
+      "content": "Sreerag is a full stack developer who does not just build features. He understands the business logic behind them and works to make them reliable, secure and ready for production.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-074",
+      "type": "profile",
+      "title": "More about Sreerag's work in the PM tool and HRMS",
+      "content": "PM tool: Sreerag worked on project and task management flows (project creation, task lists, milestone features), on connecting the front end and the backend APIs, and on linking the PM tool with the Sales tool and HRMS through shared sign-in, role-based access and protected API calls. He also worked on security and error-handling improvements: CSRF protection, authorization checks that fail closed (access is denied when a check cannot be completed), and a backend-for-frontend proxy flow. He also worked on real-time updates and on milestone locking. HRMS: he contributed to the employee workflows and their connection to the wider system. He describes his HRMS work by the features he personally built (the employee-facing screens and some backend APIs) and does not claim the whole HRMS.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-075",
+      "type": "profile",
+      "title": "What did Sreerag learn the hard way?",
+      "content": "A lesson from LearnWithHupe: notifications from payment and subscription providers cannot be treated as guaranteed, one-time events. Duplicate notifications and subscription states that did not match caused wrong state changes when the same notification was processed twice. His fixes were duplicate-notification handling, keeping the purchase-token lineage across plan changes, and reconciling against Google Play and Apple instead of blindly trusting single events. He also improved the handling of temporary external failures (HTTP 429 and 5xx responses) so they can be retried. The lesson: design integrations with idempotency, retries, reconciliation and failure cases in mind from the beginning.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-076",
+      "type": "profile",
+      "title": "How does Sreerag work? Planning, testing, asking for help and deadlines",
+      "content": "Planning: he starts by understanding the requirement and the whole business flow, then splits a large task into front end, backend, API and database parts. Testing: he builds features step by step and tests the integration as he goes instead of waiting until the end, checking API responses, validation, error cases, authorization and important edge cases. Getting stuck: he investigates an unfamiliar problem on his own first, reproduces it and narrows down the cause; when he needs help he shares the problem together with what he has already checked. Deadlines: he puts the critical functionality first, raises blockers early, and avoids last-minute changes that could cause regressions.",
+      "verificationStatus": "owner-stated",
+      "createdAt": "2026-11-07",
+      "updatedAt": "2026-11-07"
+    },
+    {
+      "id": "profile-077",
+      "type": "profile",
+      "title": "What roles, locations and companies does Sreerag want?",
+      "content": "Roles: Full Stack Developer, MERN Stack Developer, Node.js Backend Developer, or React and Node.js Developer, and also forward deployed engineer roles that involve AI. Location: he lives in Indore and prefers Kochi, Ernakulam and nearby areas in Kerala; he is open to relocating. Companies: product-based companies, SaaS companies and engineering-focused teams where he can work on real applications and backend systems. Technologies he most wants to work with: React, Next.js, Node.js, TypeScript, Express or NestJS, MongoDB and PostgreSQL. He is not targeting Java or .NET roles, because his experience and direction are in the JavaScript and TypeScript world.",
       "verificationStatus": "owner-stated",
       "createdAt": "2026-11-07",
       "updatedAt": "2026-11-07"

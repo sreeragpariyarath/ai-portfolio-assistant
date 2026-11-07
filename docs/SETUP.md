@@ -129,7 +129,7 @@ Each step that touches your Cloudflare account is marked **(account)**; do them 
 10. The free-plan rate limit: send 12 quick requests (for example `for i in $(seq 12); do curl -s -o /dev/null -w "%{http_code} " -X POST -H "Content-Type: application/json" -d "{}" https://sreerag.<name>.workers.dev/api/chat; done`).
     The first ten answer 400 (empty body) and then 429 should appear. If they never do, the binding is not enforced on the Free plan and the in-memory fallback is the only guard: record it in `docs/DECISIONS.md`.
 11. **(account)** `pnpm exec wrangler tail` while you use the site shows the structured log lines (never keys or question text).
-12. The keep-alive: after the first 04:23 UTC run, `wrangler tail` (or the Worker's logs in the dashboard) shows `{"event":"keep-alive","status":"ok","points":82}` (the number of public records; it becomes 120 after the ingest of the added records, D-037).
+12. The keep-alive: after the first 04:23 UTC run, `wrangler tail` (or the Worker's logs in the dashboard) shows `{"event":"keep-alive","status":"ok","points":82}` (the number of public records; it is 126 after the ingest of the added records, D-037 and D-038).
     Qdrant says a free cluster is suspended after a week without activity and deleted after four, but not which requests count as activity: look at the cluster in the Qdrant Cloud page after a week.
 13. Open the site with `?perf` on a phone and note the frame rate (see section 7).
 

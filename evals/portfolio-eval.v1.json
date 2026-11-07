@@ -1675,6 +1675,114 @@
       ],
       "split": "development",
       "isSynthetic": false
+    },
+    {
+      "id": "E096",
+      "category": "direct_fact",
+      "question": "Which problem did he enjoy solving the most, and why?",
+      "expectedEvidenceIds": [
+        "profile-072",
+        "decision-lwh-004"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "subscription and purchase reconciliation in LearnWithHupe"
+      ],
+      "forbiddenClaims": [
+        "pick a problem not in the records"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E097",
+      "category": "direct_fact",
+      "question": "What should a recruiter remember about him?",
+      "expectedEvidenceIds": [
+        "profile-073",
+        "profile-029"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "builds reliable, secure, production-ready features"
+      ],
+      "forbiddenClaims": [
+        "claim a job title he does not have"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E098",
+      "category": "direct_fact",
+      "question": "What did he do in the PM tool beyond the tasks module?",
+      "expectedEvidenceIds": [
+        "profile-074",
+        "contribution-pmt-001"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "CSRF protection, fail-closed authorization, milestone locking"
+      ],
+      "forbiddenClaims": [
+        "claim he built the whole HRMS"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E099",
+      "category": "decision_rationale",
+      "question": "What is a lesson he learned the hard way in production?",
+      "expectedEvidenceIds": [
+        "profile-075",
+        "decision-lwh-004"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "notifications are not guaranteed one-time events"
+      ],
+      "forbiddenClaims": [
+        "invent a bug not in the records"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E100",
+      "category": "direct_fact",
+      "question": "How does he work? How does he plan, test and handle deadlines?",
+      "expectedEvidenceIds": [
+        "profile-076"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "tests as he builds, raises blockers early"
+      ],
+      "forbiddenClaims": [
+        "invent a methodology he did not describe"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E101",
+      "category": "direct_fact",
+      "question": "What roles and locations is he looking for?",
+      "expectedEvidenceIds": [
+        "profile-077",
+        "profile-003"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "full stack and Node.js roles",
+        "prefers Kochi, Ernakulam and Kerala"
+      ],
+      "forbiddenClaims": [
+        "claim he wants Java or .NET roles"
+      ],
+      "split": "development",
+      "isSynthetic": false
     }
   ]
 }

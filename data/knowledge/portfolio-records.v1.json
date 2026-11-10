@@ -970,7 +970,7 @@
       "id": "project-norix-001",
       "type": "project",
       "title": "Norix CLI",
-      "content": "Norix (npm package norix-cli) is a \"repository intelligence\" command line tool for Node.js projects, published by Sreerag around Aug 2026. It scans a repository offline and finds frameworks, databases, ORMs, validation libraries, authentication and queues. It also gives architecture insights, shows how parts of the system relate, flags project health issues and exports machine-readable reports. It is at version 1.16.2 with 5 releases and is MIT licensed. Usage is small so far (about 6 weekly and 26 monthly downloads in late Oct 2026). Source: github.com/sreeragpariyarath/norix.",
+      "content": "Norix (npm package norix-cli) is a \"repository intelligence\" command line tool for Node.js projects, published by Sreerag around Aug 2026. It scans a repository offline and finds frameworks, databases, ORMs, validation libraries, authentication and queues. It also gives architecture insights, shows how parts of the system relate, flags project health issues and exports machine-readable reports. It is at version 1.16.2 with 5 releases and is MIT licensed. Usage is small so far (about 8 weekly and 27 monthly downloads on npm as of 10 Nov 2026). Source: github.com/sreeragpariyarath/norix.",
       "source": {
         "kind": "public_page",
         "ref": "public-pages-and-repos-checked-2026-10-30"
@@ -979,7 +979,7 @@
       "isSynthetic": false,
       "visibility": "public",
       "createdAt": "2026-11-02",
-      "updatedAt": "2026-11-02",
+      "updatedAt": "2026-11-10",
       "status": "shipped"
     },
     {
@@ -1703,7 +1703,7 @@
       "id": "profile-060",
       "type": "profile",
       "title": "How many users does Sreerag's work have, and what about revenue?",
-      "content": "Usage is small and early: LearnWithHupe has been live on the two app stores for about two months (as of Nov 2026) and the company has not started marketing it; Warvox is not publicly launched; HRMS is used by about 80 colleagues; Norix had about 6 weekly and 26 monthly downloads in late Oct 2026; Erris downloads are small. The records contain no revenue figures, so he cannot give any.",
+      "content": "Usage is small and early: LearnWithHupe has been live on the two app stores for about two months (as of Nov 2026) and the company has not started marketing it; Warvox is not publicly launched; HRMS is used by about 80 colleagues; Norix had about 8 weekly and 27 monthly downloads on npm as of 10 Nov 2026; Erris downloads are small. The records contain no revenue figures, so he cannot give any.",
       "source": {
         "kind": "owner_statement",
         "ref": "owner-interview-2026-11"
@@ -1712,7 +1712,7 @@
       "isSynthetic": false,
       "visibility": "public",
       "createdAt": "2026-11-07",
-      "updatedAt": "2026-11-07"
+      "updatedAt": "2026-11-10"
     },
     {
       "id": "profile-061",

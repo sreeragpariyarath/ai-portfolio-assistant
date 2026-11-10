@@ -40,6 +40,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Owner stories (laptop, 10 Nov): the owner answered 20 questions about his projects, opinions and working style; they became 13 owner-stated records (`profile-080` to `profile-092`) and 6 development eval cases (E108 to E113). Two answers conflicted with older records and the owner chose: LearnWithHupe uses MongoDB (not PostgreSQL), and two interns were on Warvox and one on the PM tool. Ingested (141 public points). Tested: `pnpm eval:validate`, `pnpm corpus:check`, `pnpm test:scripts` (574); live: the 6 new cases 6/6, held-out set unchanged (83.3% behaviour, 89.5% evidence, no leaks).
 
+- Demo and Norix (laptop, 10 Nov): the owner recorded a 14-second screen video; it was converted with ffmpeg (from the `ffmpeg-static` npm package, run from a scratch folder, nothing installed in the repo) to an animated WebP at 960 px and 15 fps (3.2 MB), because a GIF of the colourful water effect was 14 MB or banded badly. Saved as `docs/demo.webp`; the README points to it. Norix numbers refreshed from npm (8 weekly, 27 monthly downloads, version 1.16.2). Tested: `pnpm eval:validate`, `pnpm corpus:check`, `pnpm test:scripts`.
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

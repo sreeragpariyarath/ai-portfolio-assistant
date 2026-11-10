@@ -10,7 +10,7 @@ describe("POST /api/chat answer stream", () => {
   it("streams meta, then tokens, then done, with the right headers", async () => {
     const { worker } = workerWith({
       qdrant: [{ id: "contribution-demo-001", score: 0.9 }],
-      generation: () => sseResponse(["BEHAVIOR: answer\n", "Alex wrote ", "the validation [contribution-demo-001]."]),
+      generation: () => sseResponse(["BEHAVIOR: answer\n", "Alex wrote ", "the validation [contribution-demo-001].\nNE", "XT: What else did Alex build? | Is it live?"]),
     });
     const response = await worker.fetch(chatRequest({ question: QUESTION }, { Origin: ORIGIN }), testEnv);
 
@@ -37,6 +37,8 @@ describe("POST /api/chat answer stream", () => {
       invalidCitationsDropped: 0,
       truncated: false,
       model: "gemini-3.1-flash-lite",
+      // The hidden NEXT: line becomes suggestions and never reaches the token stream.
+      suggestions: ["What else did Alex build?", "Is it live?"],
     });
   });
 

@@ -10,9 +10,9 @@ const CITATION = /\[([A-Za-z0-9][A-Za-z0-9_-]*(?:\s*[,;]\s*[A-Za-z0-9][A-Za-z0-9
 
 // `n` numbers each distinct record by first appearance (1, 2, 3…), so repeated citations share a
 // number. When `allowed` is given, anything else in brackets stays as plain text.
-export function splitCitations(text: string, allowed?: ReadonlySet<string>): Segment[] {
+// Pass the same `numbers` map for every block of one answer, so a list item and a paragraph share the numbering.
+export function splitCitations(text: string, allowed?: ReadonlySet<string>, numbers = new Map<string, number>()): Segment[] {
   const segments: Segment[] = [];
-  const numbers = new Map<string, number>();
   let last = 0;
   for (const match of text.matchAll(CITATION)) {
     const ids = (match[1] ?? "").split(/\s*[,;]\s*/);

@@ -34,6 +34,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Fixes from the owner's live test (laptop, 10 Nov), D-042: the AI line no longer repeats (it is stripped from old turns and the prompt forbids it unless asked), "who is me?" and a name the visitor gave are answered from the chat instead of refused as private, the notes keep who the visitor said they are, and citations must be bare ids. Tested: `pnpm test:scripts` (561), API tests (84), type checks; live: conversation evaluation 10 of 10 (C08's first failure was a broken test pattern), answer evaluation 92.5% behaviour and 97.8% evidence on 106 cases, then 7 cases re-checked after the citation wording change. About 200 Gemini calls today.
 
+- Phase D (laptop, 10 Nov), D-043, branch `feat/chat-format-and-suggestions`: answers render bullet lists, numbered lists and bold (a small safe Markdown subset, no HTML); the model no longer inflates ("extensive", "strong"); each answer ends with a hidden NEXT: line that becomes 2 or 3 follow-up question buttons under the latest answer. The owner tried it locally with real keys and approved it. Tested: `pnpm test:scripts` (574), API tests (84), `pnpm test:web:a11y` (19), type checks, web lint; live evaluations re-run on the new prompt (see the results files).
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

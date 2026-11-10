@@ -2,6 +2,7 @@ import { friendlyMessage, normalizeErrorCode } from "./chat-client.ts";
 import type { ChatErrorCode } from "./chat-client.ts";
 import type { Behavior, ChatEvent } from "./chat-events.ts";
 import { splitCitations } from "./citations.ts";
+import { plainText } from "./markdown.ts";
 import type { CardKind } from "../cards/portfolio-cards.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
@@ -22,6 +23,8 @@ export interface ChatMessage {
   error?: string;
   // Set on stored replies (task 4.11): the card shown under `text`. No assistant call was made for it.
   card?: CardKind;
+  // Follow-up questions the assistant offered with this answer (D-043), shown as buttons under the latest one.
+  suggestions?: string[];
 }
 
 export interface ChatState {
@@ -112,7 +115,13 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         }
         case "done":
           return finish(
-            update(state, id, (message) => ({ ...message, status: "done", citations: event.citations, truncated: event.truncated })),
+            update(state, id, (message) => ({
+              ...message,
+              status: "done",
+              citations: event.citations,
+              truncated: event.truncated,
+              ...(event.suggestions !== undefined && event.suggestions.length > 0 ? { suggestions: event.suggestions } : {}),
+            })),
             id,
           );
         case "error":
@@ -166,9 +175,11 @@ export function announcementFor(messages: ChatMessage[]): string {
     if (message.status === "error") return message.error ?? "";
     if (message.status === "stopped") return "Answer stopped.";
     if (message.card !== undefined) return `${message.text} ${CARD_NAMES[message.card]} shown.`;
-    const text = splitCitations(message.text)
-      .map((segment) => (segment.type === "text" ? segment.text : ""))
-      .join("")
+    const text = plainText(
+      splitCitations(message.text)
+        .map((segment) => (segment.type === "text" ? segment.text : ""))
+        .join(""),
+    )
       // Removing a citation can leave a space before punctuation ("built it ."); close it up.
       .replace(/\s+([.,;:!?])/g, "$1")
       .trim();

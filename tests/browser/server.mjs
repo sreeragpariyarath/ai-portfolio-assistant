@@ -29,6 +29,13 @@ createServer(async (req, res) => {
       return;
     }
     send("meta", { behavior: "answer", behaviorValid: true, retrieved: ["project-lwh-001"], degraded: false });
+    if (question === "format") {
+      // D-043: a list answer with bold, and follow-up questions in done.
+      send("token", { text: "I used:\n- **Express** for the API [project-lwh-001]\n- React for the admin panel\n\nAll live." });
+      send("done", { citations: ["project-lwh-001"], invalidCitationsDropped: 0, truncated: false, model: "fixture", suggestions: ["Is LearnWithHupe live?", "Who built the mobile app?"] });
+      res.end();
+      return;
+    }
     // Chat memory (D-041): say how much chat came with the question, and fold older turns into notes.
     if (history.length > 0 && question !== "stop") send("token", { text: `(remembering ${history.length} turns) ` });
     if (question !== "stop") send("token", { text: "A completed answer " });

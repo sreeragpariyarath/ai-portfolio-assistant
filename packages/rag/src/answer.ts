@@ -17,6 +17,8 @@ export interface AnswerResult {
   // Allowed ids that were cited, once each, in order of first use.
   citations: string[];
   invalidCitationsDropped: number;
+  // Follow-up questions from the reply's last `NEXT:` line (D-043), never shown as answer text. Up to three.
+  suggestions: string[];
 }
 
 export interface AnswerChunk {
@@ -37,6 +39,80 @@ const MAX_CITATION_CHARS = 120;
 // Record ids look like `project-demo-001`: letters and digits with at least one separator, so `[1]` or `[note]` are left alone.
 const ID_LIKE = /^[a-z0-9]+(?:[-_][a-z0-9]+)+$/i;
 
+const NEXT_KEY = "NEXT:";
+// A `NEXT:` line found at the start of a line, possibly after spaces.
+const NEXT_LINE = /(^|\n)[ \t]*NEXT:/i;
+export const MAX_SUGGESTIONS = 3;
+const MAX_SUGGESTION_CHARS = 120;
+
+// The questions on a `NEXT:` line: split on |, tidied, without citations or numbering, at most three.
+export function parseSuggestions(line: string): string[] {
+  const out: string[] = [];
+  for (const raw of line.split(/\||\n/)) {
+    const text = raw
+      .replace(/\[[^\]]*\]/g, "")
+      .replace(/^[\s\-*•\d.)]+/, "")
+      .replace(/^["'“‘]+|["'”’]+$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (text.length < 3 || text.length > MAX_SUGGESTION_CHARS || !/[A-Za-z]/.test(text)) continue;
+    if (!out.some((existing) => existing.toLowerCase() === text.toLowerCase())) out.push(text);
+    if (out.length === MAX_SUGGESTIONS) break;
+  }
+  return out;
+}
+
+// Splits the follow-up line off a streamed body. Text that might be the start of a `NEXT:` line is held back
+// until it is clear, so the visitor never sees the line, even for a moment.
+function createNextSplitter() {
+  let pending = "";
+  let lineStart = true; // `pending` begins at the start of a line
+  let inNext = false;
+  let next = "";
+
+  return {
+    push(text: string, final: boolean): string {
+      if (inNext) {
+        next += text;
+        return "";
+      }
+      pending += text;
+      const scan = lineStart ? pending : `\u0000${pending}`;
+      const match = NEXT_LINE.exec(scan);
+      if (match) {
+        // Where the match starts in `pending` (the scan has one extra character in front when not at a line start).
+        const start = Math.max(0, lineStart ? match.index : match.index - 1);
+        const out = pending.slice(0, start);
+        next = pending.slice(pending.toUpperCase().indexOf(NEXT_KEY, start) + NEXT_KEY.length);
+        inNext = true;
+        pending = "";
+        return out;
+      }
+      if (final) {
+        const out = pending;
+        pending = "";
+        return out;
+      }
+      // Hold the last line back while it could still become "NEXT:".
+      const lastBreak = pending.lastIndexOf("\n");
+      const tail = (lastBreak === -1 ? pending : pending.slice(lastBreak + 1)).replace(/^[ \t]+/, "").toUpperCase();
+      const couldBeNext = (lastBreak !== -1 || lineStart) && NEXT_KEY.startsWith(tail);
+      if (!couldBeNext) {
+        const out = pending;
+        pending = "";
+        lineStart = out.endsWith("\n");
+        return out;
+      }
+      const holdFrom = lastBreak === -1 ? 0 : lastBreak;
+      const out = pending.slice(0, holdFrom);
+      pending = pending.slice(holdFrom);
+      if (out !== "") lineStart = false;
+      return out;
+    },
+    suggestions: () => (inNext ? parseSuggestions(next) : []),
+  };
+}
+
 function parseHeaderLine(line: string): AnswerHeader {
   const match = /^BEHAVIOR:\s*([a-z]+)\s*$/i.exec(line.trim());
   const word = match?.[1]?.toLowerCase();
@@ -54,6 +130,7 @@ export function createAnswerParser(allowedIds: Iterable<string>): AnswerParser {
   let started = false; // body text has begun (leading whitespace is skipped)
   let buffer = "";
   let emitted = "";
+  const splitter = createNextSplitter();
 
   // Moves text from `buffer` to the output as far as it is safe to do so.
   function drain(final: boolean): string {
@@ -110,7 +187,7 @@ export function createAnswerParser(allowedIds: Iterable<string>): AnswerParser {
   }
 
   function body(text: string, final: boolean): string {
-    buffer += text;
+    buffer += splitter.push(text, final);
     if (!started) {
       buffer = buffer.trimStart();
       if (buffer === "") return "";
@@ -165,6 +242,7 @@ export function createAnswerParser(allowedIds: Iterable<string>): AnswerParser {
           text: emitted.trimEnd(),
           citations: cited,
           invalidCitationsDropped: dropped,
+          suggestions: splitter.suggestions(),
         },
       };
     },

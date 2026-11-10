@@ -54,7 +54,7 @@ describe("parseAnswer: behavior line", () => {
 
   it("treats an empty reply as an invalid qualify with no text", () => {
     const result = parseAnswer("", ALLOWED);
-    assert.deepEqual(result, { behavior: "qualify", behaviorValid: false, text: "", citations: [], invalidCitationsDropped: 0 });
+    assert.deepEqual(result, { behavior: "qualify", behaviorValid: false, text: "", citations: [], invalidCitationsDropped: 0, suggestions: [] });
   });
 
   it("accepts a reply that is only the behavior line", () => {
@@ -186,5 +186,38 @@ describe("streaming parser", () => {
     assert.ok(parser.push("BEHAVIOR: answer\nOne.").header);
     assert.equal(parser.push(" Two.").header, undefined);
     assert.equal(parser.end().header, undefined);
+  });
+});
+
+describe("follow-up suggestions (the NEXT: line)", () => {
+  const REPLY = "BEHAVIOR: answer\nI built it [project-demo-001].\n\n* one\n* two\nNEXT: What stack did he use? | Is it live? | \"Who else worked on it?\"";
+
+  it("takes the last NEXT: line out of the text and returns up to three tidy questions", () => {
+    const result = parseAnswer(REPLY, ALLOWED);
+    assert.equal(result.text, "I built it [project-demo-001].\n\n* one\n* two");
+    assert.deepEqual(result.suggestions, ["What stack did he use?", "Is it live?", "Who else worked on it?"]);
+  });
+
+  it("never streams any part of the NEXT: line, however the reply is split", () => {
+    for (const size of [1, 2, 3, 5, 7]) {
+      const parser = createAnswerParser(ALLOWED);
+      let shown = "";
+      for (let i = 0; i < REPLY.length; i += size) shown += parser.push(REPLY.slice(i, i + size)).text;
+      const end = parser.end();
+      shown += end.text;
+      assert.ok(!/NEXT|What stack/.test(shown), `size ${size}: ${shown}`);
+      assert.deepEqual(end.result.suggestions.length, 3, `size ${size}`);
+    }
+  });
+
+  it("leaves a sentence that merely starts with Next alone, and gives no suggestions without the line", () => {
+    const result = parseAnswer("BEHAVIOR: answer\nNext, I moved the site to Angular 22.\nNext steps: none.", ALLOWED);
+    assert.equal(result.text, "Next, I moved the site to Angular 22.\nNext steps: none.");
+    assert.deepEqual(result.suggestions, []);
+  });
+
+  it("drops numbering, citations, duplicates and junk, and keeps at most three", () => {
+    const result = parseAnswer("BEHAVIOR: answer\nHi.\nnext: 1. What is Warvox? [project-demo-001] | what is warvox? | ?? | A | Is it live? | Does it scale? | One more?", ALLOWED);
+    assert.deepEqual(result.suggestions, ["What is Warvox?", "Is it live?", "Does it scale?"]);
   });
 });

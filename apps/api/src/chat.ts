@@ -3,7 +3,7 @@
 //
 // Events: `meta` {behavior, behaviorValid, retrieved, degraded}, `token` {text}, `memory` {summary} (only
 // when older turns were folded into new notes, D-041), `done` {citations, invalidCitationsDropped, truncated,
-// model}, `error` {code, message}. Failures before the first event return JSON instead (the caller picks the
+// model, suggestions}, `error` {code, message}. Failures before the first event return JSON instead (the caller picks the
 // status from the code).
 //
 // Chat memory (D-041): a follow-up ("and the second one?") is rewritten into a standalone search question by a
@@ -271,6 +271,8 @@ export async function answerQuestion(
             invalidCitationsDropped: result.invalidCitationsDropped,
             truncated: event.truncated,
             model: stream.model,
+            // Follow-up questions from the reply's hidden NEXT: line (D-043); empty when there was none.
+            suggestions: result.suggestions,
           });
           finished = true;
           log({

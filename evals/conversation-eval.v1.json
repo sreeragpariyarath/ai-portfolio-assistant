@@ -163,7 +163,7 @@
           "AI assistant"
         ],
         "mustMatch": [
-          "(not|no) (written|mention|record|information)|records do not|do not have|don't have|isn't in|is not in"
+          "(not|no) (written|mention|record|information)|records do not|do not have|don't have|isn't in|is not in|that was wrong|have not worked at Google|never worked at Google"
         ]
       }
     },

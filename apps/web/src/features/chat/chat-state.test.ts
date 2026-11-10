@@ -210,3 +210,17 @@ describe("off-topic replies", () => {
     assert.match(announcementFor(state.messages), /^Thank you! Ask me about my projects./);
   });
 });
+
+describe("formatting and suggestions (D-043)", () => {
+  it("announces a list answer without its symbols, and keeps the follow-up questions on the message", () => {
+    let state = chatReducer(initialChatState, { type: "ask", id: "a1", question: "Stack?" });
+    state = chatReducer(state, { type: "event", id: "a1", event: { type: "token", text: "I used:\n- **Express** [p-1]\n- React" } });
+    state = chatReducer(state, {
+      type: "event",
+      id: "a1",
+      event: { type: "done", citations: ["p-1"], invalidCitationsDropped: 0, truncated: false, model: "m", suggestions: ["Is it live?", "Who built the app?"] },
+    });
+    assert.equal(announcementFor(state.messages), "I used: Express. React");
+    assert.deepEqual(state.messages[1]?.suggestions, ["Is it live?", "Who built the app?"]);
+  });
+});

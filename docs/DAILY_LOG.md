@@ -26,6 +26,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Model-written replies (laptop), D-039: removed the stored joke lines for off-topic messages; the model now writes the whole reply (the prompt rule was reworded). Tested: `pnpm test:scripts` (523), type check, web lint, `pnpm test:web:a11y` (17). Manual: look at real off-topic replies on the live model before deploying.
 
+- Fit and capability answers (laptop), D-040: questions like "can he work on our Go project?" or "can he migrate our React app to Next.js?" now get a direct answer, the closest real evidence, the gap, and a next step, instead of a bare "not written down". Two owner-stated records were added (`profile-078`: he can work with an unlisted stack because he uses AI coding tools daily and adapts quickly, never claimed as experience; `profile-079`: the migrations he has done) and six eval cases (E102 to E107). Citations are limited to the records a sentence uses. Tested: `pnpm eval:validate` (130 records, 106 cases), `pnpm test:scripts` (525), API tests (74), type check. Manual and waiting: `pnpm ingest` for the two records and a live answer eval (owner's go-ahead).
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

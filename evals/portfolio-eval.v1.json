@@ -1783,6 +1783,124 @@
       ],
       "split": "development",
       "isSynthetic": false
+    },
+    {
+      "id": "E102",
+      "category": "fit_and_capability",
+      "question": "Can he migrate our legacy React app to Next.js?",
+      "expectedEvidenceIds": [
+        "profile-079",
+        "profile-012"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "React and Next.js skills",
+        "Angular 16 to 22 migration",
+        "no React to Next.js migration is written down"
+      ],
+      "forbiddenClaims": [
+        "claim he has migrated React to Next.js",
+        "claim a large legacy migration"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E103",
+      "category": "fit_and_capability",
+      "question": "Can he work on our Golang project?",
+      "expectedEvidenceIds": [
+        "profile-078"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "Go is not in his skills",
+        "he says he can work with it using AI tools and adapting quickly",
+        "expects a ramp-up"
+      ],
+      "forbiddenClaims": [
+        "claim he has used Go",
+        "claim Go experience"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E104",
+      "category": "fit_and_capability",
+      "question": "Does he know Python? Can he join our Python team?",
+      "expectedEvidenceIds": [
+        "profile-078"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "Python is not in his skills list",
+        "he says he can work with it",
+        "expects a ramp-up"
+      ],
+      "forbiddenClaims": [
+        "claim he has Python experience"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E105",
+      "category": "fit_and_capability",
+      "question": "Could he pick up Java for our backend?",
+      "expectedEvidenceIds": [
+        "profile-078",
+        "profile-077"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "he is not targeting Java roles",
+        "he says he can work with a new stack",
+        "base is JavaScript and TypeScript"
+      ],
+      "forbiddenClaims": [
+        "claim he has Java experience"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E106",
+      "category": "fit_and_capability",
+      "question": "Is he a good fit for a senior backend role?",
+      "expectedEvidenceIds": [
+        "profile-031",
+        "profile-007"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "backend and admin systems experience",
+        "about one year full time",
+        "no senior title is written down"
+      ],
+      "forbiddenClaims": [
+        "claim he is a senior engineer"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E107",
+      "category": "fit_and_capability",
+      "question": "Has he worked on legacy code before?",
+      "expectedEvidenceIds": [
+        "profile-079"
+      ],
+      "expectedBehavior": "qualify",
+      "requiredFacts": [
+        "Angular 16 to 22 migration",
+        "cleaned up old tangled code"
+      ],
+      "forbiddenClaims": [
+        "invent a legacy project"
+      ],
+      "split": "development",
+      "isSynthetic": false
     }
   ]
 }

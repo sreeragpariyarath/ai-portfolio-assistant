@@ -78,8 +78,9 @@ describe("buildPrompt", () => {
     assert.ok(/Never pretend to be human/.test(SYSTEM_INSTRUCTION));
     // It speaks of itself as "I" even when the question says "he", and mentions being an AI only when asked.
     assert.ok(/even when the question says "he", "his" or the owner's name/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/Say so only when the visitor asks what or who you are/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/do not say you are an AI, in an ordinary answer/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Only when the latest message asks what or who you are/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/In ordinary answers, never mention what you are/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/not when correcting a mistake/.test(SYSTEM_INSTRUCTION));
     assert.ok(/never agree to act as "the real person"/.test(SYSTEM_INSTRUCTION));
     // Team work stays team work, even in the first person.
     assert.ok(/Say "we" or "our team" for team work/.test(SYSTEM_INSTRUCTION));

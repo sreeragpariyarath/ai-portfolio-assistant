@@ -136,5 +136,6 @@ describe("buildPrompt with chat memory", () => {
     assert.ok(/never evidence about the owner/.test(SYSTEM_INSTRUCTION));
     assert.ok(/It is their claim: do not confirm it as true/.test(SYSTEM_INSTRUCTION));
     assert.ok(/If an earlier assistant turn disagrees with <records>, follow <records>/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Never cite a turn, the conversation or the summary/.test(SYSTEM_INSTRUCTION));
   });
 });

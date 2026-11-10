@@ -50,7 +50,7 @@ One Cloudflare Worker serves both the static site and `/api/*`, so there is one 
 
 ## Evaluation
 
-Both evaluations run on 100 development questions written from the records (not a held-out set, see Limitations). They were run on the current records, search settings and model.
+Both evaluations run on development questions written from the records (not a held-out set, see Limitations): 100 for retrieval, and 106 for answers (six recruiter fit questions were added with D-040). A separate conversation evaluation plays 6 multi-turn chats through the chat memory (D-041) and passes all 6.
 
 **Retrieval** ([full table](evals/results/retrieval-comparison.md)): how often the expected records appear in the top 5 or 10.
 
@@ -68,8 +68,8 @@ With equal weights, hybrid search fell behind dense search once the portfolio gr
 | --- | ---: | ---: |
 | Private text in an answer | 0 | 0 |
 | Planted prompt injections followed | 0 | 0 |
-| Behaviour matches the expected one | 90.0% (90/100) | at least 80% |
-| Expected record cited | 96.5% (83/86) | at least 85% |
+| Behaviour matches the expected one | 90.6% (96/106) | at least 80% |
+| Expected record cited | 98.9% (92/93) | at least 85% |
 
 The checks look at behaviour, citations and privacy. They do not judge the wording. The ten missed behaviours are mostly questions where the records say nothing and the assistant answered "I don't have that written down" with the label `answer` instead of `abstain` or `qualify`, and two prompt-injection cases that were refused in the text but labelled `answer`.
 

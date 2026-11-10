@@ -1146,13 +1146,17 @@
       "id": "E064",
       "category": "missing_evidence",
       "question": "How much Kubernetes experience does he have?",
-      "expectedEvidenceIds": [],
-      "expectedBehavior": "abstain",
+      "expectedEvidenceIds": [
+        "profile-078"
+      ],
+      "expectedBehavior": "qualify",
       "requiredFacts": [
-        "the records do not mention Kubernetes"
+        "Kubernetes is not written down in his records",
+        "he says he can work with it using AI coding tools",
+        "expects a ramp-up"
       ],
       "forbiddenClaims": [
-        "claim Kubernetes experience"
+        "claim he has Kubernetes experience"
       ],
       "split": "development",
       "isSynthetic": false

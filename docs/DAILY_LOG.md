@@ -38,6 +38,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Tidy-up (laptop, 10 Nov), D-044: ALLOWED_ORIGIN lists the live site and localhost:3000; CLAUDE.md now describes the built system (memory, formatting, real data, no stored lines); a 24-question held-out set was written and run once (behaviour 83.3%, evidence 89.5%, no leaks, 24 Gemini calls). The Qdrant keep-alive cron cannot be checked from the command line; check Workers > sreerag > Logs in the Cloudflare dashboard for the daily 04:23 UTC run. Tested: `pnpm test:scripts` (574), API tests (85), type checks, `pnpm cf-typegen:check`, `pnpm eval:validate`.
 
+- Owner stories (laptop, 10 Nov): the owner answered 20 questions about his projects, opinions and working style; they became 13 owner-stated records (`profile-080` to `profile-092`) and 6 development eval cases (E108 to E113). Two answers conflicted with older records and the owner chose: LearnWithHupe uses MongoDB (not PostgreSQL), and two interns were on Warvox and one on the PM tool. Ingested (141 public points). Tested: `pnpm eval:validate`, `pnpm corpus:check`, `pnpm test:scripts` (574); live: the 6 new cases 6/6, held-out set unchanged (83.3% behaviour, 89.5% evidence, no leaks).
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

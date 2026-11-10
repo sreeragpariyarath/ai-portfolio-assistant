@@ -1905,6 +1905,119 @@
       ],
       "split": "development",
       "isSynthetic": false
+    },
+    {
+      "id": "E108",
+      "category": "decision_rationale",
+      "question": "Why did he build this portfolio as a RAG chatbot instead of a normal website?",
+      "expectedEvidenceIds": [
+        "profile-085"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "more interactive than a normal website",
+        "connecting the model to the vector database was the easy part"
+      ],
+      "forbiddenClaims": [
+        "invent usage numbers"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E109",
+      "category": "decision_rationale",
+      "question": "Monolith or microservices, what does he prefer?",
+      "expectedEvidenceIds": [
+        "profile-087"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "a well-structured monolith first",
+        "split when there is a measurable reason"
+      ],
+      "forbiddenClaims": [
+        "claim he has built microservices"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E110",
+      "category": "direct_fact",
+      "question": "What made the Angular migration so hard?",
+      "expectedEvidenceIds": [
+        "profile-083"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "hospital-management template",
+        "one major version at a time",
+        "one to two months"
+      ],
+      "forbiddenClaims": [
+        "say it took a week"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E111",
+      "category": "decision_rationale",
+      "question": "Why did he make Norix?",
+      "expectedEvidenceIds": [
+        "profile-084"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "understanding unfamiliar repositories",
+        "offline",
+        "no source code sent anywhere"
+      ],
+      "forbiddenClaims": [
+        "invent download numbers"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E112",
+      "category": "direct_fact",
+      "question": "What does he never trust AI-generated code with?",
+      "expectedEvidenceIds": [
+        "profile-088"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "authentication and authorisation",
+        "payments and subscriptions",
+        "database migrations"
+      ],
+      "forbiddenClaims": [
+        "claim he ships AI code without review"
+      ],
+      "split": "development",
+      "isSynthetic": false
+    },
+    {
+      "id": "E113",
+      "category": "direct_fact",
+      "question": "How did he train the interns?",
+      "expectedEvidenceIds": [
+        "profile-090",
+        "profile-007"
+      ],
+      "expectedBehavior": "answer",
+      "requiredFacts": [
+        "pages to clean up",
+        "daily review",
+        "API integration tasks later"
+      ],
+      "forbiddenClaims": [
+        "say all three interns were on Warvox"
+      ],
+      "split": "development",
+      "isSynthetic": false
     }
   ]
 }

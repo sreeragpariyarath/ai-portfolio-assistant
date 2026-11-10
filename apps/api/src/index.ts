@@ -19,12 +19,18 @@ function jsonResponse(
   });
 }
 
-// CORS for the web app only. An origin that is not ALLOWED_ORIGIN gets no CORS headers,
+// The origins in ALLOWED_ORIGIN (space-separated: the live site and the local web app).
+export function allowedOrigins(env: Env): string[] {
+  return env.ALLOWED_ORIGIN.split(/\s+/).filter(Boolean);
+}
+
+// CORS for the web app only. An origin that is not in ALLOWED_ORIGIN gets no CORS headers,
 // so browsers block the response. This is not authentication; the rate limit (3.8) protects the quota.
 function corsHeaders(request: Request, env: Env): Record<string, string> {
   const headers: Record<string, string> = { Vary: "Origin" };
-  if (request.headers.get("Origin") === env.ALLOWED_ORIGIN) {
-    headers["Access-Control-Allow-Origin"] = env.ALLOWED_ORIGIN;
+  const origin = request.headers.get("Origin");
+  if (origin !== null && allowedOrigins(env).includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
   }
   return headers;
 }

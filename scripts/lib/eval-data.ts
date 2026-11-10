@@ -17,6 +17,8 @@ export const SYNTHETIC_RECORDS_FILE = "data/knowledge/synthetic-records.v3.json"
 export const SYNTHETIC_EVAL_FILE = "evals/retrieval-eval.v3.json";
 export const RECORDS_FILE = PORTFOLIO_RECORDS_FILE;
 export const EVAL_FILE = PORTFOLIO_EVAL_FILE;
+// Held-out questions: written after tuning and never used to tune (run with `pnpm eval:answers --set=heldout`).
+export const HELDOUT_EVAL_FILE = "evals/portfolio-eval-heldout.v1.json";
 
 export const BEHAVIORS = ["answer", "qualify", "abstain", "refuse"] as const;
 // "ranked" cases are scored with Recall@k; "list" cases ask for every matching record

@@ -26,7 +26,7 @@ import {
 import type { CachedAnswer } from "./lib/answer-eval.ts";
 import { EmbeddingCache } from "./lib/embedding-cache.ts";
 import { checkEnv } from "./lib/env.ts";
-import { EVAL_FILE, RECORDS_FILE, REPO_ROOT, loadJson } from "./lib/eval-data.ts";
+import { EVAL_FILE, HELDOUT_EVAL_FILE, RECORDS_FILE, REPO_ROOT, loadJson } from "./lib/eval-data.ts";
 import type { Corpus, EvalSet } from "./lib/eval-data.ts";
 import { validateEvalData } from "./validate-eval.ts";
 
@@ -36,14 +36,17 @@ const BUNDLE_FILE = "apps/api/src/generated/public-corpus.json";
 const WRANGLER_FILE = "apps/api/wrangler.jsonc";
 const QUERY_CACHE_FILE = resolve(REPO_ROOT, "evals/.cache/query-embeddings.json");
 const ANSWER_CACHE_FILE = resolve(REPO_ROOT, "evals/.cache/answers.json");
-const REVIEW_FILE = resolve(REPO_ROOT, "evals/.cache/answers-review.md");
-const RESULTS_FILE = resolve(REPO_ROOT, "evals/results/answer-eval.md");
+// --set=heldout runs the held-out questions and writes their own results file.
+const HELDOUT = process.argv.includes("--set=heldout");
+const REVIEW_FILE = resolve(REPO_ROOT, HELDOUT ? "evals/.cache/answers-review-heldout.md" : "evals/.cache/answers-review.md");
+const RESULTS_FILE = resolve(REPO_ROOT, HELDOUT ? "evals/results/answer-eval-heldout.md" : "evals/results/answer-eval.md");
 const SSE_FIXTURE = resolve(REPO_ROOT, "packages/rag/test/fixtures/gemini-sse-sample.txt");
 
 const USAGE = `Usage: pnpm eval:answers [options]
 
 Without --live this makes NO network calls: it scores the answers already saved in evals/.cache/answers.json.
 --live            call Qdrant and Gemini for cases that are not cached (needs .env; live runs need the owner's go-ahead)
+--set=heldout     the held-out questions (evals/portfolio-eval-heldout.v1.json) instead of the development ones
 --ids=E001,E002   only these cases (the results file is not written for a subset)
 --limit=N         only the first N cases (the results file is not written for a subset)
 --delay-ms=N      pause after each live Gemini call (default 4500, to stay under 15 requests a minute)
@@ -96,7 +99,7 @@ async function main(): Promise<void> {
   if (sseSample && !live) throw new Error("--sse-sample needs --live.");
 
   const dataset = loadJson(RECORDS_FILE) as Corpus;
-  const evalSet = loadJson(EVAL_FILE) as EvalSet;
+  const evalSet = loadJson(HELDOUT ? HELDOUT_EVAL_FILE : EVAL_FILE) as EvalSet;
   const errors = validateEvalData(dataset, evalSet);
   if (errors.length > 0) throw new Error(`Dataset validation failed:\n${errors.join("\n")}`);
 

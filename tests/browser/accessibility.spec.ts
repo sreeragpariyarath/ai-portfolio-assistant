@@ -230,36 +230,20 @@ for (const viewport of [{ width: 360, height: 640 }, { width: 1280, height: 800 
   });
 }
 
-test("an off-topic reply opens with a stored line; a plain I-don't-have-that and a refusal do not", async ({ page }) => {
+test("every reply is the model's own words: no stored line is added to off-topic, unknown or refused replies", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("textbox").fill("nothing");
-  await page.getByRole("textbox").press("Enter");
-  const live = page.locator('main [aria-live="polite"]');
-  await expect(live).toContainText("I can tell you about the projects instead.");
-  const announced = (await live.innerText()).replace(/\s+/g, " ");
-  expect(announced).not.toContain("I do not have that information");
-  await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("I can tell you about the projects instead.")).toBeVisible();
-  await expect(page.locator("ol").getByText("Not something I have on record")).toHaveCount(0);
-  // No sources under an I-don't-know.
+  const ask = async (q: string) => {
+    await page.getByRole("textbox").fill(q);
+    await page.getByRole("textbox").press("Enter");
+  };
+  await ask("nothing");
+  await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
   await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
   await accessible(page);
-  const lead = await page.locator("li p.font-medium").last().innerText();
-  expect(lead.length).toBeGreaterThan(20);
-  expect(announced.startsWith(lead)).toBe(true);
-
-  await page.getByRole("textbox").fill("private");
-  await page.getByRole("textbox").press("Enter");
-  await expect(page.locator("ol").getByText("That one stays private")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
-  await expect(page.locator("li p.font-medium")).toHaveCount(1);
-
-  // A real question the records do not cover is a plain abstain: no stored line is added.
-  await page.getByRole("textbox").fill("unknown");
-  await page.getByRole("textbox").press("Enter");
-  await expect(page.locator("ol").getByText("I do not have that information").last()).toBeVisible();
-  await expect(page.locator("li p.font-medium")).toHaveCount(1);
+  await ask("private");
+  await ask("unknown");
+  await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(3);
+  await expect(page.locator("li p.font-medium")).toHaveCount(0);
 });
 
 test("a new card slides in, but not for visitors who ask for reduced motion", async ({ page }) => {

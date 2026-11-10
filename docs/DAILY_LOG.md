@@ -24,6 +24,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Chat links (laptop): an answer that cited several records in one bracket, as [a, b], showed the raw text; the web parser now makes one numbered badge per id. Emails and web addresses in answers (mailto, linkedin.com/..., github.com/...) are now clickable links (new tab). Tested: `pnpm test:scripts` (529), type check, web lint. Manual: none.
 
+- Model-written replies (laptop), D-039: removed the stored joke lines for off-topic messages; the model now writes the whole reply (the prompt rule was reworded). Tested: `pnpm test:scripts` (523), type check, web lint, `pnpm test:web:a11y` (17). Manual: look at real off-topic replies on the live model before deploying.
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

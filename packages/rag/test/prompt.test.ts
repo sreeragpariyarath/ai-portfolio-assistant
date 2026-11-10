@@ -112,9 +112,9 @@ describe("buildPrompt", () => {
     assert.ok(/Only state an absence when a record says so/.test(SYSTEM_INSTRUCTION));
   });
 
-  it("keeps the playful, disposable first sentence for messages that have nothing to do with the owner", () => {
+  it("has the model reply in its own words to messages that have nothing to do with the owner", () => {
     assert.ok(/behavior offtopic/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/replace the first sentence with its own playful line/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/reply like a friendly person would, in your own words/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Do not use offtopic for a real question about the owner's work or life/.test(SYSTEM_INSTRUCTION));
   });
 

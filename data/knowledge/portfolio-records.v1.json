@@ -2029,6 +2029,201 @@
       "visibility": "public",
       "createdAt": "2026-11-08",
       "updatedAt": "2026-11-08"
+    },
+    {
+      "id": "profile-080",
+      "type": "profile",
+      "title": "Why the LearnWithHupe billing trusts the app stores",
+      "content": "Sreerag treated Google Play and the Apple App Store as the source of truth for LearnWithHupe subscriptions because the purchase response from the app alone does not prove that a subscription is still active. The backend verifies each purchase with the store and keeps the subscription status itself, which lets it handle renewals, cancellations, plan changes and expired subscriptions reliably. When a user changes plans, it follows the relationship between the old and new purchase tokens so the status stays consistent. To a non-technical person he explains it like this: buying a subscription through an app store does not mean access should last forever, so the backend checks with the store that users get the access they actually paid for.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-081",
+      "type": "profile",
+      "title": "How Sreerag found the duplicate-notification bug in LearnWithHupe billing",
+      "content": "Sreerag found the duplicate-notification problem while testing the notification flow: he saw duplicate notifications in the server logs (viewed over PuTTY). Instead of changing code straight away, he added more logging and traced the flow to see where the duplicates came from, then fixed it. He remembers it as his best debugging moment, and the lesson he took from it is that good debugging starts with gathering evidence and understanding the execution flow, not with changing code at random, and that repeated events must be handled safely.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-082",
+      "type": "profile",
+      "title": "Warvox translation pipeline: the hardest part and what Sreerag would change",
+      "content": "The hardest part of the Warvox translation pipeline was keeping content in 11 languages (English and 10 others) up to date without re-translating content that had not changed. The pipeline uses field-level change detection, processes translations in parallel, and retries temporary failures with exponential backoff. If he improved it now, Sreerag would add job-level tracking, so each translation is visibly pending, processing, completed or failed, and a single failed field can be retried without repeating the work that already succeeded.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-083",
+      "type": "profile",
+      "title": "What made the Angular 16 to 22 migration hard",
+      "content": "The hard part of migrating the Carina Softlabs website and admin panel was not the Angular upgrade itself. The project had started from a hospital-management template, and earlier developers had adapted it without removing the unused template code; the public website and the admin panel had been split, but old admin-panel code was still there, and the shared styles held CSS for several versions of the application, so removing something that looked unused could break the live site. Sreerag upgraded one major version at a time, from 16 to 17, 18 and on to 22, fixing compatibility issues and stabilising each step. The migration took about one to two months, and afterwards he worked on server-side rendering and SEO improvements.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-084",
+      "type": "profile",
+      "title": "Why Sreerag built Erris and Norix",
+      "content": "Sreerag built both tools for problems he kept running into. Norix came from the time he spent understanding unfamiliar repositories: it is an offline command-line tool that analyses Node.js projects and reports their architecture, dependencies and health without sending source code anywhere. Erris came from seeing every backend project handle errors differently, with its own error classes, response formats and handling for third-party library errors; he wanted one reusable, type-safe error system that normalises errors into consistent, safe responses whatever the framework.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-085",
+      "type": "profile",
+      "title": "Why Sreerag built a RAG portfolio, and what surprised him",
+      "content": "Sreerag wanted his portfolio to be more interactive than a normal website: instead of making recruiters click through pages, they can ask about his experience, architecture and technical decisions. He built it as a retrieval-augmented generation (RAG) assistant with Gemini, Qdrant, hybrid search and Cloudflare Workers. What surprised him was that connecting a language model to a vector database was the easy part; finding the right information, keeping context across a conversation, giving grounded answers with citations and protecting against prompt injection took far more care. He also built an evaluation suite to measure retrieval quality and answer accuracy.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-086",
+      "type": "profile",
+      "title": "How Sreerag chooses a tech stack",
+      "content": "Sreerag starts from the actual requirements, not from what is popular: the project's complexity, expected usage, the team's experience, development speed, maintenance and infrastructure cost. For example, LearnWithHupe uses Node.js and Express for the APIs, MongoDB for the data and Redis for caching, which suited the app without adding needless architectural complexity. His preference is to start with a maintainable design and add complexity only when there is a clear reason.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-087",
+      "type": "profile",
+      "title": "Sreerag's engineering opinions: monolith first, observability early",
+      "content": "Sreerag believes a well-structured monolith is often a better starting point than microservices. Microservices help when independent deployment, scaling or team ownership really needs them, but adopting them too early adds complexity in communication, deployment, monitoring and data consistency; he prefers a modular application with clear boundaries, split into services only when there is a measurable reason. A decision he would change in some earlier projects is to invest in observability from the start: structured logging, request correlation, processing status and error tracking, instead of adding them only once debugging becomes hard.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-088",
+      "type": "profile",
+      "title": "What Sreerag checks himself when using AI coding tools",
+      "content": "Sreerag uses AI coding tools such as Claude Code to explore unfamiliar codebases, generate boilerplate, compare implementation options, refactor and write tests, and he used Claude Code extensively to build this RAG portfolio. He does not treat generated code as correct by default: authentication, authorisation, payments, subscription logic, database migrations and anything security-sensitive get careful manual review and testing. In his words, AI speeds up implementation, but responsibility for correctness stays with the developer.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-089",
+      "type": "profile",
+      "title": "How Sreerag handles disagreement and explains technical problems",
+      "content": "Sreerag says he has not had a major disagreement with a lead or client that stands out. When he disagrees with a technical approach, he first tries to understand the reasoning behind it, then explains his concerns with practical examples of maintenance issues, risks and trade-offs, keeping the discussion about impact rather than personal preference; once the team decides, he implements the decision properly. With non-technical people he explains a problem through its impact instead of technical terms, and he finds that explaining the reason behind a decision makes communication much easier.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-090",
+      "type": "profile",
+      "title": "How Sreerag mentored the interns",
+      "content": "With the two interns on Warvox, Sreerag first gave each of them specific pages to clean up, asking them to reuse existing components wherever possible. He reviewed their work at the end of each day, explained the issues and had them fix those themselves; once they knew the codebase, he gave them API integration tasks for endpoints he had already built. The third intern worked with him later on the PM tool. What he learned is that mentoring is not only reviewing code: it is explaining why something should be done differently and gradually giving people more responsibility.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-091",
+      "type": "profile",
+      "title": "What Sreerag is learning, and where he wants to grow",
+      "content": "Outside work, Sreerag studies system design, backend architecture, database optimisation, caching and distributed systems, and recently RAG systems and AI engineering; he prefers applying what he learns in practical projects, which is one reason he built Norix and Erris. Over the next two years he wants to get better at solving complex product and engineering problems end to end, especially around data consistency, third-party integrations, subscriptions and reliable backend processing, and to own features through their whole lifecycle, including the architectural decisions. A worthwhile project for him solves a genuine problem, gives him ownership from requirements to real users, and teaches him through real engineering problems rather than technology for its own sake.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
+    },
+    {
+      "id": "profile-092",
+      "type": "profile",
+      "title": "Quick facts: favourite tool, what recruiters miss, most enjoyable projects",
+      "content": "Favourite tool: TypeScript, because it makes code across the frontend, backend and shared packages more predictable, catches mistakes during development and makes larger codebases and API contracts easier to understand. What a recruiter might miss: beyond his job title, he works across the whole feature lifecycle (frontend, backend APIs, database design, third-party integrations, debugging and production issues), and he has built independent developer tools for problems he met in real projects. Most enjoyable projects: LearnWithHupe, where the client was friendly and easy to work with and he explained technical decisions and progress to someone without a technical background, and this RAG portfolio, where he could experiment with AI, retrieval, UI and backend design freely.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-10"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-10",
+      "updatedAt": "2026-11-10"
     }
   ]
 }

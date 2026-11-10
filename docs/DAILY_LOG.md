@@ -1,5 +1,7 @@
 # Daily log
 
+- Fun card redesign (laptop, 10 Nov), D-045: after two rounds of the owner's feedback (plain flip tiles, then click-to-flip), the card is a bento grid of colour-gradient tiles with hand-drawn animated SVG illustrations (anime, movies, music, travel, space, exploring), each showing its name, a note from the records and the items in a drifting strip; nothing to click; all motion stops for reduced motion. The owner approved it locally. Also fixed a timing race in the project-dialog browser test. Tested: `pnpm test:scripts` (575), `pnpm test:web:a11y` (19), web lint and build.
+
 A brief record of the work done each day, newest first. Why we chose things: [DECISIONS.md](DECISIONS.md). Roadmap: [RAG_PROJECT_PLAN.md](RAG_PROJECT_PLAN.md).
 
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.

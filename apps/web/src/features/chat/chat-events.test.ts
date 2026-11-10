@@ -23,7 +23,11 @@ describe("decodeChatEvent", () => {
 
   it("decodes done", () => {
     const data = { citations: ["project-demo-001"], invalidCitationsDropped: 2, truncated: true, model: "gemini-3.5-flash-lite" };
-    assert.deepEqual(decodeChatEvent(frame("done", data)), { type: "done", ...data });
+    // An older API sends no suggestions: they default to none.
+    assert.deepEqual(decodeChatEvent(frame("done", data)), { type: "done", ...data, suggestions: [] });
+    const withSuggestions = { ...data, suggestions: ["What is Warvox?", "Is it live?", "Who built it?", "A fourth?"] };
+    assert.deepEqual(decodeChatEvent(frame("done", withSuggestions)), { type: "done", ...withSuggestions, suggestions: ["What is Warvox?", "Is it live?", "Who built it?"] });
+    assert.throws(() => decodeChatEvent(frame("done", { ...data, suggestions: [1] })), /suggestions/);
   });
 
   it("decodes error", () => {

@@ -82,6 +82,7 @@ describe("askQuestion: a successful answer", () => {
       invalidCitationsDropped: 0,
       truncated: false,
       model: "m",
+      suggestions: [],
     });
   });
 

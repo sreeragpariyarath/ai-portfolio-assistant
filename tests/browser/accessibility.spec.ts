@@ -397,3 +397,23 @@ test("chat memory: follow-ups carry the chat, older turns are folded into notes,
   await expect(answers).toHaveCount(1);
   expect(sent.at(-1)).toEqual({ question: "A fresh question about his work" });
 });
+
+test("answers show lists and bold, and follow-up questions ask with one click", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("textbox").fill("format");
+  await page.getByRole("textbox").press("Enter");
+  const answer = page.locator("ol > li").last();
+  await expect(answer.locator("ul > li")).toHaveCount(2);
+  await expect(answer.locator("strong")).toHaveText("Express");
+  await expect(answer).not.toContainText("**");
+  await expect(answer).not.toContainText("- React");
+  await expect(page.locator('main [aria-live="polite"]')).toContainText("I used: Express for the API. React for the admin panel");
+  const followUps = page.getByRole("group", { name: "Suggested follow-up questions" });
+  await expect(followUps.getByRole("button")).toHaveCount(2);
+  await accessible(page);
+
+  await followUps.getByRole("button", { name: "Is LearnWithHupe live?" }).click();
+  await expect(page.locator("ol").getByText("Is LearnWithHupe live?")).toBeVisible();
+  // Only the latest answer offers follow-ups, and none while it streams.
+  await expect(page.getByRole("group", { name: "Suggested follow-up questions" })).toHaveCount(0);
+});

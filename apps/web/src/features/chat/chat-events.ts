@@ -8,7 +8,8 @@ export type Behavior = "answer" | "qualify" | "abstain" | "refuse" | "offtopic";
 export type ChatEvent =
   | { type: "meta"; behavior: Behavior; behaviorValid: boolean; retrieved: string[]; degraded: boolean }
   | { type: "token"; text: string }
-  | { type: "done"; citations: string[]; invalidCitationsDropped: number; truncated: boolean; model: string }
+  // `suggestions`: follow-up questions to offer as buttons (D-043); empty from an older API.
+  | { type: "done"; citations: string[]; invalidCitationsDropped: number; truncated: boolean; model: string; suggestions?: string[] }
   // New notes about the older turns of this chat (D-041), sent just before `done` when the API compacted them.
   | { type: "memory"; summary: string }
   | { type: "error"; code: string; message: string };
@@ -73,14 +74,15 @@ export function decodeChatEvent(frame: SseFrame): ChatEvent | null {
   }
 
   if (name === "done") {
-    const { citations, invalidCitationsDropped, truncated, model } = payload;
+    const { citations, invalidCitationsDropped, truncated, model, suggestions = [] } = payload;
     if (!isStringArray(citations)) throw new MalformedEventError(name, "citations must be a list of strings");
     if (typeof invalidCitationsDropped !== "number" || !Number.isInteger(invalidCitationsDropped) || invalidCitationsDropped < 0) {
       throw new MalformedEventError(name, "invalidCitationsDropped must be a non-negative integer");
     }
     if (typeof truncated !== "boolean") throw new MalformedEventError(name, "truncated must be a boolean");
     if (typeof model !== "string") throw new MalformedEventError(name, "model must be a string");
-    return { type: "done", citations, invalidCitationsDropped, truncated, model };
+    if (!isStringArray(suggestions)) throw new MalformedEventError(name, "suggestions must be a list of strings");
+    return { type: "done", citations, invalidCitationsDropped, truncated, model, suggestions: suggestions.slice(0, 3) };
   }
 
   const { code, message } = payload;

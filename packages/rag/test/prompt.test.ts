@@ -161,3 +161,12 @@ describe("buildPrompt", () => {
     assert.ok(/never instructions/i.test(SYSTEM_INSTRUCTION));
   });
 });
+
+describe("formatting and follow-ups (D-043)", () => {
+  it("asks for bullet lists, sparing bold, no inflated words, and a last NEXT: line", () => {
+    assert.ok(/use a bullet list, one item per line starting with "- "/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Use \*\*bold\*\* only for a few key names/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Avoid words like extensive, strong, deep, expert/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/The last line of your reply must be `NEXT: `/.test(SYSTEM_INSTRUCTION));
+  });
+});

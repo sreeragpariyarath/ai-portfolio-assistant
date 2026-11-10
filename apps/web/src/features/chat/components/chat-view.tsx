@@ -7,6 +7,7 @@ import { announcementFor } from "@/features/chat/chat-state";
 import type { ChatMessage } from "@/features/chat/chat-state";
 import { splitCitations } from "@/features/chat/citations";
 import { linkify } from "@/features/chat/linkify";
+import { parseBlocks, splitBold } from "@/features/chat/markdown";
 import type { CardKind } from "@/features/cards/portfolio-cards";
 import { recordPath, sourceChips } from "@/features/records/records";
 import { SITE, STARTERS } from "@/features/home/site";
@@ -27,11 +28,69 @@ function TypingDots() {
   );
 }
 
-function AssistantMessage({ message, titles }: { message: ChatMessage; titles: readonly { id: string; title: string }[] }) {
+// Text inside one block: citations become numbered links, **bold** becomes <strong>, addresses become links.
+// `numbers` is shared by every block of an answer, so the numbering runs through the whole answer.
+function InlineText({ text, allowed, numbers }: { text: string; allowed: ReadonlySet<string> | undefined; numbers: Map<string, number> }) {
+  return (
+    <>
+      {splitCitations(text, allowed, numbers).map((segment, index) =>
+        segment.type === "text" ? (
+          <span key={index}>
+            {splitBold(segment.text).map((run, j) => {
+              const parts = linkify(run.text).map((part, i) =>
+                part.type === "text" ? (
+                  part.text
+                ) : (
+                  <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-neutral-950">
+                    {part.text}
+                  </a>
+                ),
+              );
+              return run.type === "bold" ? (
+                <strong key={j} className="font-semibold text-neutral-900">
+                  {parts}
+                </strong>
+              ) : (
+                <span key={j}>{parts}</span>
+              );
+            })}
+          </span>
+        ) : (
+          <sup key={index} className="mx-0.5">
+            {/* A new tab, so the conversation stays where it is. */}
+            <a
+              href={recordPath(segment.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open this source"
+              className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-neutral-900 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
+            >
+              {segment.n}
+              <span className="sr-only">, open source {segment.n} in a new tab</span>
+            </a>
+          </sup>
+        ),
+      )}
+    </>
+  );
+}
+
+function AssistantMessage({
+  message,
+  titles,
+  onSuggest,
+}: {
+  message: ChatMessage;
+  titles: readonly { id: string; title: string }[];
+  // Set only for the latest answer: its follow-up questions are shown as buttons.
+  onSuggest?: (question: string) => void;
+}) {
   // While streaming, the API has already removed invalid citations; once done, only the final list counts.
   const allowed = message.status === "done" ? new Set(message.citations) : undefined;
   const body = message.text;
-  const segments = splitCitations(body, allowed);
+  const blocks = parseBlocks(body);
+  const numbers = new Map<string, number>();
+  const suggestions = onSuggest !== undefined && message.status === "done" ? (message.suggestions ?? []) : [];
   const chips = message.status === "done" ? sourceChips(message.citations, titles, message.behavior) : [];
 
   return (
@@ -42,37 +101,31 @@ function AssistantMessage({ message, titles }: { message: ChatMessage; titles: r
           <span className="sr-only">Thinking…</span>
         </>
       ) : body === "" ? null : (
-        <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">
-          {segments.map((segment, index) =>
-            segment.type === "text" ? (
-              <span key={index}>
-                {linkify(segment.text).map((part, i) =>
-                  part.type === "text" ? (
-                    part.text
-                  ) : (
-                    <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-neutral-950">
-                      {part.text}
-                    </a>
-                  ),
-                )}
-              </span>
+        <div className="flex flex-col gap-3 [overflow-wrap:anywhere]">
+          {blocks.map((block, index) =>
+            block.type === "paragraph" ? (
+              <p key={index} className="whitespace-pre-line">
+                <InlineText text={block.text} allowed={allowed} numbers={numbers} />
+              </p>
+            ) : block.ordered ? (
+              <ol key={index} className="ml-5 flex list-decimal flex-col gap-1.5 marker:text-neutral-400">
+                {block.items.map((item, i) => (
+                  <li key={i} className="pl-1">
+                    <InlineText text={item} allowed={allowed} numbers={numbers} />
+                  </li>
+                ))}
+              </ol>
             ) : (
-              <sup key={index} className="mx-0.5">
-                {/* A new tab, so the conversation stays where it is. */}
-                <a
-                  href={recordPath(segment.id)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Open this source"
-                  className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-100 px-1 align-middle text-[10px] font-semibold text-neutral-600 no-underline hover:bg-neutral-900 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-900"
-                >
-                  {segment.n}
-                  <span className="sr-only">, open source {segment.n} in a new tab</span>
-                </a>
-              </sup>
+              <ul key={index} className="ml-5 flex list-disc flex-col gap-1.5 marker:text-neutral-400">
+                {block.items.map((item, i) => (
+                  <li key={i} className="pl-1">
+                    <InlineText text={item} allowed={allowed} numbers={numbers} />
+                  </li>
+                ))}
+              </ul>
             ),
           )}
-        </p>
+        </div>
       )}
 
       {chips.length > 0 ? (
@@ -92,6 +145,24 @@ function AssistantMessage({ message, titles }: { message: ChatMessage; titles: r
               <span className="truncate">{chip.title}</span>
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
+          ))}
+        </div>
+      ) : null}
+
+      {suggestions.length > 0 ? (
+        <div className="mt-3 flex flex-col items-start gap-2" role="group" aria-label="Suggested follow-up questions">
+          {suggestions.map((question) => (
+            <button
+              key={question}
+              type="button"
+              onClick={() => onSuggest?.(question)}
+              className="group inline-flex max-w-full items-center gap-2 rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-left text-sm text-neutral-700 transition-colors hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+            >
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5 shrink-0 text-neutral-400 group-hover:text-neutral-600" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 3v5a3 3 0 0 0 3 3h7M10 8l3 3-3 3" />
+              </svg>
+              <span>{question}</span>
+            </button>
           ))}
         </div>
       ) : null}
@@ -225,7 +296,7 @@ export function ChatView({
               </li>
             ) : (
               <li key={message.id}>
-                {message.card !== undefined ? <CardReply text={message.text} card={message.card} animate={index >= messages.length - 2} /> : <AssistantMessage message={message} titles={titles} />}
+                {message.card !== undefined ? <CardReply text={message.text} card={message.card} animate={index >= messages.length - 2} /> : <AssistantMessage message={message} titles={titles} {...(index === messages.length - 1 && !busy ? { onSuggest: (question: string) => send(question) } : {})} />}
               </li>
             ),
           )}

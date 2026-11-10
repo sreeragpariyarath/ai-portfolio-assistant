@@ -1,7 +1,22 @@
 // Validation for POST /api/chat (Phase 3 task 3.3). Pure request handling: no upstream calls.
+//
+// Body: { question, history?, compact?, summary? } (D-041). `history` is the latest turns of the chat, `compact`
+// the older turns the browser wants folded into the summary, `summary` the notes it holds about even older turns.
+// All three are optional, so a plain { question } still works exactly as before.
+import {
+  MAX_COMPACT_TURNS,
+  MAX_HISTORY_TURNS,
+  MAX_SUMMARY_CHARS,
+  cleanSummary,
+  cleanTurns,
+  type Turn,
+} from "@portfolio/rag";
 
-export const MAX_BODY_BYTES = 4 * 1024;
+// Room for 8 + 8 turns of up to 1,500 characters, even in a script that needs three bytes per character.
+export const MAX_BODY_BYTES = 48 * 1024;
 export const MAX_QUESTION_CHARS = 500;
+// A single turn longer than this is not a chat turn; shorter long text is cut, not rejected.
+const MAX_RAW_TURN_CHARS = 6_000;
 
 export type ChatRequestError = {
   status: 400 | 413 | 415;
@@ -10,13 +25,36 @@ export type ChatRequestError = {
     | "payload_too_large"
     | "invalid_json"
     | "invalid_body"
-    | "invalid_question";
+    | "invalid_question"
+    | "invalid_history";
   error: string;
 };
 
+export interface ChatInput {
+  question: string;
+  // Cleaned: citations stripped, long text cut, empty turns dropped.
+  history: Turn[];
+  compact: Turn[];
+  summary?: string;
+}
+
 export type ChatRequestResult =
-  | { ok: true; question: string }
+  | ({ ok: true } & ChatInput)
   | { ok: false; failure: ChatRequestError };
+
+// Checks the shape of a turn list. Returns null when it is not a valid list of at most `max` turns.
+function readTurns(value: unknown, max: number): Turn[] | null {
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.length > max) return null;
+  const turns: Turn[] = [];
+  for (const item of value) {
+    if (typeof item !== "object" || item === null || Array.isArray(item)) return null;
+    const { role, text } = item as Record<string, unknown>;
+    if ((role !== "user" && role !== "assistant") || typeof text !== "string" || text.length > MAX_RAW_TURN_CHARS) return null;
+    turns.push({ role, text });
+  }
+  return cleanTurns(turns, max);
+}
 
 function fail(
   status: ChatRequestError["status"],
@@ -110,5 +148,22 @@ export async function parseChatRequest(
     );
   }
 
-  return { ok: true, question };
+  const body = parsed as Record<string, unknown>;
+  const history = readTurns(body.history, MAX_HISTORY_TURNS);
+  const compact = readTurns(body.compact, MAX_COMPACT_TURNS);
+  const rawSummary = body.summary;
+  if (
+    history === null ||
+    compact === null ||
+    (rawSummary !== undefined && (typeof rawSummary !== "string" || rawSummary.length > MAX_SUMMARY_CHARS * 2))
+  ) {
+    return fail(
+      400,
+      "invalid_history",
+      `history and compact must be lists of at most ${MAX_HISTORY_TURNS} { role, text } turns, and summary a short string`,
+    );
+  }
+
+  const summary = cleanSummary(rawSummary);
+  return { ok: true, question, history, compact, ...(summary !== undefined ? { summary } : {}) };
 }

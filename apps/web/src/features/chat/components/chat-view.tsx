@@ -114,12 +114,15 @@ export function ChatView({
   onAsk,
   onStop,
   onHome,
+  onNewChat,
 }: {
   messages: ChatMessage[];
   busy: boolean;
   onAsk: (question: string, card?: CardKind) => void;
   onStop: () => void;
   onHome: () => void;
+  // Forgets this chat (the messages and the notes the assistant keeps) and starts again.
+  onNewChat: () => void;
 }) {
   const [question, setQuestion] = useState("");
   const [showStarters, setShowStarters] = useState(true);
@@ -181,7 +184,7 @@ export function ChatView({
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {announcementFor(messages)}
       </div>
-      <header className="flex shrink-0 justify-center pt-4 pb-1">
+      <header className="relative flex shrink-0 justify-center px-4 pt-4 pb-1">
         <button
           type="button"
           onClick={onHome}
@@ -189,6 +192,17 @@ export function ChatView({
           className="rounded-full transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
         >
           <Image src="/avatar.webp" alt="" width={48} height={48} unoptimized className="h-12 w-12 rounded-full bg-neutral-100 object-cover object-[50%_15%]" />
+        </button>
+        <button
+          type="button"
+          onClick={onNewChat}
+          title="Start a new chat. The assistant forgets this one."
+          className="absolute top-5 right-4 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+        >
+          <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <path d="M8 3v10M3 8h10" />
+          </svg>
+          New chat
         </button>
       </header>
 

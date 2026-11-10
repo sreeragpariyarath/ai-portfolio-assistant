@@ -96,8 +96,8 @@ describe("POST /api/chat request validation", () => {
     expect(generation?.body.contents[0].parts[0].text).toContain("<question>\nhi there\n</question>");
   });
 
-  it("returns 413 for a body over 4 KB", async () => {
-    const response = await postJson({ question: "a".repeat(5000) });
+  it("returns 413 for a body over 48 KB", async () => {
+    const response = await postJson({ question: "a".repeat(50_000) });
 
     expect(response.status).toBe(413);
     expect((await response.json()) as { code: string }).toMatchObject({

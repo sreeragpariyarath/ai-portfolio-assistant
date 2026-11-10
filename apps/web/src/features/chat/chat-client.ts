@@ -2,6 +2,7 @@ import { MalformedEventError, decodeChatEvent } from "./chat-events.ts";
 import type { ChatEvent } from "./chat-events.ts";
 import { CHAT_URL } from "./config.ts";
 import { createSseParser } from "./sse.ts";
+import type { Turn } from "./memory.ts";
 
 // The browser side of POST /api/chat. It asks one question and yields the typed events as they
 // arrive. Every failure becomes a ChatClientError with a code and a fixed, friendly message: server
@@ -27,8 +28,8 @@ export type ChatErrorCode =
 
 const MESSAGES: Record<ChatErrorCode, string> = {
   invalid_question: `Please ask a question of 1 to ${MAX_QUESTION_CHARS} characters.`,
-  rate_limited: "Too many questions in a short time. Please wait a moment and try again.",
-  demo_busy: "The demo is busy right now. Please try again in a minute.",
+  rate_limited: "You're asking faster than I can think! Give me a few seconds, then ask again.",
+  demo_busy: "Lots of people are chatting with me right now. Give me a minute, then ask again.",
   timeout: "The answer took too long. Please try again.",
   upstream_unavailable: "The answer service is unavailable. Please try again later.",
   prompt_blocked: "This question could not be answered. Try rephrasing it.",
@@ -114,23 +115,35 @@ export interface AskOptions {
   url?: string;
   // Defaults to the global fetch; tests pass a mock.
   fetch?: typeof fetch;
+  // Chat memory (D-041), from `memoryForRequest`: the latest turns, older turns to fold into the notes, and the
+  // notes themselves. Sent only when present, so a first question is still a plain { question }.
+  history?: readonly Turn[];
+  compact?: readonly Turn[];
+  summary?: string;
 }
 
 // Asks one question and yields its events: `meta`, then `token`s, then `done`. A server `error` event
 // is yielded like any other and ends the stream. Throws ChatClientError for everything that goes
 // wrong before or during the stream, and the browser's AbortError when `signal` is aborted.
 export async function* askQuestion(question: string, options: AskOptions = {}): AsyncGenerator<ChatEvent, void, void> {
-  const { signal, url = CHAT_URL, fetch: doFetch = fetch } = options;
+  const { signal, url = CHAT_URL, fetch: doFetch = fetch, history = [], compact = [], summary } = options;
 
   const trimmed = question.trim();
   if (trimmed.length < 1 || trimmed.length > MAX_QUESTION_CHARS) throw new ChatClientError("invalid_question");
+
+  const body = {
+    question: trimmed,
+    ...(history.length > 0 ? { history } : {}),
+    ...(compact.length > 0 ? { compact } : {}),
+    ...(summary !== undefined && summary !== "" ? { summary } : {}),
+  };
 
   let response: Response;
   try {
     response = await doFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
-      body: JSON.stringify({ question: trimmed }),
+      body: JSON.stringify(body),
       ...(signal !== undefined ? { signal } : {}),
     });
   } catch (error) {

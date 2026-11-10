@@ -2,6 +2,9 @@
 
 The single list of what is left. Read it at the start of a session (it is the shared memory between the owner's two machines, like `DAILY_LOG.md`). Tick items off or delete them when done, and record decisions in `DECISIONS.md`. Last updated 2026-10-30, at the end of Phase 4.
 
+## Update 10 Nov 2026 (laptop): chat memory built (D-041), fit answers (D-040), model-written replies (D-039)
+Branch `feat/chat-memory` (on top of `feat/model-written-replies`). Each question carries the latest 8 messages and notes about older ones; follow-ups are rewritten before search; the chat is kept in sessionStorage with a New chat button; the rate-limit and busy messages are friendlier. All offline checks pass. **Left, each needs the owner's go-ahead:** (1) `pnpm ingest` for `profile-078` and `profile-079`; (2) the live conversation evaluation (`pnpm eval:conversation --live`, about 30 Gemini calls) and the live answer evaluation on the new prompt (about 106 calls); (3) a local look at the chat with real keys; (4) push, PR, merge and redeploy.
+
 ## Update 7 Nov 2026 (laptop): more records, dense-led search, evaluation re-run (D-037, D-038)
 126 public records are in the Qdrant index (38 added from existing facts, 6 from the owner's answers); the search is dense-led (keyword weight 0.02) and the prompt says "not written down" instead of "no experience". Live evaluation on 100 cases: behaviour 90.0%, evidence cited 96.5%, no leaks, no injections followed. **Left:** (1) redeploy the Worker so the live site uses the new records, weight and prompt (`pnpm corpus:build` is done; `pnpm --filter web build`, then `wrangler deploy`); (2) chat memory (next task); (3) a held-out question set; (4) the owner's Fun card pick, the demo GIF and a licence; (5) the owner may still add real facts (notice period and shareable numbers were not given; "immediate availability" was left out on purpose).
 

@@ -25,6 +25,14 @@ export interface UpstreamOptions {
   // Points Qdrant returns; a Response replaces the whole reply (for failures).
   qdrant?: { id: string; score: number }[] | Response;
   embed?: Response;
+  // Called for each (non-streamed) generateContent request: the chat memory helper calls, query rewrite and
+  // compaction. `body` is the parsed request, so a test can tell the two apart by their system instruction.
+  complete?: (model: string, call: number, body: any) => Response | Promise<Response>;
+}
+
+// A non-streamed Gemini reply with the given text.
+export function completeResponse(text: string, finishReason = "STOP"): Response {
+  return Response.json({ candidates: [{ content: { parts: [{ text }] }, finishReason }] });
 }
 
 export function sseResponse(texts: string[], finishReason: string | null = "STOP"): Response {
@@ -39,6 +47,7 @@ export function sseResponse(texts: string[], finishReason: string | null = "STOP
 export function mockUpstreams(options: UpstreamOptions = {}) {
   const calls: UpstreamCall[] = [];
   let generationCalls = 0;
+  let completeCalls = 0;
   const fetchImpl = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
     calls.push({ url, body: init?.body ? JSON.parse(String(init.body)) : undefined });
@@ -59,6 +68,10 @@ export function mockUpstreams(options: UpstreamOptions = {}) {
       const model = /models\/([^:]+):/.exec(url)?.[1] ?? "";
       const reply = options.generation ? options.generation(model, generationCalls++) : sseResponse(["BEHAVIOR: answer\n", "Hello."]);
       return reply;
+    }
+    if (url.includes(":generateContent") && options.complete) {
+      const model = /models\/([^:]+):/.exec(url)?.[1] ?? "";
+      return options.complete(model, completeCalls++, calls.at(-1)?.body);
     }
     throw new Error(`Unexpected upstream request: ${url}`);
   }) as typeof fetch;

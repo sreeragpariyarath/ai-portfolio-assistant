@@ -4,6 +4,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { withDockGlide } from "./dock-glide";
 import { ChatClientError, askQuestion, isAbortError } from "@/features/chat/chat-client";
 import { chatReducer, initialChatState } from "@/features/chat/chat-state";
+import { clearChat, loadChat, memoryForRequest, saveChat } from "@/features/chat/memory";
 import { matchCardIntent } from "@/features/cards/card-intent";
 import { CARD_INTROS } from "@/features/cards/portfolio-cards";
 import type { CardKind } from "@/features/cards/portfolio-cards";
@@ -15,10 +16,31 @@ import { PerfOverlay } from "@/shared/perf/perf-overlay";
 // unmounts the water effect, which stops it and gives the GPU back.
 export function PortfolioApp() {
   const [state, dispatch] = useReducer(chatReducer, initialChatState);
-  const [view, setView] = useState<"home" | "chat">("home");
+  // "auto" until the visitor moves: the chat if one was restored from storage, otherwise the home screen.
+  const [view, setView] = useState<"auto" | "home" | "chat">("auto");
+  const shown = view === "auto" ? (state.messages.length > 0 ? "chat" : "home") : view;
   const controller = useRef<AbortController | null>(null);
   const currentId = useRef<string | null>(null);
   const counter = useRef(0);
+  // The latest state, for building each request's memory inside the stable `ask` callback.
+  const latest = useRef(state);
+  useEffect(() => {
+    latest.current = state;
+  }, [state]);
+
+  // Chat memory (D-041) lives in sessionStorage: a refresh brings the chat back, closing the tab forgets it.
+  const storage = () => (typeof window === "undefined" ? undefined : window.sessionStorage);
+  useEffect(() => {
+    const saved = loadChat(storage());
+    if (saved === null) return;
+    // Ids continue after the restored ones, so a new answer never reuses an old id.
+    counter.current = saved.messages.length;
+    dispatch({ type: "restore", ...saved });
+  }, []);
+  // Saved whenever nothing is streaming, so a half-written answer is never stored as if it were finished.
+  useEffect(() => {
+    if (state.activeId === null) saveChat(storage(), state);
+  }, [state]);
 
   // Text fields match :focus-visible even after a mouse click. Show the pill's
   // focus cue only when the visitor is navigating with Tab, not while typing.
@@ -59,13 +81,21 @@ export function PortfolioApp() {
     controller.current = abort;
     currentId.current = id;
 
+    // Built before the question is added: the latest turns, older ones to fold into notes, and the notes.
+    const memory = memoryForRequest(latest.current);
     withDockGlide(() => {
-      dispatch({ type: "ask", id, question });
+      dispatch({ type: "ask", id, question, ...(memory.foldThrough !== undefined ? { foldThrough: memory.foldThrough } : {}) });
       setView("chat");
     });
 
     try {
-      for await (const event of askQuestion(question, { signal: abort.signal })) {
+      const options = {
+        signal: abort.signal,
+        history: memory.history,
+        compact: memory.compact,
+        ...(memory.summary !== undefined ? { summary: memory.summary } : {}),
+      };
+      for await (const event of askQuestion(question, options)) {
         dispatch({ type: "event", id, event });
       }
     } catch (error) {
@@ -96,12 +126,19 @@ export function PortfolioApp() {
     setView("home");
   }, [stop]);
 
+  const newChat = useCallback(() => {
+    stop();
+    clearChat(storage());
+    dispatch({ type: "reset" });
+    setView("home");
+  }, [stop]);
+
   // Leaving the page cancels any answer still streaming.
   useEffect(() => () => controller.current?.abort(), []);
 
   return (
     <>
-      {view === "home" ? (
+      {shown === "home" ? (
         <HomeScreen restoreFocus={state.messages.length > 0} onAsk={(question, card) => void ask(question, card)} />
       ) : (
         <ChatView
@@ -110,6 +147,7 @@ export function PortfolioApp() {
           onAsk={(question, card) => void ask(question, card)}
           onStop={stop}
           onHome={goHome}
+          onNewChat={newChat}
         />
       )}
       <PerfOverlay />

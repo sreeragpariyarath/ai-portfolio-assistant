@@ -5,8 +5,8 @@ import { splitCitations } from "./citations.ts";
 import type { CardKind } from "../cards/portfolio-cards.ts";
 
 // The conversation shown in the chat view, as a reducer so every transition is a pure, tested
-// function. Each question is answered on its own (the API takes no history); the list is only what
-// the visitor sees.
+// function. The API remembers nothing: each question carries the latest turns and the notes about older ones
+// (memory.ts, D-041), and the notes come back in a `memory` event.
 
 export type MessageStatus = "streaming" | "done" | "error" | "stopped";
 
@@ -22,24 +22,31 @@ export interface ChatMessage {
   error?: string;
   // Set on stored replies (task 4.11): the card shown under `text`. No assistant call was made for it.
   card?: CardKind;
-  // A stored opening line that replaces the model's own first sentence on an off-topic reply.
 }
 
 export interface ChatState {
   messages: ChatMessage[];
   // The assistant message currently streaming, if any.
   activeId: string | null;
+  // Notes about the older part of the chat, written by the API, and how many messages (from the start) they
+  // cover. Messages after that are sent as they are.
+  summary?: string;
+  summarized: number;
+  // Set while a question that asked for older turns to be folded is answered: the `summarized` count to
+  // take once its notes arrive.
+  pendingFold?: { id: string; through: number };
 }
 
 export type ChatAction =
-  | { type: "ask"; id: string; question: string }
+  | { type: "ask"; id: string; question: string; foldThrough?: number }
   | { type: "show"; id: string; question: string; card: CardKind; intro: string }
   | { type: "event"; id: string; event: ChatEvent }
   | { type: "fail"; id: string; code: ChatErrorCode; retryAfterSeconds?: number }
   | { type: "stop"; id: string }
+  | { type: "restore"; messages: ChatMessage[]; summary?: string; summarized: number }
   | { type: "reset" };
 
-export const initialChatState: ChatState = { messages: [], activeId: null };
+export const initialChatState: ChatState = { messages: [], activeId: null, summarized: 0 };
 
 function update(state: ChatState, id: string, change: (message: ChatMessage) => ChatMessage): ChatState {
   let found = false;
@@ -60,7 +67,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case "ask": {
       // A new question stops whatever was still streaming.
       const stopped = state.activeId === null ? state : chatReducer(state, { type: "stop", id: state.activeId });
+      const rest: ChatState = { ...stopped };
+      delete rest.pendingFold;
       return {
+        ...rest,
+        ...(action.foldThrough !== undefined ? { pendingFold: { id: action.id, through: action.foldThrough } } : {}),
         activeId: action.id,
         messages: [
           ...stopped.messages,
@@ -74,6 +85,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       // A stored card needs no request, so nothing is left streaming; a running answer is stopped.
       const stopped = state.activeId === null ? state : chatReducer(state, { type: "stop", id: state.activeId });
       return {
+        ...stopped,
         activeId: null,
         messages: [
           ...stopped.messages,
@@ -93,6 +105,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           return update(state, id, (message) => ({ ...message, behavior: event.behavior }));
         case "token":
           return update(state, id, (message) => ({ ...message, text: message.text + event.text }));
+        case "memory": {
+          if (state.pendingFold?.id !== id) return state;
+          const { pendingFold, ...rest } = state;
+          return { ...rest, summary: event.summary, summarized: pendingFold.through };
+        }
         case "done":
           return finish(
             update(state, id, (message) => ({ ...message, status: "done", citations: event.citations, truncated: event.truncated })),
@@ -124,6 +141,14 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         update(state, action.id, (message) => (message.status === "streaming" ? { ...message, status: "stopped" } : message)),
         action.id,
       );
+
+    case "restore":
+      return {
+        messages: action.messages,
+        activeId: null,
+        summarized: action.summarized,
+        ...(action.summary !== undefined ? { summary: action.summary } : {}),
+      };
 
     case "reset":
       return initialChatState;

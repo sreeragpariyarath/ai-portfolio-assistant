@@ -117,4 +117,8 @@ The full list, with the reasons, is in [docs/DECISIONS.md](docs/DECISIONS.md). T
 
 ## Status
 
-Phases 0 to 5 (data, retrieval, generation, chat UI, deploy) are done and the site is live. The roadmap is in [docs/RAG_PROJECT_PLAN.md](docs/RAG_PROJECT_PLAN.md) and what is left is in [docs/PENDING.md](docs/PENDING.md).
+All phases are done and live: data, retrieval, generation, the chat UI and deploy, then chat memory, fit-and-capability answers, formatted answers with follow-up suggestions, a held-out evaluation set and the illustrated Fun card. The roadmap is in [docs/RAG_PROJECT_PLAN.md](docs/RAG_PROJECT_PLAN.md) and what is left is in [docs/PENDING.md](docs/PENDING.md).
+
+## Licence
+
+The code is released under the [MIT License](LICENSE). The water effect is a port of an MIT-licensed project; its notice is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The portfolio records in `data/` describe the author and are included as the assistant's knowledge base; please do not reuse them as your own.

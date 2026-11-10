@@ -9,6 +9,8 @@ export type ChatEvent =
   | { type: "meta"; behavior: Behavior; behaviorValid: boolean; retrieved: string[]; degraded: boolean }
   | { type: "token"; text: string }
   | { type: "done"; citations: string[]; invalidCitationsDropped: number; truncated: boolean; model: string }
+  // New notes about the older turns of this chat (D-041), sent just before `done` when the API compacted them.
+  | { type: "memory"; summary: string }
   | { type: "error"; code: string; message: string };
 
 // A known event whose payload is not valid JSON or has the wrong shape. The message never includes
@@ -38,7 +40,7 @@ function isStringArray(value: unknown): value is string[] {
 // known event with a bad payload.
 export function decodeChatEvent(frame: SseFrame): ChatEvent | null {
   const name = frame.event;
-  if (name !== "meta" && name !== "token" && name !== "done" && name !== "error") return null;
+  if (name !== "meta" && name !== "token" && name !== "done" && name !== "error" && name !== "memory") return null;
 
   let payload: unknown;
   try {
@@ -51,6 +53,11 @@ export function decodeChatEvent(frame: SseFrame): ChatEvent | null {
   if (name === "token") {
     if (typeof payload.text !== "string") throw new MalformedEventError(name, "text must be a string");
     return { type: "token", text: payload.text };
+  }
+
+  if (name === "memory") {
+    if (typeof payload.summary !== "string") throw new MalformedEventError(name, "summary must be a string");
+    return { type: "memory", summary: payload.summary };
   }
 
   if (name === "meta") {

@@ -112,10 +112,22 @@ describe("buildPrompt", () => {
     assert.ok(/Only state an absence when a record says so/.test(SYSTEM_INSTRUCTION));
   });
 
-  it("keeps the playful, disposable first sentence for messages that have nothing to do with the owner", () => {
+  it("has the model reply in its own words to messages that have nothing to do with the owner", () => {
     assert.ok(/behavior offtopic/.test(SYSTEM_INSTRUCTION));
-    assert.ok(/replace the first sentence with its own playful line/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/reply like a friendly person would, in your own words/.test(SYSTEM_INSTRUCTION));
     assert.ok(/Do not use offtopic for a real question about the owner's work or life/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("answers fit and capability questions in four steps and never claims experience with an unlisted technology", () => {
+    assert.ok(/Fit and capability questions/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/a direct first sentence that says yes, likely, partly or not proven/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/he can work with it because he uses AI coding tools every day/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/Never claim past experience with it/.test(SYSTEM_INSTRUCTION));
+    assert.ok(/keep the judgement clearly separate from the facts/.test(SYSTEM_INSTRUCTION));
+  });
+
+  it("cites only the records a sentence relies on", () => {
+    assert.ok(/only the records the sentence actually relies on/.test(SYSTEM_INSTRUCTION));
   });
 
   it("treats greetings, thanks and introductions as a normal answer with no citation, never an I-don't-know", () => {

@@ -12,6 +12,7 @@
     "eval:baseline": "node --disable-warning=ExperimentalWarning scripts/retrieval-baseline.ts",
     "eval:retrieval": "node --disable-warning=ExperimentalWarning scripts/retrieval-eval.ts",
     "eval:answers": "node --disable-warning=ExperimentalWarning scripts/answer-eval.ts",
+    "eval:conversation": "node --disable-warning=ExperimentalWarning scripts/conversation-eval.ts",
     "typecheck:scripts": "tsc -p tsconfig.json",
     "test:scripts": "node --disable-warning=ExperimentalWarning --test \"scripts/**/*.test.ts\" \"packages/rag/test/**/*.test.ts\" \"apps/web/src/**/*.test.ts\"",
     "web:size": "node --disable-warning=ExperimentalWarning scripts/web-size.ts",

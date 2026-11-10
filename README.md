@@ -108,7 +108,7 @@ The full list, with the reasons, is in [docs/DECISIONS.md](docs/DECISIONS.md). T
 
 ## Limitations and quotas
 
-- **No conversation memory yet.** Each question is answered on its own, so a follow-up such as "tell me more about that" loses its context. Adding recent messages to each request is the next planned change.
+- **Memory lasts one chat (D-041).** Each question carries the latest 8 messages and short notes about older ones; a follow-up such as "tell me more about that" is rewritten into a standalone search question first. The chat lives in the visitor's sessionStorage: a refresh keeps it, closing the tab or pressing New chat forgets it, and the server stores nothing. What visitors say about themselves is used for context but never treated as a fact about the owner.
 - **Strict on unknowns.** When the records hold nothing relevant, the assistant says so (with a light joke) instead of guessing. Greetings and introductions are not handled warmly enough yet.
 - **Free-tier limits.** Gemini's free tier allows a limited number of requests a day per model, and the Worker allows 10 questions a minute per visitor. When a limit is hit, the page shows a short "try again" message. Cloudflare's rate limit is approximate on the free plan: a quick burst can get a few dozen requests through before it holds (D-035).
 - **Development questions only.** The evaluation questions were written while building the system, so the scores are optimistic. A held-out set is planned.

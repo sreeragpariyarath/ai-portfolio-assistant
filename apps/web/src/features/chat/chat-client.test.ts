@@ -8,7 +8,7 @@ import {
   isAbortError,
   normalizeErrorCode,
 } from "./chat-client.ts";
-import type { ChatErrorCode } from "./chat-client.ts";
+import type { AskOptions, ChatErrorCode } from "./chat-client.ts";
 import type { ChatEvent } from "./chat-events.ts";
 
 const encoder = new TextEncoder();
@@ -58,7 +58,7 @@ async function collect(iterable: AsyncIterable<ChatEvent>): Promise<{ events: Ch
   }
 }
 
-const ask = (question: string, fetchMock: typeof fetch, extra: { signal?: AbortSignal } = {}) =>
+const ask = (question: string, fetchMock: typeof fetch, extra: Omit<AskOptions, "url" | "fetch"> = {}) =>
   askQuestion(question, { url: URL_UNDER_TEST, fetch: fetchMock, ...extra });
 
 describe("askQuestion: a successful answer", () => {
@@ -97,6 +97,19 @@ describe("askQuestion: a successful answer", () => {
     assert.deepEqual(calls[0]!.init.headers, { "Content-Type": "application/json", Accept: "text/event-stream" });
     assert.deepEqual(JSON.parse(String(calls[0]!.init.body)), { question: "Who is Alex?" });
     assert.equal(calls[0]!.init.signal, controller.signal);
+  });
+
+  it("adds the chat memory to the body only when there is some, and passes a memory event through", async () => {
+    const MEMORY = frame("memory", { summary: "Visitor: Ren from ABC." });
+    const { fetchMock, calls } = mockFetch(() => sseResponse([META + MEMORY + DONE]));
+    const history = [
+      { role: "user" as const, text: "Hi, I am Ren" },
+      { role: "assistant" as const, text: "Hello Ren!" },
+    ];
+    const { events } = await collect(ask("And his projects?", fetchMock, { history, compact: [], summary: "Notes." }));
+
+    assert.deepEqual(JSON.parse(String(calls[0]!.init.body)), { question: "And his projects?", history, summary: "Notes." });
+    assert.deepEqual(events.find((event) => event.type === "memory"), { type: "memory", summary: "Visitor: Ren from ABC." });
   });
 
   it("ignores events it does not know", async () => {

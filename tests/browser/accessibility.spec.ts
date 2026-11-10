@@ -230,36 +230,20 @@ for (const viewport of [{ width: 360, height: 640 }, { width: 1280, height: 800 
   });
 }
 
-test("an off-topic reply opens with a stored line; a plain I-don't-have-that and a refusal do not", async ({ page }) => {
+test("every reply is the model's own words: no stored line is added to off-topic, unknown or refused replies", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("textbox").fill("nothing");
-  await page.getByRole("textbox").press("Enter");
-  const live = page.locator('main [aria-live="polite"]');
-  await expect(live).toContainText("I can tell you about the projects instead.");
-  const announced = (await live.innerText()).replace(/\s+/g, " ");
-  expect(announced).not.toContain("I do not have that information");
-  await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("I can tell you about the projects instead.")).toBeVisible();
-  await expect(page.locator("ol").getByText("Not something I have on record")).toHaveCount(0);
-  // No sources under an I-don't-know.
+  const ask = async (q: string) => {
+    await page.getByRole("textbox").fill(q);
+    await page.getByRole("textbox").press("Enter");
+  };
+  await ask("nothing");
+  await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
   await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
   await accessible(page);
-  const lead = await page.locator("li p.font-medium").last().innerText();
-  expect(lead.length).toBeGreaterThan(20);
-  expect(announced.startsWith(lead)).toBe(true);
-
-  await page.getByRole("textbox").fill("private");
-  await page.getByRole("textbox").press("Enter");
-  await expect(page.locator("ol").getByText("That one stays private")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("Where this comes from")).toHaveCount(0);
-  await expect(page.locator("ol").getByText("I do not have that information")).toBeVisible();
-  await expect(page.locator("li p.font-medium")).toHaveCount(1);
-
-  // A real question the records do not cover is a plain abstain: no stored line is added.
-  await page.getByRole("textbox").fill("unknown");
-  await page.getByRole("textbox").press("Enter");
-  await expect(page.locator("ol").getByText("I do not have that information").last()).toBeVisible();
-  await expect(page.locator("li p.font-medium")).toHaveCount(1);
+  await ask("private");
+  await ask("unknown");
+  await expect(page.locator("ol").getByText("I do not have that information")).toHaveCount(3);
+  await expect(page.locator("li p.font-medium")).toHaveCount(0);
 });
 
 test("a new card slides in, but not for visitors who ask for reduced motion", async ({ page }) => {
@@ -365,4 +349,51 @@ test("in a browser without view transitions the project dialog still opens and c
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(card).toBeFocused();
+});
+
+test("chat memory: follow-ups carry the chat, older turns are folded into notes, a refresh keeps it and New chat forgets it", async ({ page }) => {
+  await page.goto("/");
+  const sent: { history?: unknown[]; compact?: unknown[]; summary?: string }[] = [];
+  page.on("request", (request) => {
+    if (request.url().endsWith("/api/chat") && request.method() === "POST") sent.push(request.postDataJSON());
+  });
+  const answers = page.getByText("Where this comes from");
+  const ask = async (question: string, done: number) => {
+    await page.getByRole("textbox").fill(question);
+    await page.getByRole("textbox").press("Enter");
+    await expect(answers).toHaveCount(done);
+  };
+
+  await ask("I am Ren from ABC, what has he built?", 1);
+  expect(sent[0]).toEqual({ question: "I am Ren from ABC, what has he built?" });
+  await ask("And what stack did it use?", 2);
+  expect(sent[1]?.history).toHaveLength(2);
+  await expect(page.locator("ol").getByText("(remembering 2 turns)")).toBeVisible();
+
+  // A refresh brings the chat back from sessionStorage, and the next question still carries it.
+  await page.reload();
+  await expect(page.locator("ol").getByText("I am Ren from ABC, what has he built?")).toBeVisible();
+  await expect(answers).toHaveCount(2);
+  await accessible(page);
+  for (let i = 3; i <= 6; i++) await ask(`Question number ${i} about his backend work`, i);
+  // Six questions in, the sixth carried 8 latest turns and asked for the 2 oldest to be folded.
+  expect(sent.at(-1)?.history).toHaveLength(8);
+  expect(sent.at(-1)?.compact).toHaveLength(2);
+  await ask("Question number 7 about his backend work", 7);
+  // The notes came back, so the first two turns are not sent again; the next two oldest are folded now.
+  expect(sent.at(-1)?.summary).toBe("Notes about 2 older turns.");
+  expect(sent.at(-1)?.compact).toEqual([
+    { role: "user", text: "And what stack did it use?" },
+    expect.objectContaining({ role: "assistant" }),
+  ]);
+
+  // New chat forgets everything, also after a refresh.
+  await page.getByRole("button", { name: "New chat" }).click();
+  await expect(page.locator("ol").getByText("I am Ren from ABC, what has he built?")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator("ol").getByText("I am Ren from ABC, what has he built?")).toHaveCount(0);
+  await page.getByRole("textbox").fill("A fresh question about his work");
+  await page.getByRole("textbox").press("Enter");
+  await expect(answers).toHaveCount(1);
+  expect(sent.at(-1)).toEqual({ question: "A fresh question about his work" });
 });

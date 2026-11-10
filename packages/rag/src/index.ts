@@ -14,7 +14,29 @@ export {
 export type { IngestPlan, PlannedRecord, PointPayload } from "./ingest.ts";
 export { documentInput, queryInput } from "./embedding-input.ts";
 export { BEHAVIORS, SYSTEM_INSTRUCTION, buildPrompt } from "./prompt.ts";
-export type { Behavior, Prompt, PromptRecord } from "./prompt.ts";
+export type { Behavior, Prompt, PromptOptions, PromptRecord } from "./prompt.ts";
+export {
+  COMPACTION_INSTRUCTION,
+  MAX_ASSISTANT_TURN_CHARS,
+  MAX_COMPACT_TURNS,
+  MAX_HISTORY_TURNS,
+  MAX_REWRITE_CHARS,
+  MAX_SUMMARY_CHARS,
+  MAX_USER_TURN_CHARS,
+  REWRITE_INSTRUCTION,
+  buildCompactionPrompt,
+  buildRewritePrompt,
+  cleanSummary,
+  cleanTurn,
+  cleanTurns,
+  conversationBlocks,
+  fallbackSearchText,
+  isFollowUp,
+  parseRewrite,
+  parseSummary,
+  stripCitations,
+} from "./conversation.ts";
+export type { Turn, TurnRole } from "./conversation.ts";
 export { createAnswerParser, parseAnswer } from "./answer.ts";
 export type { AnswerChunk, AnswerHeader, AnswerParser, AnswerResult } from "./answer.ts";
 export { EmbeddingCache, cachedEmbedQuery, embeddingKey, normalizeQuestion } from "./embedding-cache.ts";

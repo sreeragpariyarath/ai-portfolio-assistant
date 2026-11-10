@@ -76,7 +76,7 @@ async function handleChat(request: Request, env: Env, deps: ChatDeps): Promise<R
     return jsonResponse({ error, code }, status, cors);
   }
 
-  const answered = await answerQuestion(parsed.question, env, deps, cors);
+  const answered = await answerQuestion(parsed, env, deps, cors);
   if ("response" in answered) return answered.response;
 
   const { status, code, error, retryAfterSeconds } = answered.failure;

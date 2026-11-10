@@ -1999,6 +1999,36 @@
       "visibility": "private",
       "createdAt": "2026-11-02",
       "updatedAt": "2026-11-02"
+    },
+    {
+      "id": "profile-078",
+      "type": "profile",
+      "title": "Can Sreerag work with a technology that is not on his skills list?",
+      "content": "Yes. If a team uses a language, framework or tool that is not on his skills list, such as Go, Python, Java or Kubernetes, Sreerag says he can work with it, because he uses AI coding tools every day (mainly Claude Code) and adapts quickly. This is about how he learns, not past experience: he has not listed that technology as something he has used. He expects a short ramp-up, and his strongest base is JavaScript and TypeScript, Node.js backends, databases and cloud servers.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-08"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-08",
+      "updatedAt": "2026-11-08"
+    },
+    {
+      "id": "profile-079",
+      "type": "profile",
+      "title": "Migrations and legacy code Sreerag has worked on",
+      "content": "Sreerag has done migrations on real systems. In Oct 2026 he migrated the Carina Softlabs company website and admin panel alone from Angular 16 to Angular 22, cleaning up a lot of old tangled code and publishing it with server-side rendering. In Jul 2026 he migrated the LearnWithHupe iOS purchase handling to the App Store Server API. His frontend skills include React and Next.js. The records do not describe a React to Next.js migration or the size of any legacy codebase he has moved.",
+      "source": {
+        "kind": "owner_statement",
+        "ref": "owner-answers-2026-11-08"
+      },
+      "verificationStatus": "owner-stated",
+      "isSynthetic": false,
+      "visibility": "public",
+      "createdAt": "2026-11-08",
+      "updatedAt": "2026-11-08"
     }
   ]
 }

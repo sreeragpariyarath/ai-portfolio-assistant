@@ -1,14 +1,17 @@
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { REAL_SOURCE_KINDS } from "@portfolio/rag";
 import {
   BEHAVIORS,
   EVAL_FILE,
+  HELDOUT_EVAL_FILE,
   PORTFOLIO_RECORDS_FILE,
   RECORDS_FILE,
   RECORD_TYPES,
   SCORING_MODES,
   SYNTHETIC_RECORDS_FILE,
   VISIBILITIES,
+  REPO_ROOT,
   loadJson,
 } from "./lib/eval-data.ts";
 
@@ -164,13 +167,14 @@ function validateEval(evalSet: Obj, recordsById: Map<string, Obj>, report: Repor
     }
     const label = isText(entry.id) ? entry.id : `cases[${index}]`;
 
-    if (!isText(entry.id) || !/^E\d{3}$/.test(entry.id)) report(`${label}: id must look like E001`);
+    if (!isText(entry.id) || !/^[EH]\d{3}$/.test(entry.id)) report(`${label}: id must look like E001 (or H001 for held-out cases)`);
     else if (casesById.has(entry.id)) report(`${label}: duplicate case id`);
     else casesById.set(entry.id, entry);
 
     if (!isText(entry.category)) report(`${label}: category is required`);
     if (!isText(entry.question)) report(`${label}: question is required`);
-    if (entry.split !== "development") report(`${label}: split must be "development"`);
+    if (entry.split !== "development" && entry.split !== "heldout") report(`${label}: split must be "development" or "heldout"`);
+    if (entry.split === "heldout" && !/^H/.test(String(entry.id))) report(`${label}: held-out cases use ids like H001`);
     if (entry.isSynthetic !== syntheticCorpus) report(`${label}: isSynthetic must be ${syntheticCorpus}`);
     if (!(BEHAVIORS as readonly unknown[]).includes(entry.expectedBehavior)) {
       report(`${label}: expectedBehavior must be one of ${BEHAVIORS.join(", ")}`);
@@ -251,15 +255,25 @@ function validatePinnedFixes(casesById: Map<string, Obj>, report: Report): void 
 function main(): number {
   let corpus: unknown;
   let evalSet: unknown;
+  let heldout: unknown;
   try {
     corpus = loadJson(RECORDS_FILE);
     evalSet = loadJson(EVAL_FILE);
+    heldout = existsSync(resolve(REPO_ROOT, HELDOUT_EVAL_FILE)) ? loadJson(HELDOUT_EVAL_FILE) : undefined;
   } catch (error) {
     console.error(`Cannot read evaluation data: ${error instanceof Error ? error.message : String(error)}`);
     return 1;
   }
 
   const errors = validateEvalData(corpus, evalSet);
+  if (heldout !== undefined) {
+    for (const error of validateEvalData(corpus, heldout)) errors.push(`held-out: ${error}`);
+    // A held-out question must not repeat a development question.
+    const seen = new Set((evalSet as { cases: { question: string }[] }).cases.map((entry) => entry.question.trim().toLowerCase()));
+    for (const entry of (heldout as { cases: { id: string; question: string }[] }).cases) {
+      if (seen.has(entry.question.trim().toLowerCase())) errors.push(`held-out: ${entry.id} repeats a development question`);
+    }
+  }
   if (errors.length > 0) {
     console.error(`Validation failed with ${errors.length} error(s):`);
     for (const message of errors) console.error(`  - ${message}`);
@@ -268,7 +282,8 @@ function main(): number {
 
   const records = (corpus as { records: unknown[] }).records.length;
   const cases = (evalSet as { cases: unknown[] }).cases.length;
-  console.log(`ok: ${records} records, ${cases} cases`);
+  const heldoutCases = heldout === undefined ? 0 : (heldout as { cases: unknown[] }).cases.length;
+  console.log(`ok: ${records} records, ${cases} cases, ${heldoutCases} held-out cases`);
   return 0;
 }
 

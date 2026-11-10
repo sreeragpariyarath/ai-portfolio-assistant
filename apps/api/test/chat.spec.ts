@@ -163,6 +163,14 @@ describe("POST /api/chat CORS", () => {
     expect(response.headers.get("vary")).toContain("Origin");
   });
 
+  it("also allows the live site, and echoes back only the origin that asked", async () => {
+    const live = "https://sreerag.pariyarath.workers.dev";
+    const response = await SELF.fetch(URL_CHAT, { method: "OPTIONS", headers: { Origin: live } });
+    expect(response.headers.get("access-control-allow-origin")).toBe(live);
+    const whole = await SELF.fetch(URL_CHAT, { method: "OPTIONS", headers: { Origin: `${live} ${ORIGIN}` } });
+    expect(whole.headers.get("access-control-allow-origin")).toBeNull();
+  });
+
   it("gives another origin no CORS permission", async () => {
     const response = await SELF.fetch(URL_CHAT, {
       method: "OPTIONS",

@@ -74,7 +74,10 @@ describe("the deploy configuration (apps/api/wrangler.jsonc)", () => {
     assert.ok(limiter.simple.limit >= 1);
   });
 
-  it("allows only an https or localhost origin", () => {
-    assert.match(config.vars.ALLOWED_ORIGIN, /^(https:\/\/[^/\s]+|http:\/\/localhost:\d+)$/);
+  it("allows only https or localhost origins, and includes the live site", () => {
+    const origins = config.vars.ALLOWED_ORIGIN.split(/\s+/).filter(Boolean);
+    assert.ok(origins.length > 0);
+    for (const origin of origins) assert.match(origin, /^(https:\/\/[^/\s]+|http:\/\/localhost:\d+)$/);
+    assert.ok(origins.includes("https://sreerag.pariyarath.workers.dev"));
   });
 });

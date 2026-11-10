@@ -36,6 +36,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Phase D (laptop, 10 Nov), D-043, branch `feat/chat-format-and-suggestions`: answers render bullet lists, numbered lists and bold (a small safe Markdown subset, no HTML); the model no longer inflates ("extensive", "strong"); each answer ends with a hidden NEXT: line that becomes 2 or 3 follow-up question buttons under the latest answer. The owner tried it locally with real keys and approved it. Tested: `pnpm test:scripts` (574), API tests (84), `pnpm test:web:a11y` (19), type checks, web lint; live evaluations re-run on the new prompt (see the results files).
 
+- Tidy-up (laptop, 10 Nov), D-044: ALLOWED_ORIGIN lists the live site and localhost:3000; CLAUDE.md now describes the built system (memory, formatting, real data, no stored lines); a 24-question held-out set was written and run once (behaviour 83.3%, evidence 89.5%, no leaks, 24 Gemini calls). The Qdrant keep-alive cron cannot be checked from the command line; check Workers > sreerag > Logs in the Cloudflare dashboard for the daily 04:23 UTC run. Tested: `pnpm test:scripts` (574), API tests (85), type checks, `pnpm cf-typegen:check`, `pnpm eval:validate`.
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

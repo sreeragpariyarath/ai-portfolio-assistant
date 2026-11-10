@@ -14,6 +14,19 @@ describe("stored card content", () => {
     assert.doesNotMatch(everything, /tel:|whatsapp/i);
   });
 
+  it("gives every Fun tile an illustration, a short note, items and a public record behind it", () => {
+    assert.equal(new Set(FUN.groups.map((group) => group.name)).size, FUN.groups.length);
+    for (const group of FUN.groups) {
+      assert.ok(group.items.length > 0, group.name);
+    }
+    assert.equal(new Set(FUN.groups.map((group) => group.art)).size, FUN.groups.length);
+    for (const group of FUN.groups) {
+      assert.ok(group.note.length > 0 && group.note.length <= 90, `${group.name}: the note fits the back of a tile`);
+      for (const color of group.colors) assert.match(color, /^#[0-9a-f]{6}$/i);
+      assert.ok(publicRecords.some((record) => record.id === group.recordId), `${group.name}: ${group.recordId} is not a public record`);
+    }
+  });
+
   it("has unique project ids and every project has what the pop-up shows", () => {
     assert.equal(new Set(PROJECTS.map((project) => project.id)).size, PROJECTS.length);
     for (const project of PROJECTS) {

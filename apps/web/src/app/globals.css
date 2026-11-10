@@ -198,3 +198,71 @@ html:not([data-pointer-navigation]) .question-pill:has(.question-input:focus-vis
     animation: none;
   }
 }
+
+/* Fun card: illustrated tiles. Each illustration has a small loop, the item strip drifts sideways and pauses on
+   hover, and a tile lifts a little on hover. Everything stops for visitors who ask for reduced motion. */
+.fun-tile {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease;
+}
+.fun-tile:hover {
+  transform: translateY(-3px);
+}
+.fun-stars {
+  background-image: radial-gradient(1.5px 1.5px at 12% 22%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 32% 68%, #fff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 58% 30%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 78% 58%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 88% 18%, #fff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 46% 86%, #fff 50%, transparent 51%);
+  opacity: 0.8;
+}
+.fun-strip {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.fun-strip-track {
+  animation: fun-marquee 18s linear infinite;
+}
+.fun-tile:hover .fun-strip-track {
+  animation-play-state: paused;
+}
+@keyframes fun-marquee {
+  to { transform: translateX(calc(-50% - 3px)); }
+}
+.fun-art .fun-art-spin { animation: fun-spin 14s linear infinite; }
+.fun-art .fun-art-spin-slow { animation: fun-spin 24s linear infinite reverse; }
+.fun-art .fun-art-orbit { animation: fun-spin 9s linear infinite; }
+.fun-art .fun-art-twinkle { animation: fun-twinkle 2.6s ease-in-out infinite; }
+.fun-art .fun-art-clap { animation: fun-clap 3.2s ease-in-out infinite; }
+.fun-art .fun-art-float { animation: fun-float 3.4s ease-in-out infinite; }
+.fun-art .fun-art-float-late { animation: fun-float 3.4s ease-in-out 1.2s infinite; }
+.fun-art .fun-art-strum { animation: fun-strum 0.18s linear infinite alternate; }
+.fun-art .fun-art-route { animation: fun-route 1.6s linear infinite; }
+.fun-art .fun-art-bob { animation: fun-bob 2.8s ease-in-out infinite; }
+.fun-art .fun-art-glide { animation: fun-glide 4s ease-in-out infinite; }
+.fun-art .fun-art-needle { animation: fun-needle 4.5s ease-in-out infinite; }
+@keyframes fun-spin { to { transform: rotate(360deg); } }
+@keyframes fun-twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes fun-clap { 0%, 70%, 100% { transform: rotate(0deg); } 78% { transform: rotate(-16deg); } 86% { transform: rotate(0deg); } }
+@keyframes fun-float { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-10px); opacity: 0; } }
+@keyframes fun-strum { from { transform: translateX(-0.4px); } to { transform: translateX(0.4px); } }
+@keyframes fun-route { to { stroke-dashoffset: -22; } }
+@keyframes fun-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes fun-glide { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(6px, -6px) rotate(-4deg); } }
+@keyframes fun-needle { 0%, 100% { transform: rotate(-25deg); } 35% { transform: rotate(30deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(12deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .fun-tile,
+  .fun-tile:hover {
+    transition: none;
+    transform: none;
+  }
+  .fun-art *,
+  .fun-strip-track {
+    animation: none !important;
+  }
+  .fun-strip {
+    mask-image: none;
+  }
+  .fun-strip-track,
+  .fun-strip-track > ul:first-child {
+    flex-wrap: wrap;
+    width: auto;
+  }
+  .fun-strip-copy {
+    display: none;
+  }
+}

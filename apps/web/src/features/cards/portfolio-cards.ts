@@ -42,9 +42,20 @@ export interface SkillGroup {
   skills: readonly string[];
 }
 
+export type FunArt = "anime" | "movies" | "music" | "travel" | "space" | "exploring";
+
+// One tile on the Fun card: an animated illustration, the name, a note and the items (shown in a moving strip).
+// The note must say only what the record `recordId` says (no invented opinions).
 export interface FunGroup {
   name: string;
+  art: FunArt;
+  note: string;
   items: readonly string[];
+  recordId: string;
+  // The tile gradient (from, to).
+  colors: readonly [string, string];
+  // Spans two columns.
+  large?: boolean;
 }
 
 export interface FunCard {
@@ -313,11 +324,12 @@ export const CONTACT: ContactCard = {
 export const FUN: FunCard = {
   title: "Beyond the code",
   groups: [
-    { name: "Watching", items: ["Naruto", "Attack on Titan", "Demon Slayer", "Jujutsu Kaisen", "Frieren", "Solo Leveling"] },
-    { name: "Movies", items: ["Marvel", "DC", "Sci-fi", "Action", "Mystery"] },
-    { name: "Travel", items: ["Delhi", "Nepal", "Bengaluru", "Mumbai", "Madhya Pradesh", "Kerala"] },
-    { name: "Music", items: ["Listening all day", "Learning the guitar"] },
-    { name: "Curious about", items: ["Space", "Physics", "Black holes", "The multiverse"] },
+    { name: "Anime", art: "anime", note: "My favourites are Naruto, Attack on Titan and Demon Slayer.", items: ["Jujutsu Kaisen", "Frieren", "Solo Leveling", "Dandadan"], recordId: "profile-020", colors: ["#f97316", "#db2777"], large: true },
+    { name: "Movies", art: "movies", note: "A big Marvel and DC fan.", items: ["Sci-fi", "Action", "Mystery"], recordId: "profile-021", colors: ["#7c3aed", "#4338ca"] },
+    { name: "Music", art: "music", note: "Always listening. Learning the guitar since Oct 2026, still a beginner.", items: ["Listening", "Guitar"], recordId: "profile-023", colors: ["#db2777", "#7c3aed"] },
+    { name: "Travel", art: "travel", note: "I covered Nepal fully.", items: ["Delhi", "Bengaluru", "Mumbai", "Madhya Pradesh", "Kerala"], recordId: "profile-022", colors: ["#0284c7", "#0f766e"], large: true },
+    { name: "Space", art: "space", note: "I love learning about space, time and physics.", items: ["Black holes", "The multiverse", "Science"], recordId: "profile-024", colors: ["#1e1b4b", "#5b21b6"] },
+    { name: "Exploring", art: "exploring", note: "New places, new things, and coding topics on my own.", items: ["New places", "Side projects"], recordId: "profile-025", colors: ["#047857", "#4d7c0f"] },
   ],
 };
 

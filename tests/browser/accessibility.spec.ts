@@ -163,7 +163,13 @@ test("chips show stored cards with no assistant call", async ({ page }) => {
 
   await page.getByRole("button", { name: "Fun", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Beyond the code", level: 2 })).toBeVisible();
-  await expect(page.getByText("Attack on Titan")).toBeVisible();
+  // Illustrated tiles show everything at once: the name, the note and the items, with nothing to click.
+  const fun = page.locator("section[aria-labelledby=fun-card-title]");
+  await expect(fun.getByRole("heading", { level: 3 })).toHaveCount(6);
+  await expect(fun.getByText("My favourites are Naruto, Attack on Titan and Demon Slayer.")).toBeVisible();
+  await expect(fun.getByRole("button")).toHaveCount(0);
+  // With reduced motion the item strip wraps and its looping copy is gone.
+  await expect(fun.locator(".fun-strip-copy").first()).toBeHidden();
   await accessible(page);
 
   expect(chatRequests).toEqual([]);
@@ -337,6 +343,13 @@ test("in a browser without view transitions the project dialog still opens and c
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.addInitScript(() => {
     Object.defineProperty(document, "startViewTransition", { value: undefined, configurable: true });
+    // Count dialog animations as they start: on a busy machine a short one can finish before the test looks.
+    const animate = Element.prototype.animate;
+    (window as unknown as { __dialogAnimations: number }).__dialogAnimations = 0;
+    Element.prototype.animate = function (this: Element, ...args: Parameters<Element["animate"]>) {
+      if (this.closest("dialog, [role=dialog]") !== null) (window as unknown as { __dialogAnimations: number }).__dialogAnimations += 1;
+      return animate.apply(this, args);
+    };
   });
   await page.goto("/");
   await page.getByRole("button", { name: "Projects", exact: true }).click();
@@ -345,7 +358,7 @@ test("in a browser without view transitions the project dialog still opens and c
   const dialog = page.getByRole("dialog", { name: "Upthrust" });
   await expect(dialog).toBeVisible();
   // The fallback animates the dialog from the card's box (Web Animations).
-  expect(await dialog.evaluate(element => element.getAnimations().length)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => (window as unknown as { __dialogAnimations: number }).__dialogAnimations)).toBeGreaterThan(0);
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(card).toBeFocused();

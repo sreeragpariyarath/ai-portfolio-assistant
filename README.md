@@ -4,7 +4,7 @@ A portfolio site where visitors ask questions and get short, cited answers about
 
 **Live:** https://sreerag.pariyarath.workers.dev
 
-![Demo of the site: ask a question, get a streamed answer with sources](docs/demo.gif)
+![Demo of the site: ask a question, get a streamed answer with sources](docs/demo.webp)
 
 ## What it does
 

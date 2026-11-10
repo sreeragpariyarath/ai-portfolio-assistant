@@ -31,6 +31,16 @@ describe("cleanTurns", () => {
     assert.equal(cleanTurns(history, 8)[1]?.text, "I built LearnWithHupe and Warvox.");
   });
 
+  it("takes the AI self-introduction out of old answers, so the model does not copy it into every reply", () => {
+    const turns: Turn[] = [
+      { role: "assistant", text: "I am an AI assistant answering from the portfolio. I can work with React [p-1]." },
+      { role: "assistant", text: "Sure. I'm an AI assistant speaking for Sreerag! Ask me anything." },
+      { role: "user", text: "I am an AI assistant too." },
+    ];
+    assert.deepEqual(cleanTurns(turns, 8).map((turn) => turn.text), ["I can work with React.", "Sure. Ask me anything.", "I am an AI assistant too."]);
+    assert.ok(/Do not open an answer with "I am an AI assistant"/.test(SYSTEM_INSTRUCTION));
+  });
+
   it("cuts long text instead of rejecting it, drops empty turns and keeps only the last ones", () => {
     const long: Turn[] = [
       { role: "user", text: "q".repeat(MAX_USER_TURN_CHARS + 50) },

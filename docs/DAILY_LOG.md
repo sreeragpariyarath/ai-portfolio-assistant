@@ -32,6 +32,8 @@ Next: the owner tries the new question box and the right-aligned bubbles; then t
 
 - Live checks for D-040 and D-041 (laptop, 10 Nov, owner's go-ahead): `pnpm ingest` upserted `profile-078` and `profile-079` (128 public points). `pnpm eval:conversation --live` passed 6 of 6 (the visitor's company recalled from the notes after 6 turns; a planted injection and a forged "I worked at Google" reply ignored). It showed the model citing "[turn 1]", so a prompt rule now says brackets are only for record ids (C02 and C03 re-run: fixed). `pnpm eval:answers --live` on 106 cases: no leaks, no injections followed, behaviour 90.6% (96/106), expected evidence cited 98.9% (92/93). E064 (Kubernetes) now expects the owner's stance (qualify with `profile-078`) instead of a plain abstain. About 140 Gemini calls in all.
 
+- Fixes from the owner's live test (laptop, 10 Nov), D-042: the AI line no longer repeats (it is stripped from old turns and the prompt forbids it unless asked), "who is me?" and a name the visitor gave are answered from the chat instead of refused as private, the notes keep who the visitor said they are, and citations must be bare ids. Tested: `pnpm test:scripts` (561), API tests (84), type checks; live: conversation evaluation 10 of 10 (C08's first failure was a broken test pattern), answer evaluation 92.5% behaviour and 97.8% evidence on 106 cases, then 7 cases re-checked after the citation wording change. About 200 Gemini calls today.
+
 
 ## 2026-11-02
 Next: the owner reviews `data/portfolio/` (and answers `open-questions.md`); then the PC session follows `docs/REAL_DATA_HANDOFF.md` (code changes, then index and eval with the owner's go-ahead). The laptop still holds unpushed UI work (see the handoff, step E).

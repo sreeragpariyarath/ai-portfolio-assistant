@@ -325,3 +325,7 @@ Status values: `Accepted`, `Superseded`, `Proposed`.
 ## D-045: The Fun card is a bento grid of illustrated tiles
 - **Date:** 2026-11-10 · **Status:** Accepted
 - **Decision:** six tiles (Anime and Travel wide) on colour gradients, each with a hand-drawn animated SVG (no emoji, no outside artwork, `features/cards/components/fun-art.tsx`), the name, a short note and the items in a drifting strip that pauses on hover. Everything is visible without clicking; flip tiles were tried and dropped after the owner's feedback. Every note says only what its linked public record says (`recordId`, checked by a test). All motion stops for visitors who ask for reduced motion, and the strip then wraps.
+
+## D-046: Cloudflare Web Analytics
+- **Date:** 2026-11-11 · **Status:** Accepted
+- **Decision:** the site loads the Cloudflare Web Analytics beacon (`next/script`, `lazyOnload`, in `apps/web/src/app/layout.tsx`) for page views and visits. No cookies, no personal data; the token is public by design. The owner created the site in the dashboard (Analytics & Logs, Web Analytics, hostname sreerag.pariyarath.workers.dev). Question counts stay in the Worker logs, which never hold question text.

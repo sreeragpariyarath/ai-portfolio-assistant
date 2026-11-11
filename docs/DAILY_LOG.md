@@ -4,6 +4,8 @@
 
 - Licence (laptop, 10 Nov): the owner chose MIT; added `LICENSE`, a Licence section in the README (the water effect keeps its own MIT notice; the portfolio records are the author's own data) and `"license": "MIT"` in the root package.json. Tested: `pnpm test:scripts`.
 
+- Web Analytics (laptop, 11 Nov), D-046: the owner checked the Qdrant keep-alive (the cron ran at 09:53 India time, no errors) and created a Web Analytics site; the beacon is added to the layout, loaded in idle time. Tested: web lint and build, `pnpm test:web:a11y` (19). Manual: after deploy, visits appear in the dashboard under Web analytics within a few minutes.
+
 A brief record of the work done each day, newest first. Why we chose things: [DECISIONS.md](DECISIONS.md). Roadmap: [RAG_PROJECT_PLAN.md](RAG_PROJECT_PLAN.md).
 
 **Rule:** after every commit, add a few plain-language lines under today's date, in the same commit, saying what we did, what we tested (command and result), and any manual step such as creating an account or key. Don't copy commit message titles or hashes. Never write secret values, only that the step was done.
